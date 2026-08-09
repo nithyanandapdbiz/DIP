@@ -60,7 +60,7 @@ jobs:
     permissions: { id-token: write, attestations: write, contents: read }
     steps:
       - name: Download the exact SBOM produced and scanned by the scan job
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: sbom
           path: sbom

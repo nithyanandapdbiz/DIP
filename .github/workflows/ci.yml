@@ -79,7 +79,7 @@ jobs:
       # when a gate failed — that is exactly when the evidence matters most.
       - name: Upload governance evidence + reports (build artifacts, not source — ADR-0063)
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: governance-evidence
           path: |

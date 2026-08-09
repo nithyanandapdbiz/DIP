@@ -16,7 +16,7 @@
     "dev:local": "pnpm --filter @dbiz/tenant-onboarding-engine build && node packages/tenant-onboarding-engine/run-server.mjs"
   },
   "devDependencies": {
-    "typescript": "^5.7.0",
-    "@types/node": "^24.0.0"
+    "typescript": "^7.0.2",
+    "@types/node": "^26.1.2"
   }
 }

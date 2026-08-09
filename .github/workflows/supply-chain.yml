@@ -65,6 +65,6 @@ jobs:
           name: sbom
           path: sbom
       - name: Generate build provenance attestation (SLSA, closes SUP-05 / F-10)
-        uses: actions/attest-build-provenance@v1
+        uses: actions/attest-build-provenance@v4
         with:
           subject-path: 'sbom/sbom.cdx.json'

@@ -1,0 +1,31 @@
+{
+  "_note": "WS3 — enterprise branch-protection ruleset (closes finding F-08). Apply with: gh api -X PUT repos/{owner}/{repo}/branches/main/protection --input .github/branch-protection.json  (or import as a repository ruleset). This is configuration the maintainer applies; a workflow file cannot make itself Required.",
+  "required_status_checks": {
+    "strict": true,
+    "contexts": [
+      "supply-chain / scan",
+      "verify"
+    ]
+  },
+  "enforce_admins": true,
+  "required_pull_request_reviews": {
+    "required_approving_review_count": 2,
+    "require_code_owner_reviews": true,
+    "dismiss_stale_reviews": true,
+    "require_last_push_approval": true
+  },
+  "required_linear_history": true,
+  "required_signatures": true,
+  "required_conversation_resolution": true,
+  "allow_force_pushes": false,
+  "allow_deletions": false,
+  "restrictions": null,
+  "_maps_to": {
+    "Governance PASS": "verify (governance/verification/run-all.js — the single Policy Decision Point, R-18.4)",
+    "Architecture PASS": "verify (verify-architecture-integrity, -fitness, -traceability)",
+    "Security PASS": "supply-chain / scan (Trivy) + verify-http-surface",
+    "Dependency PASS": "supply-chain / scan (SBOM, license, audit)",
+    "Unit + Integration PASS": "verify (pnpm -r test)",
+    "Certification PASS": "verify (governance/verification/run-all.js — IP renders certification, R-18.17)"
+  }
+}

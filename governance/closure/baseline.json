@@ -1,0 +1,982 @@
+{
+  "baselineId": "programme-closure",
+  "generator": "governance/closure/emit-closure-package.mjs",
+  "generatorVersion": "1.1.0",
+  "rebaselineLog": [
+    {
+      "at": "2026-08-07",
+      "changed": "docs/adr/ADR-0086-reference-output-parity-as-domain-depth.md — ADDED (77 -> 78 ADRs); gates 76 -> 78 (verify-run-record-write-surface.js, verify-operator-writer-census.js absorbed)",
+      "why": "A customer directive to reproduce the reference solution's Functional Testing behaviour inside EP/IP was answered as internal domain DEPTH rather than as a second workflow — ADR-0039 C-11 applied unchanged, with CANONICAL_DOMAIN_SEQUENCE untouched and the Execution Plane not touched at all. The closure gate correctly reported the new ADR as an addition since closure, which is what it exists to do; this entry is the deliberate answer it asked for. THE TWO GATES ARE A SEPARATE FACT AND ARE ABSORBED HERE RATHER THAN SMUGGLED: they were registered by earlier work and the closure gate never reported them, because it checks only that no gate has been REMOVED. A baseline that silently trailed the runner by two gates is the drift the baseline exists to prevent, and it is named here so the absorption is on the record rather than discovered later as an unexplained delta. Evidence: program/FUNCTIONAL_TESTING_REFERENCE_PARITY_ANALYSIS.md §9; measured pnpm -r build and pnpm -r test exit 0, functional-testing-engine dist/test 223 -> 246 pass with 0 fail. The GA determination is UNCHANGED at NOT CERTIFIED — nothing here touches E-2."
+    },
+    {
+      "at": "2026-08-06",
+      "changed": "docs/architecture/05-cross-plane-communication.md — v1.2 -> v1.3",
+      "why": "A SECOND design law is now recorded beside R-05.27, on the axis the first one does not cover: a port may be declared and left unimplemented ONLY IF its empty case fails CLOSED, and where that answer is a Success the port SHALL NOT be mounted until it is implemented. It became true from the decision NOT to mount GET /api/tenants/{slug}/work behind an unimplemented PendingWorkSource (D-115): under R-05.27 an empty collection is a SUCCESS, so that port would have answered 200-with-nothing-pending to every Execution Plane forever, byte-identical to the truthful answer, with no test failing and no gate reddening. The contrast is what is being legislated: the unwired authenticator and the unconfigured package store both answer 501 and are safe for that one reason, so the same injection pattern is safe on the fail-closed side and is fabrication on the fail-open side. NO RULE IS ADDED, AMENDED OR WITHDRAWN — R-05.26-R-05.28 are untouched, the result taxonomy stays at four, no conformance criterion is added and no gate count moves; the baseline moves only because a frozen document's hash changed. Evidence: TECHNICAL_DEBT.md D-115, program/D-115_RUN_AND_EVIDENCE_RECORD_DESIGN_REPORT.md."
+    },
+    {
+      "at": "2026-08-04",
+      "changed": "docs/adr/ADR-0073-design-sync-publication-outcome.md — ADDED",
+      "why": "The design-synchronisation SPI carried the same defect ADR-0072 removed from its two siblings: linkWorkItem, applyClassification, assignToSuite and attachDesignArtefact all returned type-level literals, so it could not report that the customer tool refused. It was found by applying the contagion corollary deliberately BEFORE porting the nine design-sync agents, and four failureHandling declarations turned out to have been unimplementable when written — one of which states that its census reports what the tool accepted and never what was attempted, one line above code that counted attempts. ADR-0073 widens the four writes and wires the four agents, making all four declarations true. Read-back validation is the stronger answer and is SEQUENCED to Section F with its reasoning recorded at the SPI, not omitted. The baseline moves because a new ADR necessarily violates the closed-programme property. Evidence: TECHNICAL_DEBT.md D-028, D-029."
+    },
+    {
+      "at": "2026-08-04",
+      "changed": "docs/adr/ADR-0072-publication-outcome-spi.md — ADDED",
+      "why": "The publication SPI could not report a failed publication: four of its five operations returned a type-level literal, so an adapter could not say published:false. No layer between the customer tool and the executive report could represent a failed publication into that customer system of record, and the five status-published literals in synchronisation.ts were the only value the SPI permitted a caller to derive. Masked only because reference adapters always succeed, which is what made the repair free exactly once — after a real connector lands the same repair must be made while producing wrong data in a customer system of record. ADR-0072 adds a PublicationOutcome union; every failure path is marked UNDECIDED with its owning capability rather than decided for capabilities this programme does not own. The baseline moves because a new ADR necessarily violates the closed-programme property. Evidence: TECHNICAL_DEBT.md D-023."
+    },
+    {
+      "at": "2026-08-04",
+      "changed": "docs/adr/ADR-0071-stage-refusal-primitive.md — ADDED",
+      "why": "The governance triad could not decline. StageEmitter offered only ok and notApplicable, and certify() derived certified from applicable without ever reading what the stage produced — so refusal was expressible only as absence, and a capability wanting to refuse had to claim it had done no work. This held for all five implemented capabilities, because the defect was in @dbiz/capability-framework: every certification the platform has produced was reviewed by three stages that could not refuse. ADR-0071 adds a third stage outcome. The baseline moves because \"no ADR has been added since closure\" is a closed-programme property and a new decision necessarily violates it; the alternative was to change the stage-result algebra for six capabilities with no decision record. Evidence: TECHNICAL_DEBT.md D-019, and D-021 which was recorded BEFORE the ADR so it could not read as having addressed it."
+    },
+    {
+      "at": "2026-08-04",
+      "changed": "docs/adr/ADR-0069-capability-one-connector-realisation.md — P-69.2",
+      "why": "P-69.2 was amended to correct itself against measured evidence. Its stated orphan figure (\"fourteen\") was produced by an inventory that could not find an orphan at all — a surviving entry point imported the package barrel, so the surviving closure was the whole package. With the instrument repaired the measured count is TEN, and two of the precondition's named instances were wrong in opposite directions: observation-interpretation is NOT orphaned (the bridge imports it directly), and the design-synchronisation entry named the adapter, which survives, rather than agents/design-sync.ts, which does not. Evidence: governance/capability/retirement-inventory.json; reasoning: TECHNICAL_DEBT.md D-011, D-018. The alternative was leaving the decision record that governs retirement asserting a withdrawn figure and two wrong instances, which is the declaration-versus-implementation drift of D-007 committed deliberately in the document meant to prevent it."
+    }
+  ],
+  "commit": "a7821fd63f6fedc2c7888478d33fcd33e300b765",
+  "branch": "main",
+  "baselineHash": "faa0f6c020d4e26185d306657393909094bc67cfd76a48e707dad3d37d82a98c",
+  "architecture": [
+    {
+      "document": "01-platform-constitution.md",
+      "frozen": true,
+      "criteria": 52,
+      "owns": null,
+      "sha256": "3f71462175e06fdfe8ffc3e8f4c570cbf65a1bddff1f99537ef8a355ea8ebaca"
+    },
+    {
+      "document": "02-reference-architecture.md",
+      "frozen": true,
+      "criteria": 8,
+      "owns": "the whole-system view — how the two planes, the execution package, and the evidence chain compose into one platform.",
+      "sha256": "901535875395828adaed1c10d82885e6d5f40c4ca6aab5a6bd9f978680a5aa0c"
+    },
+    {
+      "document": "03-intelligence-plane-architecture.md",
+      "frozen": true,
+      "criteria": 22,
+      "owns": "the internal structure of the Intelligence Plane, including its bounded contexts, technology profiles and the solution generation engine.",
+      "sha256": "1e52d860f63587423ea1c5028f263cfe456b83220d4960b8f3f6245a2152d7bb"
+    },
+    {
+      "document": "04-execution-plane-architecture.md",
+      "frozen": true,
+      "criteria": 14,
+      "owns": "the internal structure of the Execution Plane.",
+      "sha256": "c347f16bc09d913d448c1900c3d38b820b4ada099fb5d4a3f0b8d60e2e3e11fe"
+    },
+    {
+      "document": "05-cross-plane-communication.md",
+      "frozen": true,
+      "criteria": 12,
+      "owns": "direction, transport, the result taxonomy, retry semantics, and the degradation matrix.",
+      "sha256": "df995b20ef6e1d54c3afc5c57e8891a9b1ac9c14a71b4041459fa228d40acb9a"
+    },
+    {
+      "document": "06-data-sovereignty.md",
+      "frozen": true,
+      "criteria": 12,
+      "owns": "data classification, residency, the conditions under which customer data may exist in the Intelligence Plane, and retention and purge **obligations**.",
+      "sha256": "224a5dffc8d718a968177feb49a437e12eacb7d74a7e47fd717dc49a3bb942bd"
+    },
+    {
+      "document": "07-tenant-isolation.md",
+      "frozen": true,
+      "criteria": 12,
+      "owns": "the isolation dimensions, partitioning strategy, and the single validated path constructor.",
+      "sha256": "a17fb25f39421e6d0fc0dd5abb2a903790521a2923926643832ba21b09f51352"
+    },
+    {
+      "document": "08-security-model.md",
+      "frozen": true,
+      "criteria": 27,
+      "owns": "trust boundaries, threat posture, authentication, authorisation, secret handling, and key management.",
+      "sha256": "80b895cf3f2d7e155b66224abfbe90b82b4b3db4dcc9e7dd8b185dde493809e5"
+    },
+    {
+      "document": "09-data-flow-model.md",
+      "frozen": true,
+      "criteria": 12,
+      "owns": "what data moves where, under what authority, and with what transformation.",
+      "sha256": "b557e16da1d1ac5b571e07dc0efe7d17e1f3be95a90362331799150991191844"
+    },
+    {
+      "document": "10-evidence-flow-model.md",
+      "frozen": true,
+      "criteria": 14,
+      "owns": "evidence capture, custody, integrity, the reference chain, and why a decision outlives the evidence it cites.",
+      "sha256": "6463d717f2e5766c6801aed6ea7175d8ba6a349ffdfd5e7c3e09960e35edaf45"
+    },
+    {
+      "document": "11-capability-model.md",
+      "frozen": true,
+      "criteria": 13,
+      "owns": "what a capability is, the five capabilities, their ownership across the planes, and the capability registry.",
+      "sha256": "898b6cf94a4ee88a4465204d8a34a027ea8c699ed91556b5576629bf0f3e9709"
+    },
+    {
+      "document": "12-capability-orchestration.md",
+      "frozen": true,
+      "criteria": 18,
+      "owns": "the twelve-stage lifecycle, what each stage does, which plane executes it, and why no stage may be bypassed.",
+      "sha256": "af5bc2b255d56f52a18b089180b989f648508e7b106cafd07dc34a6b60814826"
+    },
+    {
+      "document": "13-ai-operating-model.md",
+      "frozen": true,
+      "criteria": 20,
+      "owns": "the agent contract, AI boundaries, provider abstraction, AI-disabled operation, provider integration, and the **AI Capability Class taxonomy**.",
+      "sha256": "9b4bd662ee38205988ae9a4990873066c4fe1b15d550b00e4c4e1fbc9f4992c1"
+    },
+    {
+      "document": "14-tool-operating-model.md",
+      "frozen": true,
+      "criteria": 14,
+      "owns": "tool abstraction, the adapter interfaces, tool integration strategy, and vendor containment.",
+      "sha256": "cc0331a4e86647d71feda01ccb19910a6e2a7e49d7dcd5ed6bff546f04a1c655"
+    },
+    {
+      "document": "15-configuration-model.md",
+      "frozen": true,
+      "criteria": 13,
+      "owns": "the configuration schema model, precedence, the ownership split, and declared-versus-consumed enforcement.",
+      "sha256": "d4662b10de299183d484eb48d9f6aeb27a4f7611895cab3cd143f642fc09164a"
+    },
+    {
+      "document": "16-runtime-model.md",
+      "frozen": true,
+      "criteria": 20,
+      "owns": "the process model, composition, lifecycle, concurrency, and scheduling.",
+      "sha256": "db7275107029c78caaa29faf3a670c3a46aafd44b7945368adabb6cb2d3180c3"
+    },
+    {
+      "document": "17-deployment-topology.md",
+      "frozen": true,
+      "criteria": 15,
+      "owns": "deployment topology, images and build, cloud portability and integration.",
+      "sha256": "3840cb3ada21ab0be9d1bcaa3865cee27ece448c360f37f62734ba503aae882a"
+    },
+    {
+      "document": "18-governance-model.md",
+      "frozen": true,
+      "criteria": 18,
+      "owns": "the governance model, gates, the certification authority, and how conformance is reported.",
+      "sha256": "564ae8cb198da4c52dcc74fb5c6077e971f30260a25cbc7eabac2061bf440210"
+    },
+    {
+      "document": "19-repository-ownership.md",
+      "frozen": true,
+      "criteria": 7,
+      "owns": "repository boundaries, what lives in each, the vehicle for plane-neutral shared code, and its versioning.",
+      "sha256": "babec565f22ce61e2126968ab5c014115e381ea897f6f404db92ecf2f3509a44"
+    },
+    {
+      "document": "20-cross-plane-contracts.md",
+      "frozen": true,
+      "criteria": 14,
+      "owns": "the execution package and evidence contracts, the canonical integrity primitive, the wire format, and contract versioning.",
+      "sha256": "0c406661e989f10d6a8625ccaca0049b235459fa4edf3265ccbcb8ec1dc359eb"
+    },
+    {
+      "document": "21-tenant-lifecycle.md",
+      "frozen": true,
+      "criteria": 31,
+      "owns": "tenant identity, onboarding, provisioning, state transitions, suspension, and offboarding.",
+      "sha256": "bd08be0155f61154515b574ac51c6390b859940cc12392402910c64194f63165"
+    },
+    {
+      "document": "22-security-threat-model.md",
+      "frozen": true,
+      "criteria": 11,
+      "owns": "threat actors, assets, attack paths, the threat-to-mitigation map, **replay protection**, and **supply-chain security**.",
+      "sha256": "e4652d34fbdb2ed8ed29dd7bfcbfb7347dbf5cfce5f9d6ebd0526fb5ba96aed9"
+    },
+    {
+      "document": "23-operational-excellence-model.md",
+      "frozen": true,
+      "criteria": 14,
+      "owns": "SLOs, SLIs, error budgets, incident and problem management, capacity planning, HA/DR, backup and restore validation, health and readiness models, and operational runbooks.",
+      "sha256": "6552e755ca98c519199a963eb6371cf91da990dd2277abca82d505900e3daef5"
+    },
+    {
+      "document": "24-platform-intelligence-model.md",
+      "frozen": true,
+      "criteria": 15,
+      "owns": "engineering, governance, operational, customer, AI and executive intelligence; the analytics pipeline; dashboard architecture; and evidence sourcing.",
+      "sha256": "977b9e06acfa6db9cdf260183d16faebdd95a5bab0e036d8cf5251be373f0740"
+    },
+    {
+      "document": "25-customer-success-model.md",
+      "frozen": true,
+      "criteria": 14,
+      "owns": "installation, upgrade, migration and configuration lifecycles from the customer's perspective; documentation, API and SDK strategy; training; support; the customer health model; and the Customer Success Package.",
+      "sha256": "58fd598e5dbacd46c9fee96c38474633fecb54cfc10c7d0940140c25a70cc763"
+    }
+  ],
+  "adrs": [
+    {
+      "adr": "ADR-0001-platform-language-and-runtime.md",
+      "status": "ACCEPTED",
+      "sha256": "1210560e0e6dd282c8ee0264e458b2e84f34a8c75d7b2fc537a3a18f9b89e296"
+    },
+    {
+      "adr": "ADR-0002-capability-extension-points.md",
+      "status": "ACCEPTED",
+      "sha256": "4f98a415df5e901ff7d7fd62e1569a1b097bd26f173fc0b6e92a3efc0e7371b1"
+    },
+    {
+      "adr": "ADR-0003-shared-package-vehicle.md",
+      "status": "ACCEPTED",
+      "sha256": "773a36e6187c3011562730d7d0c828148ab73ab517bf6e670477548ad016efd2"
+    },
+    {
+      "adr": "ADR-0004-wire-format.md",
+      "status": "ACCEPTED",
+      "sha256": "a7ab349d6cf0d5e853119203732e59beb56d596065aeea3b6a26e3642c4fe626"
+    },
+    {
+      "adr": "ADR-0005-canonical-integrity-primitive.md",
+      "status": "ACCEPTED",
+      "sha256": "00ec650b7944ab7e4924860bfa19de0b58cfbe0a3b3277813034b6d015497c4b"
+    },
+    {
+      "adr": "ADR-0006-retention-model.md",
+      "status": "ACCEPTED",
+      "sha256": "2acad0e18252512329a9ec1fc0024b5e080c94ec662f01673d697dd3494d48a6"
+    },
+    {
+      "adr": "ADR-0007-package-signing.md",
+      "status": "ACCEPTED",
+      "sha256": "ec11b79e370dbb4ba31a893504d63366fc53c2fc5b99aa737b6d8ec7b8448539"
+    },
+    {
+      "adr": "ADR-0008-encryption-at-rest.md",
+      "status": "ACCEPTED",
+      "sha256": "2c7c36f4741899230a256c270598bcd9c3fec335c0cae9c3626ed3cc029da175"
+    },
+    {
+      "adr": "ADR-0009-configuration-precedence.md",
+      "status": "ACCEPTED",
+      "sha256": "f7baf05498df1f995b76d0334ee2f7300aa220b5437a7bf4858dddd4eed5a072"
+    },
+    {
+      "adr": "ADR-0010-tenant-storage-layout.md",
+      "status": "ACCEPTED",
+      "sha256": "24ad17d82c36a95a98844753948ba62815e9efaaf07fa8a0a241490169318c61"
+    },
+    {
+      "adr": "ADR-0011-contract-distribution.md",
+      "status": "ACCEPTED",
+      "sha256": "3e5d652c27a9f5a28b22cc3bfce40abd252da9b2b08521249fa04323989d34f5"
+    },
+    {
+      "adr": "ADR-0012-cloud-portability.md",
+      "status": "ACCEPTED",
+      "sha256": "7f0b0e6157142c00f1673ef0b5e8d8a7818a4b188fc14cfc5568af2a8b0dc903"
+    },
+    {
+      "adr": "ADR-0013-execution-lifecycle-limits.md",
+      "status": "ACCEPTED",
+      "sha256": "a2f01d84bcb606358b1359da8223d83fda23fc4c31a359ed36bb8b168bd61502"
+    },
+    {
+      "adr": "ADR-0014-pii-scrubbing-posture.md",
+      "status": "ACCEPTED",
+      "sha256": "42356c9263c8360fd5fd38f9a314a8798555579ecf9223973ec83b6eb47e2efa"
+    },
+    {
+      "adr": "ADR-0015-degraded-operation-mechanism.md",
+      "status": "ACCEPTED",
+      "sha256": "a8ceeae074276a0c8888c6a43e5f9386f50d23c0224e7f21b0b7819cb703b8fb"
+    },
+    {
+      "adr": "ADR-0016-ai-tool-agnosticism.md",
+      "status": "ACCEPTED",
+      "sha256": "a6aa5387b4eb35bcdfc39feb51cf5f416c511ae0fe41c6dffe9fbadc242618c1"
+    },
+    {
+      "adr": "ADR-0017-runtime-baseline-node-24.md",
+      "status": "ACCEPTED",
+      "sha256": "32b643c056c4e6878a7b67c63e7598941a393af843e1f588121f8ec2813e07c6"
+    },
+    {
+      "adr": "ADR-0018-platform-services-and-programme-instruments.md",
+      "status": "ACCEPTED",
+      "sha256": "f90e2f1b143076a560710a1fc05cde5e51c569364e94266ec59a6d2ad5087535"
+    },
+    {
+      "adr": "ADR-0019-evidence-over-assertion.md",
+      "status": "ACCEPTED",
+      "sha256": "446f4967025552107a15c5262bd0e61ae6cd716c079a65c089741e61bacf9cb8"
+    },
+    {
+      "adr": "ADR-0020-continuous-verification.md",
+      "status": "ACCEPTED",
+      "sha256": "2aa63117834f2c04d7fd0fe6e0aec9ba843480ca9415b5acb2c008cb3c23d4f2"
+    },
+    {
+      "adr": "ADR-0021-platform-core-bounded-context.md",
+      "status": "ACCEPTED",
+      "sha256": "713ac8d07bf292a9826f94e8e017bb9b4022a6ecf8a8cbc3d0792b4f754ceaed"
+    },
+    {
+      "adr": "ADR-0022-functional-testing-engine-internal-structure.md",
+      "status": "ACCEPTED",
+      "sha256": "6cb4099cbd4fe86a3d894985d014d926e342c5d45ae2ae46ac20d4d076263234"
+    },
+    {
+      "adr": "ADR-0023-discovery-flow-engine-internal-structure.md",
+      "status": "ACCEPTED",
+      "sha256": "7809d27355b60fea4e0bc0064cace7cfe5b4f03d95a63b23f49949b87f1cd042"
+    },
+    {
+      "adr": "ADR-0024-dev-change-engine-internal-structure.md",
+      "status": "ACCEPTED",
+      "sha256": "15d3fb977f93db3b5da561a47b1251c032c806f316f64bf56f83f478edb3b607"
+    },
+    {
+      "adr": "ADR-0025-platform-certification-framework.md",
+      "status": "ACCEPTED",
+      "sha256": "3afc1b01564ab627b3edb2c7b0d5045aa12938a00a29812eba11425ec145e98e"
+    },
+    {
+      "adr": "ADR-0026-performance-engine-internal-structure.md",
+      "status": "A",
+      "sha256": "bff5a4ed864ed3739861822d74a95350012b2e898050f63a64ca11a547437fc0"
+    },
+    {
+      "adr": "ADR-0027-penetration-testing-engine-internal-structure.md",
+      "status": "ACCEPTED",
+      "sha256": "81e781e4d6351e93c3f8b52c8d36b0485996dc74f3bb0841271f0a19b5a25064"
+    },
+    {
+      "adr": "ADR-0028-security-testing-engine-internal-structure.md",
+      "status": "ACCEPTED",
+      "sha256": "2ea3dc259cd16f413456460363e46de37d173ac3d30018ba185db3a0eb2291c0"
+    },
+    {
+      "adr": "ADR-0029-security-intelligence-layer-and-platform-intelligence-boundary.md",
+      "status": "ACCEPTED",
+      "sha256": "c23c4ec5e743868ee5d9771dbc456f205c6dc13d8700bd6ead5bf2228d98b853"
+    },
+    {
+      "adr": "ADR-0030-tenant-lifecycle-management-orchestration.md",
+      "status": "ACCEPTED",
+      "sha256": "421580f192114261941996e3b56ccd55ffd2f0c585c6c5cf3b4f9217c04b8a18"
+    },
+    {
+      "adr": "ADR-0031-onboarding-experience-layer.md",
+      "status": "ACCEPTED",
+      "sha256": "7e06f16f8ea4078ba5522c9a98df077f8ac35ced3a95aead4ac9a9ad420b96a5"
+    },
+    {
+      "adr": "ADR-0032-tenant-configuration-repository-ssot.md",
+      "status": "ACCEPTED",
+      "sha256": "4c70b4a5195a5348903ce1e6d12031e566d55cc9dbafd020b7927fd903257a0b"
+    },
+    {
+      "adr": "ADR-0033-production-web-tier.md",
+      "status": "ACCEPTED",
+      "sha256": "68cf91cb5a2a3f35838d9f1c6bcf960ce9012a488cd1b82dc838feb48845258b"
+    },
+    {
+      "adr": "ADR-0034-tenant-onboarding-engine-refounding.md",
+      "status": "UNKNOWN",
+      "sha256": "49eb018cf3134d4b98a04100ae2be6fad3ca96e845289c362309928a59caafb7"
+    },
+    {
+      "adr": "ADR-0035-execution-plane-operational-portal.md",
+      "status": "UNKNOWN",
+      "sha256": "6a4fd46ca1db103f5d0c81a0cb473227c4e6aa624d78ae0fa80463ad70b5c76e"
+    },
+    {
+      "adr": "ADR-0036-execution-plane-registration-and-trust-establishment.md",
+      "status": "ACCEPTED",
+      "sha256": "d5260ffa8b4f968094fe65207fce5e23ce9f0620378449b2e5e354b3b03f42b5"
+    },
+    {
+      "adr": "ADR-0037-execution-target-simplification.md",
+      "status": "PROPOSED",
+      "sha256": "0afa5d4c2ed17c00d209ecb5fa84bc535efd3921f1dece110ec14fb71a49909c"
+    },
+    {
+      "adr": "ADR-0038-execution-authoring-intent-conservation.md",
+      "status": "PROPOSED",
+      "sha256": "42b4ec758f16c2c47e772ed3d2d9de239eaf5ad2dbcce6784c09af761eb649ea"
+    },
+    {
+      "adr": "ADR-0039-functional-testing-capability-refounding.md",
+      "status": "UNKNOWN",
+      "sha256": "104cad32de507e3df2449fa91a83e8bc16bcea61e2f1f4a3e46291c334425d4b"
+    },
+    {
+      "adr": "ADR-0040-canonical-platform-contract-framework.md",
+      "status": "UNKNOWN",
+      "sha256": "8b838957e85c7bb59115ec4f3f23017e12298c34658e604475ab1451688c84f4"
+    },
+    {
+      "adr": "ADR-0041-generation-output-sovereignty.md",
+      "status": "UNKNOWN",
+      "sha256": "9850a8539d746b401b7afb34afc06e73fa4ce811b07fca3b326f1bdc4c4eee0c"
+    },
+    {
+      "adr": "ADR-0042-repository-purity-and-output-isolation.md",
+      "status": "UNKNOWN",
+      "sha256": "88d7f23e9f1028eb8212f2dfc8417541c36741bbeb04025bd2612a93fd200cee"
+    },
+    {
+      "adr": "ADR-0043-executable-constitutional-governance-and-traceability.md",
+      "status": "UNKNOWN",
+      "sha256": "c9aa5214c01c414b05b33ead18df36a4169d17bfe6741a7f48c7cf317036afd5"
+    },
+    {
+      "adr": "ADR-0044-functional-testing-capability-activation.md",
+      "status": "UNKNOWN",
+      "sha256": "62a080eaa509a4d6fd45f97f9513a96e1a9252c90552c6e5f26e1b64e05164e1"
+    },
+    {
+      "adr": "ADR-0045-functional-testing-production-qualification.md",
+      "status": "UNKNOWN",
+      "sha256": "bcfc702b5c2aa5f59c7e83514a872295cdf52271bddbd9ed076199c6bcbea374"
+    },
+    {
+      "adr": "ADR-0046-legacy-functional-pipeline-retirement.md",
+      "status": "UNKNOWN",
+      "sha256": "d380a8a75165400e803a029c140b1980e898b12d8ec0d54a7e59b0797cef313e"
+    },
+    {
+      "adr": "ADR-0047-canonical-runtime-integration.md",
+      "status": "UNKNOWN",
+      "sha256": "d4e676ec68ad1748ccc919047456529d46c3b2eabf7a22a6bc3f16b71715e441"
+    },
+    {
+      "adr": "ADR-0048-canonical-runtime-integration-m1-m3.md",
+      "status": "UNKNOWN",
+      "sha256": "d6471847061199fbcdf3d5986d1d97c65687d8fa1d6c5e8d8065b71059b10ea1"
+    },
+    {
+      "adr": "ADR-0049-canonical-runtime-cutover.md",
+      "status": "UNKNOWN",
+      "sha256": "44385578069c4b25266c987a34741747a93708e51abc61c5bf72812e0465eb07"
+    },
+    {
+      "adr": "ADR-0050-runtime-enablement-m4.md",
+      "status": "UNKNOWN",
+      "sha256": "af632fd3bda4588fd83cd24509070187239ec95e3ebfdda503a9998465711ca7"
+    },
+    {
+      "adr": "ADR-0051-production-readiness-review.md",
+      "status": "UNKNOWN",
+      "sha256": "45b4af520d7962af25172776dd60be46e322a14d82261fa1e5c28331e2bc2401"
+    },
+    {
+      "adr": "ADR-0052-first-runtime-deployment.md",
+      "status": "UNKNOWN",
+      "sha256": "b1c4c4b14fa998d8f0c6f6ccd7cf65bcc1886ce915b0a7ba8087700f11402902"
+    },
+    {
+      "adr": "ADR-0053-repository-governance-reconciliation.md",
+      "status": "UNKNOWN",
+      "sha256": "4382db909f2a72ef5adfa9cf0e56efa900ae4c42d2c6b2dee3f8d9d4f947c245"
+    },
+    {
+      "adr": "ADR-0054-operational-handover.md",
+      "status": "UNKNOWN",
+      "sha256": "4f1387aa0ff007b3e508a4fa7363b65bc6daebe0214b966cafd89437d3cd83f9"
+    },
+    {
+      "adr": "ADR-0060-cloud-native-provider-platform.md",
+      "status": "UNKNOWN",
+      "sha256": "d9b016ed6ca5582c86fe0884feb18565a57ea5dbfd1d91f34eeaedee2f160169"
+    },
+    {
+      "adr": "ADR-0061-canonical-functional-capability-runtime-adoption.md",
+      "status": "ACCEPTED",
+      "sha256": "d02b589c04e9b8dc19956df4d5bc51f616ae240e98dd466e1045e517a8ce12ea"
+    },
+    {
+      "adr": "ADR-0062-canonical-platform-capability-lifecycle.md",
+      "status": "ACCEPTED",
+      "sha256": "23a09fb4c575b0597c33e40a31f243cc943b7f5d79f7ec935d82dd583767300b"
+    },
+    {
+      "adr": "ADR-0063-sbom-build-artifact-model.md",
+      "status": "A",
+      "sha256": "b49418e236cddab74ca22366a5905b4a54e1450aca81ab410fe1d3d1ec4325e3"
+    },
+    {
+      "adr": "ADR-0066-functional-workflow-governance.md",
+      "status": "P",
+      "sha256": "a163882a76ab86ce2cdc2a31a71613d1b09dfe8af5ee081f7cbd263c62559533"
+    },
+    {
+      "adr": "ADR-0067-reasoning-result-registry.md",
+      "status": "A",
+      "sha256": "3e02c354b53124140da1ab08e7046a0344676ca3c71bea8fde6fb0c7f8e94e68"
+    },
+    {
+      "adr": "ADR-0069-capability-one-connector-realisation.md",
+      "status": "A",
+      "sha256": "af3e024deb585894a95637373c3bcae6c54661aa101893da4c014740e0b4fc49"
+    },
+    {
+      "adr": "ADR-0070-execution-package-retrieval-inversion.md",
+      "status": "A",
+      "sha256": "d62c6a5ba6702cbf089cbb74f4df4ad68eab6fb33d310543a03235a058976b73"
+    },
+    {
+      "adr": "ADR-0071-stage-refusal-primitive.md",
+      "status": "A",
+      "sha256": "47b2e214f75ddff44375920930d7b192e8d1215f4a0ecd9077eebe5ce4afff7c"
+    },
+    {
+      "adr": "ADR-0072-publication-outcome-spi.md",
+      "status": "A",
+      "sha256": "b689f058b76a31dedcd11d3f1148ac2642181e0e99e6630bf9c2707a85e8dd6b"
+    },
+    {
+      "adr": "ADR-0073-design-sync-publication-outcome.md",
+      "status": "A",
+      "sha256": "1faabbdbce6cbe34bcf21573c35d75996e44f269a1d8d0b9f9df0bd70f065f8a"
+    },
+    {
+      "adr": "ADR-0074-connector-read-reachability.md",
+      "status": "PROPOSED",
+      "sha256": "5f7f7034e3dbd50250bf89e4ad168b533e0bb519a433f88090f9693744cefff0"
+    },
+    {
+      "adr": "ADR-0075-observation-interpretation-canonical-composition.md",
+      "status": "PROPOSED",
+      "sha256": "03a1d0f54011431f88f5697f9110cad80e00188389d871842b1f63321d68a552"
+    },
+    {
+      "adr": "ADR-0076-declaration-typing-and-independent-review.md",
+      "status": "ACCEPTED",
+      "sha256": "edcae99e0acde29e4f68a1373e9fcd735560cc514effad86378c47c5ec355440"
+    },
+    {
+      "adr": "ADR-0077-canonical-authoring-cutover.md",
+      "status": "UNKNOWN",
+      "sha256": "a1beb8b9e5be4893e22ee0c71a9b323f78abb2259c1669522b10a8fdf88c16a5"
+    },
+    {
+      "adr": "ADR-0078-package-retrieval-recorded-in-architecture.md",
+      "status": "UNKNOWN",
+      "sha256": "196bd51c98e0a08e7828b27dcf6ee51474bd5e6e052cb7593874c0f9719eb904"
+    },
+    {
+      "adr": "ADR-0079-retrievable-package-store.md",
+      "status": "ACCEPTED",
+      "sha256": "9750e2ffdbee8f95498f46acf8eee8ecf45a6bd0b8a755fc7cb946b7b5c82978"
+    },
+    {
+      "adr": "ADR-0080-work-request-exchange.md",
+      "status": "ACCEPTED",
+      "sha256": "89c45c918a10f451d45c872e8652c0749477aaa6ddc910daadfcc7ed2a6c33a8"
+    },
+    {
+      "adr": "ADR-0081-execution-package-signature-carrier.md",
+      "status": "ACCEPTED",
+      "sha256": "6b70a6009f8509e59393abe367355d568c45e04dc61d08c1c1955beb314fb32a"
+    },
+    {
+      "adr": "ADR-0082-run-and-evidence-record.md",
+      "status": "ACCEPTED",
+      "sha256": "5f803f33e631595cf9987f2ba8ad1fb0ff4d45f5eb7dde34e5150826f80b3eac"
+    },
+    {
+      "adr": "ADR-0083-signing-key-custody.md",
+      "status": "ACCEPTED",
+      "sha256": "cc9d162caa58fedfb8ad56874c203137b796b30a9fa456e1c1e5cbaa1b4ac665"
+    },
+    {
+      "adr": "ADR-0084-rule-6-scope.md",
+      "status": "ACCEPTED",
+      "sha256": "006cf777350af2e4883d3006dc069c442cc84aa64d1b7b1535ea7f6b6ef7a62b"
+    },
+    {
+      "adr": "ADR-0085-tenant-test-repository-disposition.md",
+      "status": "ACCEPTED",
+      "sha256": "6d06f47f40ad7eaece6fac62b2b09561732ace9d3b06677814eecd448e09226d"
+    },
+    {
+      "adr": "ADR-0086-reference-output-parity-as-domain-depth.md",
+      "status": "ACCEPTED",
+      "sha256": "74c83be4e3d9ad6e7e09374f3166dbb02bd39f2758fdd6d99b98431f05b0878b"
+    },
+    {
+      "adr": "ADR-0087-functional-testing-capability-removal.md",
+      "status": "UNKNOWN",
+      "sha256": "0e62687e47dfd514cf1e7018a9ec9af4b3648f3a79f6d41bd2e4196849ca4fa4"
+    }
+  ],
+  "gates": [
+    "verify-architecture-integrity.js",
+    "verify-adr-completeness.js",
+    "verify-ai-vendor-neutrality.js",
+    "verify-implementation-traceability.js",
+    "verify-change-control-completeness.js",
+    "verify-decision-index.js",
+    "verify-governance-self-validation.js",
+    "verify-suite-integrity.js",
+    "verify-tool-contracts.js",
+    "verify-architecture-fitness.js",
+    "verify-contract-compatibility.js",
+    "verify-supply-chain.js",
+    "verify-traceability.js",
+    "verify-operational-readiness.js",
+    "verify-customer-readiness.js",
+    "verify-production-readiness.js",
+    "verify-general-availability.js",
+    "verify-repository-hygiene.js",
+    "verify-ep-certification.js",
+    "verify-discovery-conformance.js",
+    "verify-devchange-conformance.js",
+    "verify-devchange-certification.js",
+    "verify-performance-conformance.js",
+    "verify-sectest-conformance.js",
+    "verify-pentest-conformance.js",
+    "verify-pentest-completeness.js",
+    "verify-platform-certification.js",
+    "verify-tenant-lifecycle-conformance.js",
+    "verify-registration-conformance.js",
+    "verify-http-surface.js",
+    "verify-http-surface-parity.js",
+    "verify-platform-contract-framework.js",
+    "verify-execution-contracts.js",
+    "verify-connector-spi.js",
+    "verify-decision-engine.js",
+    "verify-intelligence-models.js",
+    "verify-reporting-model.js",
+    "verify-platform-events.js",
+    "verify-provider-platform.js",
+    "verify-composition-root.js",
+    "verify-data-sovereignty-store.js",
+    "verify-run-record-write-surface.js",
+    "verify-operator-writer-census.js",
+    "verify-programme-closure.js",
+    "verify-intelligence-plane-egress.js",
+    "verify-execution-plane-boundary.js"
+  ],
+  "invariants": {
+    "architectureDocuments": 25,
+    "frozenDocuments": 25,
+    "conformanceCriteria": 422,
+    "platformServices": 3,
+    "capabilities": 6,
+    "planes": 2,
+    "adrs": 79
+  },
+  "generalAvailability": "NOT CERTIFIED",
+  "generalAvailabilityReason": "Deployment evidence unavailable. E-2 is NOT MEASURED because no container runtime exists in this environment.",
+  "unmeasured": [
+    {
+      "id": "E-2",
+      "set": "operational",
+      "class": "deployment-alone",
+      "needs": "a container runtime"
+    },
+    {
+      "id": "K-11",
+      "set": "customer-success",
+      "class": "transient",
+      "needs": "nothing — blocked only while its own validation run is failing"
+    },
+    {
+      "id": "K-12",
+      "set": "customer-success",
+      "class": "independent",
+      "needs": "an observed customer. The automated path is already measured"
+    },
+    {
+      "id": "K-13",
+      "set": "customer-success",
+      "class": "independent",
+      "needs": "Playwright, Selenium, JUnit, NUnit and pytest installed"
+    },
+    {
+      "id": "K-14",
+      "set": "customer-success",
+      "class": "independent",
+      "needs": "a clean-environment runner per language"
+    },
+    {
+      "id": "K-15",
+      "set": "customer-success",
+      "class": "deployment-alone",
+      "needs": "a container runtime"
+    },
+    {
+      "id": "G-1",
+      "set": "production",
+      "class": "deployment-alone",
+      "needs": "a container runtime"
+    },
+    {
+      "id": "G-2",
+      "set": "production",
+      "class": "deployment-and-more",
+      "needs": "a horizontally scaled deployment AND production load"
+    },
+    {
+      "id": "G-3",
+      "set": "production",
+      "class": "deployment-and-more",
+      "needs": "a deployment AND a 30-day window of real traffic"
+    },
+    {
+      "id": "G-4",
+      "set": "production",
+      "class": "deployment-and-more",
+      "needs": "a deployment AND a production incident to detect"
+    },
+    {
+      "id": "G-5",
+      "set": "production",
+      "class": "independent",
+      "needs": "a shared nonce store implementation — a deployment-topology decision (D-003). A container runtime does NOT provide one"
+    },
+    {
+      "id": "G-reports",
+      "set": "production",
+      "class": "transient",
+      "needs": "nothing — blocked only while its own validation run is failing"
+    },
+    {
+      "id": "GA-1",
+      "set": "deployment",
+      "class": "deployment-alone",
+      "needs": "a container runtime"
+    },
+    {
+      "id": "GA-2",
+      "set": "deployment",
+      "class": "deployment-alone",
+      "needs": "a container runtime"
+    },
+    {
+      "id": "GA-3",
+      "set": "deployment",
+      "class": "deployment-alone",
+      "needs": "a container runtime"
+    },
+    {
+      "id": "GA-4",
+      "set": "deployment",
+      "class": "deployment-alone",
+      "needs": "a container runtime"
+    },
+    {
+      "id": "GA-5",
+      "set": "deployment",
+      "class": "deployment-alone",
+      "needs": "a container runtime"
+    },
+    {
+      "id": "GA-6",
+      "set": "deployment",
+      "class": "deployment-alone",
+      "needs": "a container runtime"
+    },
+    {
+      "id": "GA-7",
+      "set": "deployment",
+      "class": "deployment-alone",
+      "needs": "a container runtime"
+    },
+    {
+      "id": "GA-8",
+      "set": "deployment",
+      "class": "deployment-alone",
+      "needs": "a container runtime"
+    },
+    {
+      "id": "GA-9",
+      "set": "deployment",
+      "class": "deployment-alone",
+      "needs": "a container runtime"
+    },
+    {
+      "id": "GA-10",
+      "set": "deployment",
+      "class": "deployment-alone",
+      "needs": "a container runtime"
+    }
+  ],
+  "unclassified": [],
+  "transient": [
+    "K-11",
+    "G-reports"
+  ],
+  "notImplemented": [
+    "Composition root",
+    "Policy decision point",
+    "AI runtime + provider abstraction",
+    "Capability registry",
+    "Certification service",
+    "Knowledge graph",
+    "Platform APIs beyond the gateway",
+    "Execution runtime",
+    "Browser execution",
+    "API execution",
+    "Performance execution",
+    "Security execution",
+    "Penetration execution",
+    "Tool mapping / adapters",
+    "AI provider mapping",
+    "Credential custody",
+    "Evidence custody",
+    "Degraded-mode operation",
+    "Plane-boundary integrity",
+    "AI-disabled operation"
+  ],
+  "openDebt": [
+    "D-019",
+    "D-003",
+    "D-006",
+    "D-005",
+    "D-007",
+    "D-008",
+    "D-009",
+    "D-010",
+    "D-011",
+    "D-012",
+    "D-013",
+    "D-014",
+    "D-015",
+    "D-016",
+    "D-017",
+    "D-018",
+    "D-024",
+    "D-023",
+    "D-039",
+    "D-038",
+    "D-040",
+    "D-041",
+    "D-042",
+    "D-043",
+    "D-044",
+    "D-045",
+    "D-047",
+    "D-048",
+    "D-049",
+    "D-050",
+    "D-051",
+    "D-054",
+    "D-055",
+    "D-056",
+    "D-059",
+    "D-057",
+    "D-068",
+    "D-067",
+    "D-075",
+    "D-080",
+    "D-081",
+    "D-082",
+    "D-083",
+    "D-084",
+    "D-085",
+    "D-086",
+    "D-087",
+    "D-088",
+    "D-089",
+    "D-090",
+    "D-091",
+    "D-092",
+    "D-093",
+    "D-094",
+    "D-098",
+    "D-097",
+    "D-096",
+    "D-095",
+    "D-099",
+    "D-100",
+    "D-101",
+    "D-102",
+    "D-103",
+    "D-104",
+    "D-105",
+    "D-106",
+    "D-107",
+    "D-108",
+    "D-109",
+    "D-110",
+    "D-111",
+    "D-112",
+    "D-113",
+    "D-114",
+    "D-115",
+    "D-116",
+    "D-117",
+    "D-118",
+    "D-119",
+    "D-120",
+    "D-121",
+    "D-122",
+    "D-123",
+    "D-124",
+    "D-125",
+    "D-126",
+    "D-128",
+    "D-129",
+    "D-130",
+    "D-131",
+    "D-132",
+    "D-133",
+    "D-134",
+    "D-135",
+    "D-136",
+    "D-137",
+    "D-138",
+    "D-139",
+    "D-140",
+    "D-141",
+    "D-142",
+    "D-146",
+    "D-147",
+    "D-148",
+    "D-149",
+    "D-144",
+    "D-145",
+    "D-143",
+    "D-127",
+    "D-076",
+    "D-077",
+    "D-078",
+    "D-079",
+    "D-074",
+    "D-073",
+    "D-072",
+    "D-071",
+    "D-069",
+    "D-070",
+    "D-066",
+    "D-064",
+    "D-065",
+    "D-060",
+    "D-061",
+    "D-062",
+    "D-063",
+    "D-058",
+    "D-052",
+    "D-053",
+    "D-046",
+    "D-037",
+    "D-036",
+    "D-035",
+    "D-034",
+    "D-033",
+    "D-032",
+    "D-031",
+    "D-030",
+    "D-029",
+    "D-028",
+    "D-027",
+    "D-026",
+    "D-025",
+    "D-022",
+    "D-021",
+    "D-020"
+  ]
+}

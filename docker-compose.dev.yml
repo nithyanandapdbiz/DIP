@@ -1,0 +1,43 @@
+# docker-compose.dev.yml — DEVX-0001 / CROSSPLANE-001 Workstream 3 (Intelligence-Plane side).
+# ADDITIVE developer override. Use with: docker compose -f docker-compose.yml -f docker-compose.dev.yml up --build
+# The production docker-compose.yml is NOT modified. This file orchestrates the local dev topology; it never
+# references the Execution Plane's filesystem (the EP image is supplied by the Execution-Plane repo via
+# ${DEV_EP_IMAGE}). No plane merge, no mock, no simulated EP, no production change.
+services:
+  # Developer Execution Plane — the REAL EP software, image OWNED + published by the Execution-Plane repo
+  # (carlislehomes). Placeholder image name; the EP repo delivers Dockerfile.dev + this image (WS1).
+  execution-plane-dev:
+    image: ${DEV_EP_IMAGE:-dbiz/execution-plane:dev}
+    environment:
+      - EP_MODE=dev
+      - EP_TENANT=developer-local
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS https://localhost:${DEV_EP_PORT:-8443}/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+    networks: [dbiz-dev]
+
+  # Developer-owned test target the EP drives (WS2 — provided by the EP repo / developer).
+  test-target-app:
+    image: ${DEV_TEST_APP_IMAGE:-dbiz/test-target:dev}
+    networks: [dbiz-dev]
+
+  # Existing Intelligence Plane service — dev overrides point at the dev EP + generated bindings.
+  # (Local provider selection comes from .env: DBIZ_ENV=local + DBIZ_*_BACKEND, per @dbiz/platform-providers.)
+  intelligence-plane:
+    environment:
+      - FTE_EXECUTION_PLANE_ENDPOINT=https://execution-plane-dev:${DEV_EP_PORT:-8443}
+      - FTE_RUNTIME_BINDINGS=/app/generated/dev-bindings.mjs
+    depends_on:
+      execution-plane-dev:
+        condition: service_healthy
+    volumes:
+      - dev-generated:/app/generated
+    networks: [dbiz-dev]
+
+networks:
+  dbiz-dev: {}
+
+volumes:
+  dev-generated: {}

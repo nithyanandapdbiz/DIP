@@ -1,0 +1,55 @@
+# DBiz Intelligence Plane — line-ending and diff policy.
+#
+# WHY THIS EXISTS. Developers work on Windows (core.autocrlf=true) while CI runs ubuntu-latest. Without
+# a policy, the same file checks in with different line endings depending on who committed it, which
+# produces whole-file phantom diffs and makes review and `git blame` unreliable. This file fixes the
+# normalised form IN THE REPOSITORY to LF while leaving each developer's working copy alone.
+#
+# This changes no file content: every path below is already stored with LF, so applying this policy is
+# a no-op for the current tree. It constrains future commits, not existing ones.
+
+# Default: detect text, store it as LF in the repository. Working-copy endings stay platform-native.
+* text=auto eol=lf
+
+# ── Explicit text types ────────────────────────────────────────────────────────
+*.ts       text eol=lf
+*.tsx      text eol=lf
+*.js       text eol=lf
+*.mjs      text eol=lf
+*.cjs      text eol=lf
+*.json     text eol=lf
+*.jsonl    text eol=lf
+*.md       text eol=lf
+*.yml      text eol=lf
+*.yaml     text eol=lf
+*.html     text eol=lf
+*.css      text eol=lf
+*.sh       text eol=lf
+*.sql      text eol=lf
+*.txt      text eol=lf
+.gitignore      text eol=lf
+.gitattributes  text eol=lf
+Dockerfile      text eol=lf
+
+# Shell scripts and Dockerfiles MUST be LF even on Windows — CRLF breaks the shebang and RUN lines
+# inside a Linux container. Covered above; restated here because it is a correctness rule, not style.
+
+# ── Binary: never normalise, never diff as text ────────────────────────────────
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.gif  binary
+*.ico  binary
+*.webp binary
+*.pdf  binary
+*.zip  binary
+*.gz   binary
+*.tgz  binary
+*.woff binary
+*.woff2 binary
+*.ttf  binary
+*.eot  binary
+
+# ── Generated / lock files: keep them out of review noise ──────────────────────
+# linguist-generated collapses them by default in diffs; they remain fully tracked and diffable.
+pnpm-lock.yaml text eol=lf linguist-generated=true

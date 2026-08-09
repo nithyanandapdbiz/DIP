@@ -1,0 +1,136 @@
+# Build deploy/Dockerfile, push to ACR, update Container App to a new revision.
+# Optionally apply non-secret env vars from variable group vg-dbiz-ip-dev.
+# Setup: deploy/azure/AZURE_DEVOPS.md (SP, sc-dbiz-ip-rg, vg-dbiz-ip-dev).
+
+parameters:
+  - name: updateEnvVars
+    displayName: Also update Container App environment variables
+    type: boolean
+    default: false
+
+trigger:
+  branches:
+    include:
+      - main
+  paths:
+    include:
+      - packages/**
+      - deploy/Dockerfile
+      - package.json
+      - pnpm-lock.yaml
+      - pnpm-workspace.yaml
+      - azure-pipelines/deploy-api.yml
+
+pr: none
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  - group: vg-dbiz-ip-dev
+  - name: UPDATE_ENV_VARS
+    value: ${{ parameters.updateEnvVars }}
+
+steps:
+  - checkout: self
+
+  - task: AzureCLI@2
+    displayName: Build, push image, update Container App
+    inputs:
+      azureSubscription: $(AZURE_SERVICE_CONNECTION)
+      scriptType: bash
+      scriptLocation: inlineScript
+      addSpnToEnvironment: true
+      inlineScript: |
+        set -euo pipefail
+
+        ACR="$(ACR_NAME)"
+        REPO="$(IMAGE_REPOSITORY)"
+        TAG="${BUILD_SOURCEVERSION:0:7}"
+        LOGIN_SERVER="${ACR}.azurecr.io"
+        IMAGE_SHA="${LOGIN_SERVER}/${REPO}:${TAG}"
+        IMAGE_LATEST="${LOGIN_SERVER}/${REPO}:latest"
+
+        echo "Building ${IMAGE_SHA} (and :latest)"
+        az acr login -n "${ACR}"
+
+        # D-144. The FULL sha reaches the process, while the image TAG stays abbreviated. The tag
+        # names an image; the baked value is compared for equality against a local HEAD, and a
+        # 7-character comparison is a prefix match wearing an identity's clothes.
+        docker build \
+          -f deploy/Dockerfile \
+          --build-arg BUILD_COMMIT="${BUILD_SOURCEVERSION}" \
+          -t "${IMAGE_SHA}" \
+          -t "${IMAGE_LATEST}" \
+          .
+
+        docker push "${IMAGE_SHA}"
+        docker push "${IMAGE_LATEST}"
+
+        UPDATE_ARGS=(
+          -g "$(RESOURCE_GROUP)"
+          -n "$(CONTAINER_APP_NAME)"
+          --image "${IMAGE_SHA}"
+        )
+
+        # AzureCLI@2 already exports AZURE_TENANT_ID / AZURE_CLIENT_ID for the service connection.
+        # App config uses IP_* / VITE_* from the variable group (expanded by ADO before bash runs).
+        if [ "$(UPDATE_ENV_VARS)" = "True" ] || [ "$(UPDATE_ENV_VARS)" = "true" ]; then
+          echo "Applying Container App environment variables from variable group..."
+          ENV_VARS=()
+
+          # ADO leaves $(VAR) as a literal string when the variable is undefined.
+          resolve() {
+            local raw="$1"
+            case "$raw" in
+              ""|\$\(*\)) echo "" ;;
+              *) echo "$raw" ;;
+            esac
+          }
+
+          # Prefer dedicated IP_* names; fall back to VITE_* for Entra ids (same public values).
+          TENANT_ID="$(resolve "$(IP_AZURE_TENANT_ID)")"
+          CLIENT_ID="$(resolve "$(IP_AZURE_CLIENT_ID)")"
+          if [ -z "${TENANT_ID}" ]; then TENANT_ID="$(resolve "$(VITE_AZURE_TENANT_ID)")"; fi
+          if [ -z "${CLIENT_ID}" ]; then CLIENT_ID="$(resolve "$(VITE_AZURE_CLIENT_ID)")"; fi
+
+          add_env() {
+            local name="$1"
+            local value
+            value="$(resolve "$2")"
+            if [ -n "${value}" ]; then
+              ENV_VARS+=("${name}=${value}")
+            fi
+          }
+
+          add_env "AZURE_TENANT_ID" "${TENANT_ID}"
+          add_env "AZURE_CLIENT_ID" "${CLIENT_ID}"
+          add_env "IP_ADMIN_ALLOWLIST" "$(IP_ADMIN_ALLOWLIST)"
+          add_env "AZURE_FRONTDOOR_ID" "$(IP_AZURE_FRONTDOOR_ID)"
+          add_env "DBIZ_REQUIRE_ENTRA_ROLES" "$(IP_DBIZ_REQUIRE_ENTRA_ROLES)"
+          add_env "DBIZ_CORS_ORIGINS" "$(IP_DBIZ_CORS_ORIGINS)"
+          add_env "REGISTRATION_ENDPOINT" "$(IP_REGISTRATION_ENDPOINT)"
+          add_env "PORT" "8080"
+          add_env "DBIZ_STATE_DIR" "/state"
+          add_env "NODE_ENV" "production"
+
+          if [ "${#ENV_VARS[@]}" -eq 0 ]; then
+            echo "##vso[task.logissue type=warning]updateEnvVars was true but no IP_*/VITE_* env values were set in vg-dbiz-ip-dev"
+          else
+            # --set-env-vars merges; does not remove SESSION_SECRET secretRef.
+            UPDATE_ARGS+=(--set-env-vars "${ENV_VARS[@]}")
+            printf 'Env vars to set:\n'
+            printf '  %s\n' "${ENV_VARS[@]}"
+          fi
+        else
+          echo "Skipping env update (updateEnvVars=false). Image only."
+        fi
+
+        echo "Updating Container App $(CONTAINER_APP_NAME) -> ${IMAGE_SHA}"
+        az containerapp update "${UPDATE_ARGS[@]}"
+
+        echo "Done. https://inteligenceplane.dbizsolution.com/api/health"
+        az containerapp revision list \
+          -g "$(RESOURCE_GROUP)" \
+          -n "$(CONTAINER_APP_NAME)" \
+          -o table

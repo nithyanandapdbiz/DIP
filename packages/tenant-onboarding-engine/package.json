@@ -1,0 +1,36 @@
+{
+  "name": "@dbiz/tenant-onboarding-engine",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Tenant Onboarding Engine — the consolidated Node bounded context for the tenant journey (ADR-0034): domain (onboard(), six frozen states, config schema, validation) + tenant.json SSOT repository + REST/authz + NestJS server. Preserves R-21.5, INV-2/3/9, the SSOT, R-11.4.",
+  "license": "UNLICENSED",
+  "type": "module",
+  "main": "./dist/src/index.js",
+  "types": "./dist/src/index.d.ts",
+  "exports": {
+    ".": { "types": "./dist/src/index.d.ts", "default": "./dist/src/index.js" },
+    "./web-client": { "types": "./dist/src/engine/web-client.d.ts", "default": "./dist/src/engine/web-client.js" },
+    "./dashboard": { "types": "./dist/src/engine/dashboard.d.ts", "default": "./dist/src/engine/dashboard.js" },
+    "./manifest-diff": { "types": "./dist/src/engine/manifest-diff.d.ts", "default": "./dist/src/engine/manifest-diff.js" },
+    "./authz": { "types": "./dist/src/engine/authz.d.ts", "default": "./dist/src/engine/authz.js" }
+  },
+  "engines": { "node": ">=24.0.0 <25" },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "node --test \"dist/test/*.test.js\""
+  },
+  "dependencies": {
+    "zod": "^4.0.0",
+    "@dbiz/contracts": "workspace:*",
+    "@dbiz/platform-core": "workspace:*",
+    "@dbiz/platform-runtime": "workspace:*",
+    "@dbiz/platform-providers": "workspace:*",
+    "@nestjs/common": "10.4.15",
+    "@nestjs/core": "10.4.15",
+    "@nestjs/platform-express": "10.4.15",
+    "@nestjs/swagger": "8.1.1",
+    "reflect-metadata": "0.2.2",
+    "rxjs": "7.8.1"
+  },
+  "devDependencies": { "typescript": "^5.7.0", "@types/node": "^24.0.0" }
+}

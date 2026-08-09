@@ -1,0 +1,22 @@
+{
+  "tenant": {
+    "tenantId": "tenant-example",
+    "registrationEndpoint": "https://gateway.example.test/v1/register"
+  },
+  "technologyProfile": {
+    "profileVersion": "1.0.0",
+    "language": "javascript",
+    "framework": "playwright",
+    "testRunner": "playwright-test",
+    "ciSystem": "github-actions",
+    "gitProvider": "github",
+    "cloudProvider": "azure",
+    "deploymentModel": "container",
+    "packageManager": "npm",
+    "reportingFramework": "allure",
+    "frameworkVersions": {
+      "@playwright/test": "1.49.0",
+      "allure-playwright": "3.0.7"
+    }
+  }
+}

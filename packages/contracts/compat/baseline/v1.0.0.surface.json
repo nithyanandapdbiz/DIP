@@ -1,0 +1,28 @@
+{
+  "execution-package": [
+    "capabilityId",
+    "contractVersion",
+    "correlationId",
+    "directives",
+    "evidenceRequirements",
+    "gates",
+    "operations",
+    "proceed",
+    "provenance",
+    "refusalReason",
+    "runId",
+    "validity"
+  ],
+  "evidence-reference": [
+    "assuranceState",
+    "capturedAt",
+    "classification",
+    "contentHash",
+    "contractVersion",
+    "evidenceId",
+    "expiresAt",
+    "outcome",
+    "packageHash",
+    "reason"
+  ]
+}

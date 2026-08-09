@@ -1,0 +1,3 @@
+
+# IP execution-gateway signing key (private) — never commit
+.execute-signing-key.pem

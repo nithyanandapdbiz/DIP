@@ -1,0 +1,70 @@
+# WS6 — supply-chain scanning + provenance (closes part of finding F-10).
+# ADDITIVE. Complements the existing every-commit SBOM/license/audit gate in
+# run-all.js with a vulnerability scanner (Trivy) and SLSA build provenance.
+# A finding above the declared severity fails the build (R-22.9).
+#
+# SBOM lifecycle (ADR-0063): the SBOM is a BUILD ARTIFACT, never repository source.
+# It is generated here from the resolved dependency tree, scanned, uploaded as a
+# build artifact, then downloaded and attested. It is never read from, nor
+# committed to, Git — so provenance can only ever sign what this build produced.
+name: supply-chain
+on:
+  push:
+    branches: ['**']
+  pull_request:
+
+permissions:
+  contents: read
+  id-token: write   # for provenance attestation (OIDC)
+  attestations: write
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '24' }
+      # The SBOM is derived from the RESOLVED dependency tree (pnpm licenses list),
+      # not from package.json — so the tree must be installed before it is generated.
+      - name: Install the resolved dependency tree (frozen)
+        run: |
+          corepack enable
+          pnpm install --frozen-lockfile
+      - name: Generate SBOM (CycloneDX) — build output, never read from Git (ADR-0063)
+        run: node governance/supply-chain/generate-sbom.js
+      - name: Trivy filesystem + dependency scan
+        # Pinned to a full commit SHA (v0.33.1): after the March-2025 supply-chain
+        # attack, trivy-action migrated every tag to a `v` prefix and removed the
+        # bare `0.28.0` tag, which no longer resolves. Pinning to a SHA is the
+        # practice this workflow exists to enforce — a mutable tag can be re-pointed.
+        uses: aquasecurity/trivy-action@b6643a29fecd7f34b3597bc6acb0a98b03d33ff8 # v0.33.1
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          severity: 'HIGH,CRITICAL'
+          exit-code: '1'          # HIGH/CRITICAL fails the build
+          ignore-unfixed: true
+      - name: Supply-chain governance gate (SBOM/license/lockfile/audit)
+        run: node governance/verification/verify-supply-chain.js
+      - name: Publish the scanned SBOM for provenance attestation
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom
+          path: governance/supply-chain/sbom.cdx.json
+          if-no-files-found: error
+
+  provenance:
+    needs: scan
+    runs-on: ubuntu-latest
+    permissions: { id-token: write, attestations: write, contents: read }
+    steps:
+      - name: Download the exact SBOM produced and scanned by the scan job
+        uses: actions/download-artifact@v4
+        with:
+          name: sbom
+          path: sbom
+      - name: Generate build provenance attestation (SLSA, closes SUP-05 / F-10)
+        uses: actions/attest-build-provenance@v1
+        with:
+          subject-path: 'sbom/sbom.cdx.json'

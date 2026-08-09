@@ -1,0 +1,18 @@
+# WS3 — ownership routing for mandatory review before merge.
+# Governance, architecture, and security surfaces require their owners' review.
+# Replace the placeholder teams with your real GitHub org teams.
+
+# Canonical architecture & ADRs — Enterprise Architecture Board
+/docs/architecture/            @dbiz/architecture-board
+/docs/adr/                     @dbiz/architecture-board
+
+# Governance engine and gates — Chief Governance Officer + Platform Eng
+/governance/                   @dbiz/governance @dbiz/platform-engineering
+
+# Security-sensitive surfaces — Security review required
+/packages/platform-runtime/    @dbiz/security @dbiz/platform-engineering
+/deploy/                       @dbiz/security @dbiz/cloud
+/.github/                      @dbiz/platform-engineering @dbiz/security
+
+# Programme state — programme owner
+/program/                      @dbiz/programme

@@ -1,0 +1,22 @@
+{
+  "name": "@dbiz/intelligence-plane",
+  "version": "0.1.0",
+  "private": true,
+  "description": "DBiz Intelligence Plane — reasons, decides, governs (Sovereign Split)",
+  "engines": { "node": ">=24.0.0 <25" },
+  "packageManager": "pnpm@11.15.1",
+  "scripts": {
+    "build": "pnpm -r build",
+    "test": "pnpm -r test",
+    "govern": "node governance/verification/run-all.js",
+    "//governance:workflow": "REMOVED with the Functional Testing Engine (ADR-0087). The seven governance:workflow:* scripts drove governance/functional-workflow/, whose entire subject was the canonical Functional Testing Workflow (ADR-0066) — the FWGA read CANONICAL_DOMAIN_SEQUENCE out of the engine's own source. `verify` no longer chains it; it is not replaced, because there is no second workflow for it to govern.",
+    "verify": "pnpm build && pnpm test && pnpm govern",
+    "dev": "docker compose up --build",
+    "dev:down": "docker compose down -v",
+    "dev:local": "pnpm --filter @dbiz/tenant-onboarding-engine build && node packages/tenant-onboarding-engine/run-server.mjs"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.0",
+    "@types/node": "^24.0.0"
+  }
+}

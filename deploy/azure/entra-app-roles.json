@@ -1,0 +1,49 @@
+{
+  "$comment": [
+    "THE DBIZ APPLICATION ROLES, AS A DEPLOYABLE ARTEFACT.",
+    "",
+    "These roles belong to the solution, not to whoever last clicked through the Azure portal. The",
+    "role vocabulary is defined in code — ENTRA_ROLE_MAP in",
+    "packages/tenant-onboarding-engine/src/engine/microsoft-auth.ts — and the API refuses any identity",
+    "whose directory role is not in that closed table. Until this file existed, the vocabulary lived",
+    "ONLY in TypeScript: nothing declared the roles for provisioning and nothing created them, so every",
+    "deployment had to reproduce them by hand from prose. That is how an environment reaches production",
+    "with the role check enabled and no role to satisfy it.",
+    "",
+    "'id' values are STABLE. Azure keys assignments by role id, so regenerating them orphans every",
+    "existing assignment. Never change an id; add a new role instead.",
+    "",
+    "'value' is what Entra puts in the token's `roles` claim and is the ONLY field the API matches.",
+    "The display name is for humans and is matched by nothing.",
+    "",
+    "Apply with deploy/azure/provision-entra-app-roles.sh. Kept in sync with the code table by",
+    "packages/tenant-onboarding-engine/test/entra-app-roles.conformance.test.ts, which fails if the two",
+    "drift apart."
+  ],
+  "appRoles": [
+    {
+      "id": "5805a71a-0d95-4443-9ea2-4b7627386b40",
+      "allowedMemberTypes": ["User"],
+      "displayName": "DBiz Platform Admin",
+      "value": "DBiz.Platform.Admin",
+      "description": "Global administrator of the Intelligence Plane. Onboards and manages every tenant, issues Execution Plane credentials, and publishes updates. Carries no tenant scope because it is not confined to one.",
+      "isEnabled": true
+    },
+    {
+      "id": "4f6df170-9c7c-42c7-8ff9-d10b60517c86",
+      "allowedMemberTypes": ["User"],
+      "displayName": "DBiz Tenant Admin",
+      "value": "DBiz.Tenant.Admin",
+      "description": "Administers only the tenants granted by group membership (DBIZ_GROUP_TENANT_MAP). An unmapped group grants no tenant at all, so this role is useless until the mapping exists — deliberately, so scope is never assumed.",
+      "isEnabled": true
+    },
+    {
+      "id": "74ffda65-e404-48f9-9d49-7164a34fac49",
+      "allowedMemberTypes": ["User"],
+      "displayName": "DBiz Viewer",
+      "value": "DBiz.Viewer",
+      "description": "Read-only access to tenant configuration and status. Makes no changes.",
+      "isEnabled": true
+    }
+  ]
+}

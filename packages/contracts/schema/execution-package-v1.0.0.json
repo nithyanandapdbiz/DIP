@@ -1,0 +1,289 @@
+{
+  "$id": "https://contracts.dbiz.platform/execution-package/v1.0.0",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "allOf": [
+    {
+      "type": "object",
+      "properties": {
+        "contractVersion": {
+          "type": "string",
+          "minLength": 1
+        },
+        "runId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "correlationId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "capabilityId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "operations": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "operationId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 256
+              },
+              "kind": {
+                "type": "string",
+                "minLength": 1
+              },
+              "parameters": {
+                "default": {},
+                "type": "object",
+                "propertyNames": {
+                  "type": "string"
+                },
+                "additionalProperties": {}
+              }
+            },
+            "required": [
+              "operationId",
+              "kind"
+            ],
+            "additionalProperties": {}
+          }
+        },
+        "directives": {
+          "type": "object",
+          "properties": {
+            "timeoutMs": {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991
+            },
+            "maxAttempts": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9007199254740991
+            },
+            "maxConcurrency": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9007199254740991
+            },
+            "mode": {
+              "type": "string",
+              "enum": [
+                "live",
+                "dry-run"
+              ]
+            }
+          },
+          "required": [
+            "timeoutMs",
+            "maxAttempts",
+            "maxConcurrency",
+            "mode"
+          ],
+          "additionalProperties": {}
+        },
+        "gates": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "gateId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 256
+              },
+              "expression": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "gateId",
+              "expression"
+            ],
+            "additionalProperties": {}
+          }
+        },
+        "evidenceRequirements": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "requirementId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 256
+              },
+              "classification": {
+                "type": "string",
+                "enum": [
+                  "C1",
+                  "C2",
+                  "C3",
+                  "C4",
+                  "C5"
+                ]
+              },
+              "required": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "requirementId",
+              "classification",
+              "required"
+            ],
+            "additionalProperties": {}
+          }
+        },
+        "provenance": {
+          "type": "object",
+          "properties": {
+            "authoredBy": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "tenantId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "authoredAt": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+            },
+            "contractVersion": {
+              "type": "string",
+              "minLength": 1
+            },
+            "signingKeyId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "contentHash": {
+              "type": "object",
+              "properties": {
+                "algorithm": {
+                  "type": "string",
+                  "enum": [
+                    "sha256-jcs-v1"
+                  ]
+                },
+                "domain": {
+                  "type": "string",
+                  "enum": [
+                    "dbiz.execution-package@1",
+                    "dbiz.evidence-record@1",
+                    "dbiz.evidence-payload@1",
+                    "dbiz.decision@1"
+                  ]
+                },
+                "value": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                }
+              },
+              "required": [
+                "algorithm",
+                "domain",
+                "value"
+              ]
+            }
+          },
+          "required": [
+            "authoredBy",
+            "tenantId",
+            "authoredAt",
+            "contractVersion",
+            "signingKeyId",
+            "contentHash"
+          ],
+          "additionalProperties": {}
+        },
+        "validity": {
+          "type": "object",
+          "properties": {
+            "notBefore": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+            },
+            "notAfter": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+            },
+            "reusableWhileUnavailable": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "notBefore",
+            "notAfter",
+            "reusableWhileUnavailable"
+          ],
+          "additionalProperties": {}
+        }
+      },
+      "required": [
+        "contractVersion",
+        "runId",
+        "correlationId",
+        "capabilityId",
+        "operations",
+        "directives",
+        "gates",
+        "evidenceRequirements",
+        "provenance",
+        "validity"
+      ]
+    },
+    {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "proceed": {
+              "type": "boolean",
+              "const": true
+            }
+          },
+          "required": [
+            "proceed"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "proceed": {
+              "type": "boolean",
+              "const": false
+            },
+            "refusalReason": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "proceed",
+            "refusalReason"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "object",
+      "properties": {},
+      "additionalProperties": {}
+    }
+  ]
+}

@@ -1,0 +1,57 @@
+# DBiz Intelligence Plane — local development topology (ADR-0060).
+#
+# One command brings up the SAME image that ships to Azure Container Apps, plus a local Redis that
+# stands in for Azure Cache for Redis. Nothing here is Azure-specific: the container is configured
+# entirely through environment variables (env_file + environment), exactly as Container Apps configures
+# it. No Azure account is required.
+#
+#   docker compose up --build
+#
+# Then: http://localhost:8080/api/health · Swagger at /api/docs.
+#
+# In Azure the identical image runs with SESSION_SECRET sourced from Key Vault (secretRef → env),
+# /state mounted from Azure Files, and REDIS_URL pointing at Azure Cache for Redis — same binary,
+# configuration-only difference (R-17.15).
+services:
+  redis:
+    image: redis:7-alpine
+    command: ["redis-server", "--save", "", "--appendonly", "no"]
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  intelligence-plane:
+    build:
+      context: .
+      dockerfile: deploy/Dockerfile
+    env_file:
+      - .env
+    environment:
+      # Infrastructure selection is configuration, never code (ADR-0060 / R-17.15).
+      PORT: "8080"
+      DBIZ_STATE_DIR: /state
+      DBIZ_STORAGE_BACKEND: filesystem
+      DBIZ_SECRET_BACKEND: env
+      # M-a (done): config + secret adopted via bootstrapPlatform. The Distributed-State consumer is M-b —
+      # it needs the injected ioredis client factory before the redis backend can be selected. Until then
+      # the platform uses the in-memory backend (correct at a single replica).
+      DBIZ_STATE_BACKEND: memory
+      # REDIS_URL: redis://redis:6379   # uncomment at M-b once the injected Redis client factory is wired
+      DBIZ_ENV: local
+      NODE_ENV: production
+      # LOCAL ONLY — the unsigned dev:<email> verifier. MUST be unset in Azure.
+      DBIZ_DEV_AUTH: "1"
+    ports:
+      - "8080:8080"
+    volumes:
+      - dbiz-state:/state
+    depends_on:
+      redis:
+        condition: service_healthy
+
+volumes:
+  dbiz-state: {}

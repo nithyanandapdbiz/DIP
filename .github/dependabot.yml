@@ -1,0 +1,23 @@
+# WS6 — automated dependency updates (closes part of finding F-10).
+# Weekly PRs for npm + GitHub Actions; grouped to keep review load sane. Each PR
+# is gated by the existing supply-chain gate (SBOM/license/lockfile/audit) and by
+# the governance verification suite (governance/verification/run-all.js, the `verify`
+# job), so a malicious or advisory-bearing update cannot merge silently.
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule: { interval: "weekly" }
+    open-pull-requests-limit: 10
+    groups:
+      dev-dependencies:
+        dependency-type: "development"
+      production-dependencies:
+        dependency-type: "production"
+    commit-message:
+      prefix: "chore(deps)"
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule: { interval: "weekly" }
+    commit-message:
+      prefix: "chore(ci)"

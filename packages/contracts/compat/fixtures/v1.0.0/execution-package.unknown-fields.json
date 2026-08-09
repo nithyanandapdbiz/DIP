@@ -1,0 +1,44 @@
+{
+  "contractVersion": "1.0.0",
+  "runId": "run-unknown",
+  "correlationId": "corr-unknown",
+  "capabilityId": "functional-testing",
+  "proceed": true,
+  "operations": [],
+  "directives": {
+    "timeoutMs": 1000,
+    "maxAttempts": 1,
+    "maxConcurrency": 1,
+    "mode": "dry-run",
+    "futureDirective": "ignored-by-older-consumers"
+  },
+  "gates": [],
+  "evidenceRequirements": [],
+  "provenance": {
+    "authoredBy": "ip",
+    "tenantId": "t1",
+    "authoredAt": "2026-07-22T10:00:00Z",
+    "contractVersion": "1.0.0",
+    "signingKeyId": "k1",
+    "contentHash": {
+      "algorithm": "sha256-jcs-v1",
+      "domain": "dbiz.execution-package@1",
+      "value": "0000000000000000000000000000000000000000000000000000000000000000"
+    }
+  },
+  "validity": {
+    "notBefore": "2026-07-22T10:00:00Z",
+    "notAfter": "2026-07-22T11:00:00Z",
+    "reusableWhileUnavailable": false
+  },
+  "futureField": {
+    "addedIn": "1.1.0",
+    "nested": [
+      1,
+      2,
+      {
+        "deep": true
+      }
+    ]
+  }
+}

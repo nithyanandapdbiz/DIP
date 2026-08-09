@@ -1,0 +1,145 @@
+{
+  "payload": {
+    "schemaVersion": "1.0.0",
+    "certificationId": "epcert-726d57c47338d5d7",
+    "executionId": "exec-fbc9fc5ead77427e",
+    "plane": "execution",
+    "capability": "functional-testing",
+    "runtimeVersion": "node v24.14.1, playwright 1.62.0",
+    "contractVersion": "1.0.0",
+    "executedAt": "2026-07-27T14:01:41.965Z",
+    "verdict": "CERTIFIED",
+    "governanceResults": [
+      {
+        "id": "G-1",
+        "property": "browser launches",
+        "ok": true,
+        "detail": "real browser via I2-browser adapter"
+      },
+      {
+        "id": "G-6",
+        "property": "browser closes / resources released",
+        "ok": true,
+        "detail": "context + browser closed"
+      },
+      {
+        "id": "G-2.screenshot",
+        "property": "screenshot captured",
+        "ok": true,
+        "detail": "present"
+      },
+      {
+        "id": "G-2.video",
+        "property": "video captured",
+        "ok": true,
+        "detail": "present"
+      },
+      {
+        "id": "G-2.trace",
+        "property": "trace captured",
+        "ok": true,
+        "detail": "present"
+      },
+      {
+        "id": "G-2.har",
+        "property": "har captured",
+        "ok": true,
+        "detail": "present"
+      },
+      {
+        "id": "G-2.console",
+        "property": "console captured",
+        "ok": true,
+        "detail": "present"
+      },
+      {
+        "id": "G-2.dom",
+        "property": "dom captured",
+        "ok": true,
+        "detail": "present"
+      },
+      {
+        "id": "G-3",
+        "property": "evidence integrity — references carry hash+locator, no content",
+        "ok": true,
+        "detail": "9 references, hash-only"
+      },
+      {
+        "id": "G-4",
+        "property": "failure handling — a failed step is evidenced, not swallowed",
+        "ok": true,
+        "detail": "failed step captured a screenshot"
+      }
+    ],
+    "evidenceReferences": [
+      {
+        "kind": "screenshot",
+        "name": "step-01.png",
+        "sha256": "fa5600efa69171668cf53aaf1e8d653ddd087e1ddc53833fea923eb2b1eaab36",
+        "bytes": 6390,
+        "locator": "tnt/functional-testing/run/step-01.png"
+      },
+      {
+        "kind": "screenshot",
+        "name": "step-02.png",
+        "sha256": "f58c8a13bbf131e843107e136c1b6a5f16c1b854b51402af89758c395f255414",
+        "bytes": 6973,
+        "locator": "tnt/functional-testing/run/step-02.png"
+      },
+      {
+        "kind": "screenshot",
+        "name": "step-03.png",
+        "sha256": "f58c8a13bbf131e843107e136c1b6a5f16c1b854b51402af89758c395f255414",
+        "bytes": 6973,
+        "locator": "tnt/functional-testing/run/step-03.png"
+      },
+      {
+        "kind": "screenshot",
+        "name": "step-04.png",
+        "sha256": "f58c8a13bbf131e843107e136c1b6a5f16c1b854b51402af89758c395f255414",
+        "bytes": 6973,
+        "locator": "tnt/functional-testing/run/step-04.png"
+      },
+      {
+        "kind": "video",
+        "name": "page@0927cc0656aaf0f6868f6dc5a74a1c19.webm",
+        "sha256": "0cbfa51761ec3b3181bf655c895104813a0066dd3ad4792255f94da0bfeb063a",
+        "bytes": 7221,
+        "locator": "tnt/functional-testing/run/page@0927cc0656aaf0f6868f6dc5a74a1c19.webm"
+      },
+      {
+        "kind": "trace",
+        "name": "trace.zip",
+        "sha256": "c43680757398ed9b692c18ce42b7cf73ead74362a3eedfdd53004bd589b46594",
+        "bytes": 28088,
+        "locator": "tnt/functional-testing/run/trace.zip"
+      },
+      {
+        "kind": "har",
+        "name": "network.har",
+        "sha256": "f4d132e6f8f17643513a9ad7c01095de8c89ebdef6622437b4c5995e03fcdd35",
+        "bytes": 1586,
+        "locator": "tnt/functional-testing/run/network.har"
+      },
+      {
+        "kind": "console",
+        "name": "console.json",
+        "sha256": "32a9c0f3fa1e9dda7879d48a25df2f77edf34a7351ea7272c38edf7bffeb597f",
+        "bytes": 63,
+        "locator": "tnt/functional-testing/run/console.json"
+      },
+      {
+        "kind": "dom",
+        "name": "dom.html",
+        "sha256": "ba24e7fe0416377b5e2a81e937c834b4e275cdde437acf3b05ea633f860f33ea",
+        "bytes": 314,
+        "locator": "tnt/functional-testing/run/dom.html"
+      }
+    ],
+    "evidenceRoot": "tnt/functional-testing/run"
+  },
+  "contentHash": "8ee02c3b9f0a3f7f8941acb2df6ae88b49c874057e1af3e9e67351a2280f7c4f",
+  "signature": "bgFq2k2Tqiq2gqoY23eWpfAj2nGV/6cf43C4MPKDsYezbLpXN384b9fbN21GRIKLCMDI7j4PW/VbyelLFHbECQ==",
+  "algorithm": "ed25519",
+  "keyId": "ep-cert-v1"
+}

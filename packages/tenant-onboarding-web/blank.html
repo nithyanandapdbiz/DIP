@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Signing in…</title>
+    <meta name="robots" content="noindex" />
+  </head>
+  <!--
+    THE MICROSOFT SIGN-IN CALLBACK. A Vite entry point, not a static asset — it must be BUILT so the
+    hashed bridge script below is injected. Moving it back to public/ ships it without a script, and
+    sign-in then hangs on a white screen (see src/auth/redirect-bridge.ts for why).
+
+    Register in Entra (App registration → Authentication → Single-page application):
+      https://inteligenceplane.dbizsolution.com/blank.html
+  -->
+  <body>
+    <script type="module" src="/src/auth/redirect-bridge.ts"></script>
+  </body>
+</html>

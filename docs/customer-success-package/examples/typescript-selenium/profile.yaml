@@ -1,0 +1,23 @@
+# DBiz Execution Plane — tenant configuration
+# Synthetic values throughout. Replace tenantId and registrationEndpoint with the
+# ones issued to you during onboarding.
+tenant:
+  tenantId: tenant-example
+  registrationEndpoint: https://gateway.example.test/v1/register
+technologyProfile:
+  profileVersion: 1.0.0
+  language: typescript
+  framework: selenium
+  testRunner: jest
+  ciSystem: github-actions
+  gitProvider: github
+  cloudProvider: azure
+  deploymentModel: container
+  packageManager: pnpm
+  reportingFramework: allure
+  frameworkVersions:
+    @types/selenium-webdriver: "4.1.28"
+    allure-jest: "3.0.7"
+    jest: "29.7.0"
+    selenium-webdriver: "4.27.0"
+    typescript: "5.7.2"

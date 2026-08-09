@@ -1,0 +1,23 @@
+{
+  "contractVersion": "1.0.0",
+  "runId": "run-full",
+  "correlationId": "corr-full",
+  "capabilityId": "penetration-testing",
+  "proceed": true,
+  "operations": [
+    { "operationId": "op-1", "kind": "browser.navigate", "parameters": { "url": "https://example.test" } },
+    { "operationId": "op-2", "kind": "api.invoke", "parameters": { "method": "GET" } }
+  ],
+  "directives": { "timeoutMs": 30000, "maxAttempts": 3, "maxConcurrency": 8, "mode": "live" },
+  "gates": [{ "gateId": "g-1", "expression": "all(steps.passed)" }],
+  "evidenceRequirements": [
+    { "requirementId": "r-1", "classification": "C1", "required": true },
+    { "requirementId": "r-2", "classification": "C3", "required": false }
+  ],
+  "provenance": {
+    "authoredBy": "ip-authoring", "tenantId": "carlisle-homes", "authoredAt": "2026-07-22T10:05:00Z",
+    "contractVersion": "1.0.0", "signingKeyId": "key-2026-07",
+    "contentHash": { "algorithm": "sha256-jcs-v1", "domain": "dbiz.execution-package@1", "value": "1111111111111111111111111111111111111111111111111111111111111111" }
+  },
+  "validity": { "notBefore": "2026-07-22T10:05:00Z", "notAfter": "2026-07-22T10:35:00Z", "reusableWhileUnavailable": true }
+}

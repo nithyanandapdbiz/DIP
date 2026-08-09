@@ -1,0 +1,23 @@
+{
+  "tenant": {
+    "tenantId": "tenant-example",
+    "registrationEndpoint": "https://gateway.example.test/v1/register"
+  },
+  "technologyProfile": {
+    "profileVersion": "1.0.0",
+    "language": "java",
+    "framework": "selenium",
+    "testRunner": "junit5",
+    "ciSystem": "github-actions",
+    "gitProvider": "github",
+    "cloudProvider": "azure",
+    "deploymentModel": "container",
+    "packageManager": "maven",
+    "reportingFramework": "allure",
+    "frameworkVersions": {
+      "io.qameta.allure:allure-junit5": "2.29.0",
+      "org.junit.jupiter:junit-jupiter": "5.11.3",
+      "org.seleniumhq.selenium:selenium-java": "4.27.0"
+    }
+  }
+}

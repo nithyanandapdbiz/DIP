@@ -1,0 +1,6 @@
+{
+  "keyId": "ep-cert-v1",
+  "algorithm": "ed25519",
+  "publicKeyPem": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEA1rZu+WJFUj2axLStds3sOCWCKs8gi4aZDOpvVKgYRRg=\n-----END PUBLIC KEY-----\n",
+  "source": "EP registration trust anchor (public key — not a secret)"
+}

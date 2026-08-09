@@ -1,0 +1,669 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "DBiz Agentic QA Platform — Intelligence Plane API",
+    "version": "1.0.0",
+    "description": "Generated from the published contract schemas and from the gateway's observed\nbehaviour. It is not maintained by hand.\n\nThe Execution Plane always initiates. The Intelligence Plane never opens a\nconnection into a customer tenancy, for any purpose.",
+    "license": {
+      "name": "UNLICENSED"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://gateway.example.test",
+      "description": "Synthetic host. Replace with the endpoint issued during onboarding."
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "mutualTLS": {
+        "type": "mutualTLS",
+        "description": "A client certificate issued to your tenant during registration. The tenant is bound in the subject CN and in a SAN URI (urn:dbiz:tenant:<id>). Certificates rotate; the previous certificate keeps working until it is revoked."
+      },
+      "oauth2": {
+        "type": "oauth2",
+        "description": "An access token bound to the certificate key via the `cnf.kid` confirmation claim. Presenting the token on a different certificate is refused: a stolen token is useless without the private key it was bound to.",
+        "flows": {
+          "clientCredentials": {
+            "tokenUrl": "https://gateway.example.test/v1/token",
+            "scopes": {
+              "execution:invoke": "Submit execution packages for your tenant."
+            }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "EvidenceReference": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "contractVersion": {
+                "type": "string",
+                "minLength": 1
+              },
+              "evidenceId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 256
+              },
+              "packageHash": {
+                "type": "object",
+                "properties": {
+                  "algorithm": {
+                    "type": "string",
+                    "enum": [
+                      "sha256-jcs-v1"
+                    ]
+                  },
+                  "domain": {
+                    "type": "string",
+                    "enum": [
+                      "dbiz.execution-package@1",
+                      "dbiz.evidence-record@1",
+                      "dbiz.evidence-payload@1",
+                      "dbiz.decision@1"
+                    ]
+                  },
+                  "value": {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{64}$"
+                  }
+                },
+                "required": [
+                  "algorithm",
+                  "domain",
+                  "value"
+                ]
+              },
+              "contentHash": {
+                "type": "object",
+                "properties": {
+                  "algorithm": {
+                    "type": "string",
+                    "enum": [
+                      "sha256-jcs-v1"
+                    ]
+                  },
+                  "domain": {
+                    "type": "string",
+                    "enum": [
+                      "dbiz.execution-package@1",
+                      "dbiz.evidence-record@1",
+                      "dbiz.evidence-payload@1",
+                      "dbiz.decision@1"
+                    ]
+                  },
+                  "value": {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{64}$"
+                  }
+                },
+                "required": [
+                  "algorithm",
+                  "domain",
+                  "value"
+                ]
+              },
+              "classification": {
+                "type": "string",
+                "enum": [
+                  "C1",
+                  "C2",
+                  "C3",
+                  "C4",
+                  "C5"
+                ]
+              },
+              "capturedAt": {
+                "type": "string",
+                "format": "date-time",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+              },
+              "expiresAt": {
+                "type": "string",
+                "format": "date-time",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+              },
+              "assuranceState": {
+                "type": "string",
+                "enum": [
+                  "CERTIFIED",
+                  "DEGRADED",
+                  "DEGRADED_UNCERTIFIED",
+                  "HALTED"
+                ]
+              }
+            },
+            "required": [
+              "contractVersion",
+              "evidenceId",
+              "packageHash",
+              "contentHash",
+              "classification",
+              "capturedAt",
+              "expiresAt",
+              "assuranceState"
+            ]
+          },
+          {
+            "oneOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "outcome": {
+                    "type": "string",
+                    "const": "captured"
+                  }
+                },
+                "required": [
+                  "outcome"
+                ]
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "outcome": {
+                    "type": "string",
+                    "const": "empty"
+                  }
+                },
+                "required": [
+                  "outcome"
+                ]
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "outcome": {
+                    "type": "string",
+                    "const": "not-applicable"
+                  },
+                  "reason": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "required": [
+                  "outcome",
+                  "reason"
+                ]
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "outcome": {
+                    "type": "string",
+                    "const": "failed"
+                  },
+                  "reason": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "required": [
+                  "outcome",
+                  "reason"
+                ]
+              }
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {},
+            "additionalProperties": {}
+          }
+        ]
+      },
+      "ExecutionPackage": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "contractVersion": {
+                "type": "string",
+                "minLength": 1
+              },
+              "runId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 256
+              },
+              "correlationId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 256
+              },
+              "capabilityId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 256
+              },
+              "operations": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "operationId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 256
+                    },
+                    "kind": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "parameters": {
+                      "default": {},
+                      "type": "object",
+                      "propertyNames": {
+                        "type": "string"
+                      },
+                      "additionalProperties": {}
+                    }
+                  },
+                  "required": [
+                    "operationId",
+                    "kind"
+                  ],
+                  "additionalProperties": {}
+                }
+              },
+              "directives": {
+                "type": "object",
+                "properties": {
+                  "timeoutMs": {
+                    "type": "integer",
+                    "exclusiveMinimum": 0,
+                    "maximum": 9007199254740991
+                  },
+                  "maxAttempts": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 9007199254740991
+                  },
+                  "maxConcurrency": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 9007199254740991
+                  },
+                  "mode": {
+                    "type": "string",
+                    "enum": [
+                      "live",
+                      "dry-run"
+                    ]
+                  }
+                },
+                "required": [
+                  "timeoutMs",
+                  "maxAttempts",
+                  "maxConcurrency",
+                  "mode"
+                ],
+                "additionalProperties": {}
+              },
+              "gates": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "gateId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 256
+                    },
+                    "expression": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "required": [
+                    "gateId",
+                    "expression"
+                  ],
+                  "additionalProperties": {}
+                }
+              },
+              "evidenceRequirements": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "requirementId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 256
+                    },
+                    "classification": {
+                      "type": "string",
+                      "enum": [
+                        "C1",
+                        "C2",
+                        "C3",
+                        "C4",
+                        "C5"
+                      ]
+                    },
+                    "required": {
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "requirementId",
+                    "classification",
+                    "required"
+                  ],
+                  "additionalProperties": {}
+                }
+              },
+              "provenance": {
+                "type": "object",
+                "properties": {
+                  "authoredBy": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 256
+                  },
+                  "tenantId": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 256
+                  },
+                  "authoredAt": {
+                    "type": "string",
+                    "format": "date-time",
+                    "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                  },
+                  "contractVersion": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "signingKeyId": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 256
+                  },
+                  "contentHash": {
+                    "type": "object",
+                    "properties": {
+                      "algorithm": {
+                        "type": "string",
+                        "enum": [
+                          "sha256-jcs-v1"
+                        ]
+                      },
+                      "domain": {
+                        "type": "string",
+                        "enum": [
+                          "dbiz.execution-package@1",
+                          "dbiz.evidence-record@1",
+                          "dbiz.evidence-payload@1",
+                          "dbiz.decision@1"
+                        ]
+                      },
+                      "value": {
+                        "type": "string",
+                        "pattern": "^[0-9a-f]{64}$"
+                      }
+                    },
+                    "required": [
+                      "algorithm",
+                      "domain",
+                      "value"
+                    ]
+                  }
+                },
+                "required": [
+                  "authoredBy",
+                  "tenantId",
+                  "authoredAt",
+                  "contractVersion",
+                  "signingKeyId",
+                  "contentHash"
+                ],
+                "additionalProperties": {}
+              },
+              "validity": {
+                "type": "object",
+                "properties": {
+                  "notBefore": {
+                    "type": "string",
+                    "format": "date-time",
+                    "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                  },
+                  "notAfter": {
+                    "type": "string",
+                    "format": "date-time",
+                    "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                  },
+                  "reusableWhileUnavailable": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "notBefore",
+                  "notAfter",
+                  "reusableWhileUnavailable"
+                ],
+                "additionalProperties": {}
+              }
+            },
+            "required": [
+              "contractVersion",
+              "runId",
+              "correlationId",
+              "capabilityId",
+              "operations",
+              "directives",
+              "gates",
+              "evidenceRequirements",
+              "provenance",
+              "validity"
+            ]
+          },
+          {
+            "oneOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "proceed": {
+                    "type": "boolean",
+                    "const": true
+                  }
+                },
+                "required": [
+                  "proceed"
+                ]
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "proceed": {
+                    "type": "boolean",
+                    "const": false
+                  },
+                  "refusalReason": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "required": [
+                  "proceed",
+                  "refusalReason"
+                ]
+              }
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {},
+            "additionalProperties": {}
+          }
+        ]
+      },
+      "Refusal": {
+        "type": "object",
+        "required": [
+          "status",
+          "reason"
+        ],
+        "properties": {
+          "status": {
+            "type": "integer",
+            "description": "HTTP-equivalent status the gateway returned."
+          },
+          "reason": {
+            "type": "string",
+            "description": "Why the request was refused. Always present on a refusal."
+          }
+        },
+        "description": "Every refusal carries a reason. A refusal without one is indistinguishable from a fault."
+      }
+    },
+    "responses": {
+      "401AccessTokenRequired": {
+        "description": "access token required. Obtain a token bound to the certificate you are presenting. After rotating, fetch a new one.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Refusal"
+            },
+            "example": {
+              "status": 401,
+              "reason": "access token required"
+            }
+          }
+        }
+      },
+      "401ClientCertificateRequired": {
+        "description": "client certificate required. Present your client certificate. Mutual TLS is required; a token alone is never sufficient.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Refusal"
+            },
+            "example": {
+              "status": 401,
+              "reason": "client certificate required"
+            }
+          }
+        }
+      },
+      "401TokenCertificateMismatch": {
+        "description": "token certificate-mismatch. Obtain a token bound to the certificate you are presenting. After rotating, fetch a new one.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Refusal"
+            },
+            "example": {
+              "status": 401,
+              "reason": "token certificate-mismatch"
+            }
+          }
+        }
+      },
+      "403NotAuthorisedForThisPath": {
+        "description": "not authorised for this path. Authenticated, but not entitled to what you asked for. Reissuing credentials will not change this — check the path and the tenant.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Refusal"
+            },
+            "example": {
+              "status": 403,
+              "reason": "not authorised for this path"
+            }
+          }
+        }
+      },
+      "403TenantScopeMayNotBeAssertedByTheCaller": {
+        "description": "tenant scope may not be asserted by the caller. Authenticated, but not entitled to what you asked for. Reissuing credentials will not change this — check the path and the tenant.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Refusal"
+            },
+            "example": {
+              "status": 403,
+              "reason": "tenant scope may not be asserted by the caller"
+            }
+          }
+        }
+      }
+    }
+  },
+  "paths": {
+    "/v1/execute": {
+      "post": {
+        "summary": "Invoke /v1/execute",
+        "description": "Requires BOTH a client certificate and an OAuth access token bound to that certificate. Either alone is refused. The tenant is taken from the certificate; a tenant identifier supplied in the request body is treated as an attack.",
+        "operationId": "v1Execute",
+        "security": [
+          {
+            "mutualTLS": [],
+            "oauth2": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExecutionPackage"
+              },
+              "example": {
+                "path": "/v1/execute",
+                "token": "<access-token-issued-during-registration>",
+                "nonce": "nonce-example-0001",
+                "body": {
+                  "contractVersion": "1.0.0",
+                  "runId": "run-example-0001",
+                  "correlationId": "corr-example-0001",
+                  "capabilityId": "functional-testing",
+                  "operations": [
+                    {
+                      "operationId": "op-example-0001",
+                      "kind": "navigate",
+                      "target": "https://app.example.test/"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Accepted and served.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": 200,
+                  "tenantId": "tenant-example",
+                  "body": {
+                    "accepted": true
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/401TokenCertificateMismatch"
+          },
+          "403": {
+            "$ref": "#/components/responses/403TenantScopeMayNotBeAssertedByTheCaller"
+          }
+        }
+      }
+    }
+  },
+  "security": [
+    {
+      "mutualTLS": [],
+      "oauth2": []
+    }
+  ]
+}

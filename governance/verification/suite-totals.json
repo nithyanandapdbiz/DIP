@@ -1,0 +1,43 @@
+{
+  "recordedBy": "verify-suite-integrity.js --relock",
+  "note": "Declared test counts per package. A DROP fails the gate; a rise passes and is re-cut here deliberately.",
+  "reductions": [
+    {
+      "reason": "ADR-0061 §6 step 6 / ADR-0077 — the legacy authoring runtime is deleted. 218 tests removed, named per file: conformance.test.ts 78 · authoring-specification-conformance.test.ts 41 · design-sync-conformance.test.ts 33 · review-board-conformance.test.ts 26 (carries the four A1 board-aggregator tests, preserved as program/BOARD_AGGREGATOR_PORT_SPECIFICATION.md and recoverable from commit de1a784) · authoring-pipeline-conformance.test.ts 22 · v22-conformance.test.ts 16 — six files deleted whole, all legacy-only, each reached its subject through createFunctionalTestingEngine/buildCatalogue/FunctionalTestingOrchestrator; plus canonical-capability-conformance.test.ts 2 of 13 removed (the other 11 kept, canonical-only). NOT a regression and NOT a coverage decision: every one of the 218 asserted behaviour of the nine modules the step deletes, so each would now fail to COMPILE rather than fail to pass. The canonical suite is untouched at 210 TS + 94 mjs, green.",
+      "packages": [
+        {
+          "package": "functional-testing-engine",
+          "from": 518,
+          "to": 300,
+          "removed": 218
+        }
+      ]
+    },
+    {
+      "reason": "ADR-0087 — the Functional Testing Engine capability was removed in full. Its entire suite (300 tests) went with the package, so this is a package REMOVAL, not a coverage reduction within a surviving package: there is no code left for the tests to assert against and every one of them would now fail to COMPILE rather than fail to pass. Recorded here rather than silently dropped from `totals`, because a package that vanishes from the lock is indistinguishable from a package whose suite was quietly deleted.",
+      "packages": [
+        {
+          "package": "functional-testing-engine",
+          "from": 300,
+          "to": 0,
+          "removed": 300
+        }
+      ]
+    }
+  ],
+  "totals": {
+    "capability-framework": 77,
+    "contracts": 99,
+    "customer-success": 38,
+    "dev-change-engine": 47,
+    "discovery-flow-engine": 54,
+    "observability": 57,
+    "penetration-testing-engine": 37,
+    "performance-engine": 53,
+    "platform-core": 57,
+    "platform-providers": 19,
+    "platform-runtime": 58,
+    "security-testing-engine": 14,
+    "tenant-onboarding-engine": 284
+  }
+}

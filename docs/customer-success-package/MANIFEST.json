@@ -1,0 +1,81 @@
+{
+  "packageId": "customer-success-package",
+  "releaseVersion": "M2.7",
+  "contractVersion": "1.0.0",
+  "generatorVersion": "1.0.0",
+  "templateVersion": "1.0.0",
+  "builtAt": "2026-07-22T00:00:00.000Z",
+  "onboardingDurationMs": 256.5975,
+  "expiresAt": "2026-08-21T00:00:00.000Z",
+  "repository": "DBiz_IntelligencePlane",
+  "commit": "292bf9f6e0cba0ec8b143a5fb9ae8148b69afb01",
+  "branch": "main",
+  "executionContext": "node v24.14.1 on win32",
+  "fileCount": 56,
+  "validatedTargets": [
+    {
+      "id": "typescript-playwright",
+      "valid": true,
+      "detail": "accepted by the live validator"
+    },
+    {
+      "id": "typescript-selenium",
+      "valid": true,
+      "detail": "accepted by the live validator"
+    },
+    {
+      "id": "javascript-playwright",
+      "valid": true,
+      "detail": "accepted by the live validator"
+    },
+    {
+      "id": "java-selenium",
+      "valid": true,
+      "detail": "accepted by the live validator"
+    },
+    {
+      "id": "csharp-selenium",
+      "valid": true,
+      "detail": "accepted by the live validator"
+    },
+    {
+      "id": "python-playwright",
+      "valid": true,
+      "detail": "accepted by the live validator"
+    },
+    {
+      "id": "minimal-tenant",
+      "valid": true,
+      "detail": "accepted by the live validator"
+    },
+    {
+      "id": "enterprise-tenant",
+      "valid": true,
+      "detail": "accepted by the live validator"
+    },
+    {
+      "id": "jenkins-vm",
+      "valid": true,
+      "detail": "accepted by the live validator"
+    }
+  ],
+  "unmeasured": [
+    {
+      "id": "E-2",
+      "property": "Execution Plane generated AND DEPLOYED to a customer tenancy",
+      "blocker": "Docker unavailable in this environment — generation is proven (E-1, E-3); deployment is not, and is not claimed"
+    }
+  ],
+  "documentedResponses": 5,
+  "ruleReference": [
+    "R-25.1",
+    "R-25.26",
+    "R-25.27",
+    "R-25.33",
+    "R-25.34",
+    "R-25.35",
+    "R-13.3",
+    "R-14.5"
+  ],
+  "contentHash": "d088bdc64b0575d3563f213fec0f1202095f42f8b102936572e93e41273799e2"
+}

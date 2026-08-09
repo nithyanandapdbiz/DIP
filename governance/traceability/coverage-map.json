@@ -1,0 +1,191 @@
+{
+  "$comment": [
+    "DECLARED INPUT \u2014 not a measurement.",
+    "",
+    "This file maps each canonical architecture document to the implementation",
+    "milestone(s) that realise it. That mapping is a PLANNING decision and cannot be",
+    "derived from the repository: nothing in an architecture document knows which",
+    "milestone will implement it.",
+    "",
+    "It is kept here rather than inside the architecture documents deliberately.",
+    "Recording a milestone inside a frozen document would mean amending frozen",
+    "architecture every time the roadmap moved \u2014 which is precisely what a freeze",
+    "exists to prevent. Architecture states what shall be true; the programme states",
+    "when it will be built.",
+    "",
+    "The DISTINCTION that keeps this honest: this file is an INPUT, and the coverage",
+    "computed from it is the MEASUREMENT. Declaring an input is legitimate. Declaring",
+    "a measurement would be the hand-authored status value R-13.1 prohibits \u2014 and a",
+    "milestone claimed here is still checked against the programme plan, so a mapping",
+    "to a milestone that does not exist is a finding, not a passing entry."
+  ],
+  "version": 1,
+  "documents": {
+    "01": {
+      "milestones": [
+        "M1.1"
+      ],
+      "note": "Constitution \u2014 realised by every gate that enforces a rule"
+    },
+    "02": {
+      "milestones": [
+        "M2.1",
+        "M4.1",
+        "M5.1"
+      ],
+      "note": "Reference architecture \u2014 realised across both plane runtimes"
+    },
+    "03": {
+      "milestones": [
+        "M4.1",
+        "M2.6"
+      ],
+      "note": "Intelligence Plane runtime; Platform Core bounded context and solution generation (ADR-0021)"
+    },
+    "04": {
+      "milestones": [
+        "M5.1"
+      ],
+      "note": "Execution Plane runtime"
+    },
+    "05": {
+      "milestones": [
+        "M2.1",
+        "M6.1"
+      ],
+      "note": "Contract carries the transport semantics; integration proves them"
+    },
+    "06": {
+      "milestones": [
+        "M6.3",
+        "M9.2"
+      ],
+      "note": "Retention and purge enforcement"
+    },
+    "07": {
+      "milestones": [
+        "M9.1"
+      ],
+      "note": "Physical tenant partitioning"
+    },
+    "08": {
+      "milestones": [
+        "M2.1",
+        "M9.3",
+        "M2.6"
+      ],
+      "note": "Signing in the contract; graded access at tenancy; secure registration (ADR-0021)"
+    },
+    "09": {
+      "milestones": [
+        "M6.3"
+      ],
+      "note": "Egress pipeline"
+    },
+    "10": {
+      "milestones": [
+        "M2.1",
+        "M5.3"
+      ],
+      "note": "Integrity primitive shipped; evidence custody at EP"
+    },
+    "11": {
+      "milestones": [
+        "M7.3",
+        "M8.1"
+      ],
+      "note": "Capability registry and conformance"
+    },
+    "12": {
+      "milestones": [
+        "M7.1"
+      ],
+      "note": "Twelve-stage lifecycle"
+    },
+    "13": {
+      "milestones": [
+        "M4.3"
+      ],
+      "note": "AI runtime and provider abstraction"
+    },
+    "14": {
+      "milestones": [
+        "M2.3",
+        "M8.1"
+      ],
+      "note": "Adapter SPIs and conformance suites"
+    },
+    "15": {
+      "milestones": [
+        "M2.4"
+      ],
+      "note": "Configuration model and declared-versus-consumed"
+    },
+    "16": {
+      "milestones": [
+        "M4.1",
+        "M5.1"
+      ],
+      "note": "Process, composition, concurrency"
+    },
+    "17": {
+      "milestones": [
+        "M2.5",
+        "M10.1"
+      ],
+      "note": "Images, topology, cloud portability"
+    },
+    "18": {
+      "milestones": [
+        "M3.1",
+        "M3.2"
+      ],
+      "note": "Governance gates \u2014 largely realised"
+    },
+    "19": {
+      "milestones": [
+        "M2.1"
+      ],
+      "note": "Shared package vehicle \u2014 realised"
+    },
+    "20": {
+      "milestones": [
+        "M2.1",
+        "M2.2"
+      ],
+      "note": "Contracts and compatibility \u2014 realised"
+    },
+    "21": {
+      "milestones": [
+        "M9.1",
+        "M2.6"
+      ],
+      "note": "Tenant lifecycle and the onboarding workflow (ADR-0021)"
+    },
+    "22": {
+      "milestones": [
+        "M2.4",
+        "M9.3"
+      ],
+      "note": "Supply chain partially realised; remaining threats at tenancy"
+    },
+    "23": {
+      "milestones": [
+        "M2.6"
+      ],
+      "note": "Operational excellence \u2014 restore validation proven at M2.6"
+    },
+    "24": {
+      "milestones": [
+        "M2.8"
+      ],
+      "note": "Platform intelligence"
+    },
+    "25": {
+      "milestones": [
+        "M2.7"
+      ],
+      "note": "Customer success"
+    }
+  }
+}

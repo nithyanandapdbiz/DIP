@@ -1,0 +1,94 @@
+# Continuous verification — build, test and govern on every push and pull request.
+#
+# TRACEABILITY
+#   ADR-0033 §R-33.4  — both tiers SHALL build in CI on every commit
+#   D-015             — both images built in CI on every commit
+#   D-016             — gates run WHERE work happens: all branches; NOT RUN is treated as FAIL
+#   Constitution C-0.4 — NOT RUN ≡ FAIL
+#
+# WHY THIS EXISTS. The governance suite (`run-all.js`) was only ever run by hand, so drift landed
+# silently between manual runs — the exact failure this repository's own D-016 records against the
+# predecessor. This workflow closes KNOWN_LIMITATIONS "CI wiring on active branches" and mitigates
+# Risk Register R-4 (silent regression) and R-7 (architecture fitness erosion): every push and PR now
+# builds, tests and governs, and the architecture-fitness / bounded-context / traceability gates run
+# automatically instead of depending on someone remembering to run them.
+#
+# BLOCKING. Each step fails the job on a non-zero exit, so a red build, a failing test, or a violated
+# gate blocks the job. To make the check *block merges*, enable branch protection on `main` requiring
+# the `verify` job (a repository setting — the workflow makes the check run; protection makes it required).
+name: ci
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js 24 (ADR-0017 runtime baseline)
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      # pnpm version is pinned by the repository's packageManager field; corepack honours it, so CI
+      # cannot build against a different package manager than a developer used.
+      - name: Enable corepack (pnpm)
+        run: corepack enable
+
+      # --frozen-lockfile fails if package.json and pnpm-lock.yaml have drifted, catching an
+      # unrecorded dependency change before it reaches a build.
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build all packages
+        run: pnpm -r build
+
+      - name: Test all packages
+        run: pnpm -r test
+
+      # Coverage is measured now and threshold-gated later (Risk Register R-9 / F-15). Non-blocking
+      # until a target is agreed, so it reports without failing the build in the meantime.
+      - name: Measure test coverage (informational)
+        run: node --test --experimental-test-coverage 'packages/*/dist/test/*.test.js' || true
+        continue-on-error: true
+
+      # The governance suite. NOT RUN ≡ FAIL (C-0.4): a non-zero exit here is a real governance
+      # violation and blocks the job, which is the entire point of running it on every commit.
+      # It REGENERATES all governance evidence in-process (each verify-*.js regenerates and
+      # refuses a stale file, R-14.2) and consumes it in the same run — no evidence is read from
+      # Git. The evidence is a build output (ADR-0063), produced here, not committed.
+      - name: Govern (governance verification suite)
+        run: node governance/verification/run-all.js
+
+      # Engineering reports are generated output too (ADR-0063), not committed. run-all does not
+      # produce them, so regenerate here for publication. Informational — never blocks the build.
+      - name: Generate engineering reports (informational)
+        run: node governance/verification/generate-scorecard.js || true
+        continue-on-error: true
+
+      # Publish the produced evidence + reports as build artifacts so they are available for
+      # inspection without ever living in source control. always() so evidence is captured even
+      # when a gate failed — that is exactly when the evidence matters most.
+      - name: Upload governance evidence + reports (build artifacts, not source — ADR-0063)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: governance-evidence
+          path: |
+            governance/**/evidence.json
+            governance/**/*-evidence.json
+            governance/traceability/ARCHITECTURE-COVERAGE-MATRIX.md
+            governance/traceability/ENTERPRISE-TRACEABILITY-MATRIX.md
+            governance/supply-chain/sbom.cdx.json
+            packages/contracts/compat/evidence.json
+            program/ENGINEERING_SCORECARD.md
+            program/PLATFORM_MATURITY.md
+          if-no-files-found: warn

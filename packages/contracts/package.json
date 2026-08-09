@@ -1,0 +1,19 @@
+{
+  "name": "@dbiz/contracts",
+  "version": "1.0.0",
+  "description": "Cross-plane contracts — shape and validation only. No business logic (R-19.7).",
+  "license": "UNLICENSED",
+  "type": "module",
+  "main": "./dist/src/index.js",
+  "types": "./dist/src/index.d.ts",
+  "exports": { ".": { "types": "./dist/src/index.d.ts", "default": "./dist/src/index.js" } },
+  "files": ["dist", "schema", "README.md"],
+  "engines": { "node": ">=24.0.0 <25" },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "schema": "node dist/src/bin/emit-schema.js",
+    "test": "node --test \"dist/test/*.test.js\""
+  },
+  "dependencies": { "zod": "^4.0.0" },
+  "devDependencies": { "typescript": "^5.7.0", "@types/node": "^24.0.0" }
+}

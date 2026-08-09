@@ -1,0 +1,28 @@
+packages:
+  - 'packages/*'
+# Supply-chain remediation. Scoped overrides pin transitively-pulled vulnerable packages to their
+# patched versions (each verified present on the registry 2026-07-24). This supersedes the earlier
+# F-20 note that these were "unpatchable": js-yaml 4.3.0 and lodash 4.18.1 are now published, and
+# multer 2.0.2 clears the three 1.x DoS advisories. The multer 1->2 major is forced here deliberately
+# — the onboarding engine registers no multer/file-upload route, so no runtime behaviour depends on it
+# (verified by the NestJS e2e suite after the bump). vite/vitest are patched by direct devDep bumps in
+# packages/tenant-onboarding-web (>=6.4.3 / >=3.2.6), the only versions the advisory DB marks fixed.
+overrides:
+  'path-to-regexp@<0.1.13': '0.1.13' # ReDoS (express, under @nestjs/platform-express)
+  'multer': '2.2.0' # DoS advisories across 1.x AND 2.0.x (GHSA-4pg4/g5hg/fjgf + later); 2.2.0 is latest and clears all; forced global (a range excludes multer's 1.4.4-lts.1 prerelease)
+  'vite@<6.4.3': '6.4.3' # server.fs.deny bypass on Windows (GHSA-fx2h-pf6j-xcff); also catches vitest's transitive vite
+  'lodash@>=4.0.0 <4.18.0': '4.18.1' # _.template code injection (GHSA-r5fr-rjxr-66jc); via @nestjs/swagger
+  'js-yaml@>=4.0.0 <4.3.0': '4.3.0' # merge-key chains quadratic CPU; via tooling
+# Dependency build scripts (postinstall). `allowBuilds` is the ONE authoritative declaration: pnpm 11
+# — the version pinned by packageManager — reads this map and nothing else. Every package that wants to
+# run a postinstall MUST appear here with an explicit true/false, or `pnpm install --frozen-lockfile`
+# exits non-zero demanding interactive approval, which fails CI and any clean clone.
+#
+# The pnpm 10 keys (`onlyBuiltDependencies` / `ignoredBuiltDependencies`) previously sat here and in
+# package.json. pnpm 11 ignores both, so they silently stopped taking effect; the working state lived
+# only in each developer's untracked node_modules/.modules.yaml. They are removed rather than left as
+# dead config, so there is exactly one source of truth.
+allowBuilds:
+  esbuild: true # needs its postinstall to fetch the platform binary (Vite/Vitest)
+  '@nestjs/core': false # telemetry/support postinstall, no build output — acknowledged, not run
+  '@scarf/scarf': false # analytics postinstall, no build output — acknowledged, not run

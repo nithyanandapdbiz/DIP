@@ -1,0 +1,24 @@
+{
+  "tenant": {
+    "tenantId": "tenant-example",
+    "registrationEndpoint": "https://gateway.example.test/v1/register"
+  },
+  "technologyProfile": {
+    "profileVersion": "1.0.0",
+    "language": "python",
+    "framework": "playwright",
+    "testRunner": "pytest",
+    "ciSystem": "github-actions",
+    "gitProvider": "github",
+    "cloudProvider": "azure",
+    "deploymentModel": "container",
+    "packageManager": "pip",
+    "reportingFramework": "allure",
+    "frameworkVersions": {
+      "allure-pytest": "2.13.5",
+      "playwright": "1.49.0",
+      "pytest": "8.3.4",
+      "pytest-playwright": "0.6.2"
+    }
+  }
+}

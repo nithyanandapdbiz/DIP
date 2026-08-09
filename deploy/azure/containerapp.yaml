@@ -1,0 +1,94 @@
+# Azure Container App — DBiz Intelligence Plane (the one IP artefact, R-17.1).
+# Phase 1: FIRST SUCCESSFUL DEPLOYMENT. Single replica (min=max=1). No horizontal scaling,
+# no distributed state. Deploy with:  az containerapp create --resource-group <rg> --yaml deploy/azure/containerapp.yaml
+#
+# Placeholders in <angle-brackets> are wired at deploy time. Secrets are Key Vault references resolved
+# through a user-assigned managed identity — no secret value appears in this file or in the image (C-17.4).
+location: <azure-region>
+identity:
+  type: UserAssigned
+  userAssignedIdentities:
+    # Needs role assignments: 'Key Vault Secrets User' on the vault, 'AcrPull' on the registry.
+    <user-assigned-identity-resource-id>: {}
+properties:
+  managedEnvironmentId: <container-apps-environment-resource-id>   # the environment that has the Azure Files storage registered
+  configuration:
+    activeRevisionsMode: Single
+    ingress:
+      external: true            # App Gateway is the public edge and forwards to this ingress FQDN
+      targetPort: 8080          # matches Dockerfile EXPOSE / PORT
+      transport: http
+      traffic:
+        - latestRevision: true
+          weight: 100
+    registries:
+      - server: <acr-name>.azurecr.io
+        identity: <user-assigned-identity-resource-id>
+    secrets:
+      # Key Vault reference — the app sees only the resolved value via SESSION_SECRET (env, below).
+      - name: session-secret
+        keyVaultUrl: https://<keyvault-name>.vault.azure.net/secrets/session-secret
+        identity: <user-assigned-identity-resource-id>
+      # The package signing key (ADR-0083). REQUIRED: there is no create-if-missing, so the container
+      # refuses to start without it. A vault secret with no reference here never reaches the process,
+      # and that failure is indistinguishable at the app from the secret not existing at all.
+      - name: package-signing-key
+        keyVaultUrl: https://<keyvault-name>.vault.azure.net/secrets/package-signing-key
+        identity: <user-assigned-identity-resource-id>
+  template:
+    containers:
+      - name: intelligence-plane
+        image: <acr-name>.azurecr.io/dbiz-intelligence-plane:<image-tag>
+        resources:
+          cpu: 1.0
+          memory: 2Gi
+        env:
+          - name: PORT
+            value: "8080"
+          - name: DBIZ_STATE_DIR
+            value: /state
+          - name: NODE_ENV
+            value: production
+          # Real Microsoft Entra sign-in. With both set, the default JWKS/RS256 verifier is used.
+          # DBIZ_DEV_AUTH is deliberately ABSENT — the unsigned dev verifier must never run in Azure.
+          - name: AZURE_TENANT_ID
+            value: <entra-tenant-id>
+          - name: AZURE_CLIENT_ID
+            value: <entra-app-client-id>
+          - name: IP_ADMIN_ALLOWLIST
+            value: <comma,separated,admin,emails>
+          - name: SESSION_SECRET
+            secretRef: session-secret
+          # ed25519 PKCS#8 PEM. Stored and delivered AS-IS: literal \n, CRLF and a missing trailing
+          # newline all parse to the same key and the same key id; stripped newlines are refused at
+          # boot. Measured in DEPLOY_READINESS.md §2.
+          - name: PACKAGE_SIGNING_KEY
+            secretRef: package-signing-key
+        # /api/health is public and cheap; it is the same signal validated locally.
+        probes:
+          - type: Startup
+            httpGet: { path: /api/health, port: 8080 }
+            periodSeconds: 2
+            failureThreshold: 30      # up to ~60s for a cold Node start
+          - type: Liveness
+            httpGet: { path: /api/health, port: 8080 }
+            periodSeconds: 30
+            failureThreshold: 3
+          - type: Readiness
+            httpGet: { path: /api/health, port: 8080 }
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            failureThreshold: 3
+        volumeMounts:
+          # Durable SSOT (tenants/, registration/, generated/) survives revision swaps & restarts.
+          # Optional for BOOT (the app creates the dirs on an ephemeral path too), required to not lose
+          # tenant data on restart. Single replica → no cross-replica consistency concern (Phase 1).
+          - volumeName: state
+            mountPath: /state
+    volumes:
+      - name: state
+        storageType: AzureFile
+        storageName: <azurefiles-storage-name-registered-on-the-environment>
+    scale:
+      minReplicas: 1
+      maxReplicas: 1

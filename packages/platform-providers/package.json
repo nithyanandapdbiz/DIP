@@ -1,0 +1,15 @@
+{
+  "name": "@dbiz/platform-providers",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Cloud-native infrastructure abstraction (ADR-0060) — Configuration, Storage, Secret, and Distributed-State providers with Local + Cloud implementations selected by configuration. No @azure/* dependency; one image runs everywhere.",
+  "license": "UNLICENSED",
+  "type": "module",
+  "main": "./dist/src/index.js",
+  "types": "./dist/src/index.d.ts",
+  "exports": { ".": { "types": "./dist/src/index.d.ts", "default": "./dist/src/index.js" } },
+  "engines": { "node": ">=24.0.0 <25" },
+  "scripts": { "build": "tsc -p tsconfig.json", "test": "node --test \"dist/test/*.test.js\"" },
+  "dependencies": { "zod": "^4.0.0" },
+  "devDependencies": { "typescript": "^5.7.0", "@types/node": "^24.0.0" }
+}

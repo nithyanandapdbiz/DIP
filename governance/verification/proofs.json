@@ -1,0 +1,3975 @@
+{
+  "registryVersion": 1,
+  "recordedAt": "2026-08-07T06:47:33.569Z",
+  "proofs": [
+    {
+      "evidenceId": "proof:verify-architecture-integrity.js",
+      "gate": "verify-architecture-integrity.js",
+      "recordedAt": "2026-08-07T06:47:33.569Z",
+      "expiresAt": "2026-08-14T06:47:33.569Z",
+      "proved": true,
+      "replayed": true,
+      "violation": "document without ownership boundary, without conformance criteria, with a dangling reference",
+      "generator": "governance/verification/record-fault-proofs.js",
+      "generatorVersion": "2.0.0",
+      "executionContext": "node v24.14.1 on win32",
+      "repository": "DBiz_IntelligencePlane",
+      "branch": "main",
+      "commit": "a7821fd63f6fedc2c7888478d33fcd33e300b765",
+      "adrReference": [
+        "ADR-0019",
+        "ADR-0020"
+      ],
+      "ruleReference": [
+        "R-13.4",
+        "R-14.2",
+        "R-14.4",
+        "C-01.39",
+        "C-01.42",
+        "C-01.43"
+      ],
+      "verificationStatus": "verified",
+      "certificationStatus": "certified",
+      "observations": {
+        "cleanRunExit": 0,
+        "faultedRunExit": 1,
+        "causeNamedInOutput": true
+      },
+      "properties": {
+        "positiveDetection": {
+          "verified": true,
+          "evidence": "faulted run exited 1 and named the cause"
+        },
+        "negativeDetection": {
+          "verified": true,
+          "evidence": "clean run exited 0"
+        },
+        "faultInjection": {
+          "verified": true,
+          "evidence": "a real violation was planted and observed"
+        },
+        "falsePositiveResistance": {
+          "verified": true,
+          "evidence": "derived from the clean run — not independently measured",
+          "confidence": "derived"
+        },
+        "falseNegativeResistance": {
+          "verified": true,
+          "evidence": "derived from the faulted run — not independently measured",
+          "confidence": "derived"
+        },
+        "deterministicReplay": {
+          "verified": true,
+          "evidence": "the faulted observation was repeated and produced an equivalent outcome",
+          "confidence": "measured"
+        }
+      }
+    },
+    {
+      "evidenceId": "proof:verify-adr-completeness.js",
+      "gate": "verify-adr-completeness.js",
+      "recordedAt": "2026-08-07T06:47:33.569Z",
+      "expiresAt": "2026-08-14T06:47:33.569Z",
+      "proved": true,
+      "replayed": true,
+      "violation": "ADR missing required sections",
+      "generator": "governance/verification/record-fault-proofs.js",
+      "generatorVersion": "2.0.0",
+      "executionContext": "node v24.14.1 on win32",
+      "repository": "DBiz_IntelligencePlane",
+      "branch": "main",
+      "commit": "a7821fd63f6fedc2c7888478d33fcd33e300b765",
+      "adrReference": [
+        "ADR-0019",
+        "ADR-0020"
+      ],
+      "ruleReference": [
+        "R-13.4",
+        "R-14.2",
+        "R-14.4",
+        "C-01.39",
+        "C-01.42",
+        "C-01.43"
+      ],
+      "verificationStatus": "verified",
+      "certificationStatus": "certified",
+      "observations": {
+        "cleanRunExit": 0,
+        "faultedRunExit": 1,
+        "causeNamedInOutput": true
+      },
+      "properties": {
+        "positiveDetection": {
+          "verified": true,
+          "evidence": "faulted run exited 1 and named the cause"
+        },
+        "negativeDetection": {
+          "verified": true,
+          "evidence": "clean run exited 0"
+        },
+        "faultInjection": {
+          "verified": true,
+          "evidence": "a real violation was planted and observed"
+        },
+        "falsePositiveResistance": {
+          "verified": true,
+          "evidence": "derived from the clean run — not independently measured",
+          "confidence": "derived"
+        },
+        "falseNegativeResistance": {
+          "verified": true,
+          "evidence": "derived from the faulted run — not independently measured",
+          "confidence": "derived"
+        },
+        "deterministicReplay": {
+          "verified": true,
+          "evidence": "the faulted observation was repeated and produced an equivalent outcome",
+          "confidence": "measured"
+        }
+      }
+    },
+    {
+      "evidenceId": "proof:verify-ai-vendor-neutrality.js",
+      "gate": "verify-ai-vendor-neutrality.js",
+      "recordedAt": "2026-08-07T06:47:33.569Z",
+      "expiresAt": "2026-08-14T06:47:33.569Z",
+      "proved": false,
+      "replayed": true,
+      "violation": "AI vendor and model named as a platform requirement",
+      "generator": "governance/verification/record-fault-proofs.js",
+      "generatorVersion": "2.0.0",
+      "executionContext": "node v24.14.1 on win32",
+      "repository": "DBiz_IntelligencePlane",
+      "branch": "main",
+      "commit": "a7821fd63f6fedc2c7888478d33fcd33e300b765",
+      "adrReference": [
+        "ADR-0019",
+        "ADR-0020"
+      ],
+      "ruleReference": [
+        "R-13.4",
+        "R-14.2",
+        "R-14.4",
+        "C-01.39",
+        "C-01.42",
+        "C-01.43"
+      ],
+      "verificationStatus": "failed",
+      "certificationStatus": "uncertified",
+      "observations": {
+        "cleanRunExit": 1,
+        "faultedRunExit": 1,
+        "causeNamedInOutput": true
+      },
+      "properties": {
+        "positiveDetection": {
+          "verified": true,
+          "evidence": "faulted run exited 1 and named the cause"
+        },
+        "negativeDetection": {
+          "verified": false,
+          "evidence": "clean run exited 0"
+        },
+        "faultInjection": {
+          "verified": true,
+          "evidence": "a real violation was planted and observed"
+        },
+        "falsePositiveResistance": {
+          "verified": false,
+          "evidence": "derived from the clean run — not independently measured",
+          "confidence": "derived"
+        },
+        "falseNegativeResistance": {
+          "verified": true,
+          "evidence": "derived from the faulted run — not independently measured",
+          "confidence": "derived"
+        },
+        "deterministicReplay": {
+          "verified": true,
+          "evidence": "the faulted observation was repeated and produced an equivalent outcome",
+          "confidence": "measured"
+        }
+      }
+    },
+    {
+      "evidenceId": "proof:verify-implementation-traceability.js",
+      "gate": "verify-implementation-traceability.js",
+      "recordedAt": "2026-08-07T06:47:33.569Z",
+      "expiresAt": "2026-08-14T06:47:33.569Z",
+      "proved": false,
+      "replayed": true,
+      "violation": "source file with no TRACEABILITY block",
+      "generator": "governance/verification/record-fault-proofs.js",
+      "generatorVersion": "2.0.0",
+      "executionContext": "node v24.14.1 on win32",
+      "repository": "DBiz_IntelligencePlane",
+      "branch": "main",
+      "commit": "a7821fd63f6fedc2c7888478d33fcd33e300b765",
+      "adrReference": [
+        "ADR-0019",
+        "ADR-0020"
+      ],
+      "ruleReference": [
+        "R-13.4",
+        "R-14.2",
+        "R-14.4",
+        "C-01.39",
+        "C-01.42",
+        "C-01.43"
+      ],
+      "verificationStatus": "failed",
+      "certificationStatus": "uncertified",
+      "observations": {
+        "cleanRunExit": 1,
+        "faultedRunExit": 1,
+        "causeNamedInOutput": true
+      },
+      "properties": {
+        "positiveDetection": {
+          "verified": true,
+          "evidence": "faulted run exited 1 and named the cause"
+        },
+        "negativeDetection": {
+          "verified": false,
+          "evidence": "clean run exited 0"
+        },
+        "faultInjection": {
+          "verified": true,
+          "evidence": "a real violation was planted and observed"
+        },
+        "falsePositiveResistance": {
+          "verified": false,
+          "evidence": "derived from the clean run — not independently measured",
+          "confidence": "derived"
+        },
+        "falseNegativeResistance": {
+          "verified": true,
+          "evidence": "derived from the faulted run — not independently measured",
+          "confidence": "derived"
+        },
+        "deterministicReplay": {
+          "verified": true,
+          "evidence": "the faulted observation was repeated and produced an equivalent outcome",
+          "confidence": "measured"
+        }
+      }
+    },
+    {
+      "evidenceId": "proof:verify-tool-contracts.js",
+      "gate": "verify-tool-contracts.js",
+      "recordedAt": "2026-08-07T06:47:33.569Z",
+      "expiresAt": "2026-08-14T06:47:33.569Z",
+      "proved": false,
+      "replayed": true,
+      "violation": "a tool contract naming an SPI that exists nowhere in the repository",
+      "generator": "governance/verification/record-fault-proofs.js",
+      "generatorVersion": "2.0.0",
+      "executionContext": "node v24.14.1 on win32",
+      "repository": "DBiz_IntelligencePlane",
+      "branch": "main",
+      "commit": "a7821fd63f6fedc2c7888478d33fcd33e300b765",
+      "adrReference": [
+        "ADR-0019",
+        "ADR-0020"
+      ],
+      "ruleReference": [
+        "R-13.4",
+        "R-14.2",
+        "R-14.4",
+        "C-01.39",
+        "C-01.42",
+        "C-01.43"
+      ],
+      "verificationStatus": "failed",
+      "certificationStatus": "uncertified",
+      "observations": {
+        "cleanRunExit": 1,
+        "faultedRunExit": 1,
+        "causeNamedInOutput": true
+      },
+      "properties": {
+        "positiveDetection": {
+          "verified": true,
+          "evidence": "faulted run exited 1 and named the cause"
+        },
+        "negativeDetection": {
+          "verified": false,
+          "evidence": "clean run exited 0"
+        },
+        "faultInjection": {
+          "verified": true,
+          "evidence": "a real violation was planted and observed"
+        },
+        "falsePositiveResistance": {
+          "verified": false,
+          "evidence": "derived from the clean run — not independently measured",
+          "confidence": "derived"
+        },
+        "falseNegativeResistance": {
+          "verified": true,
+          "evidence": "derived from the faulted run — not independently measured",
+          "confidence": "derived"
+        },
+        "deterministicReplay": {
+          "verified": true,
+          "evidence": "the faulted observation was repeated and produced an equivalent outcome",
+          "confidence": "measured"
+        }
+      }
+    },
+    {
+      "evidenceId": "proof:verify-suite-integrity.js",
+      "gate": "verify-suite-integrity.js",
+      "recordedAt": "2026-08-07T06:47:33.569Z",
+      "expiresAt": "2026-08-14T06:47:33.569Z",
+      "proved": true,
+      "replayed": true,
+      "violation": "a source test file with no compiled counterpart — it would silently never run",
+      "generator": "governance/verification/record-fault-proofs.js",
+      "generatorVersion": "2.0.0",
+      "executionContext": "node v24.14.1 on win32",
+      "repository": "DBiz_IntelligencePlane",
+      "branch": "main",
+      "commit": "a7821fd63f6fedc2c7888478d33fcd33e300b765",
+      "adrReference": [
+        "ADR-0019",
+        "ADR-0020"
+      ],
+      "ruleReference": [
+        "R-13.4",
+        "R-14.2",
+        "R-14.4",
+        "C-01.39",
+        "C-01.42",
+        "C-01.43"
+      ],
+      "verificationStatus": "verified",
+      "certificationStatus": "certified",
+      "observations": {
+        "cleanRunExit": 0,
+        "faultedRunExit": 1,
+        "causeNamedInOutput": true
+      },
+      "properties": {
+        "positiveDetection": {
+          "verified": true,
+          "evidence": "faulted run exited 1 and named the cause"
+        },
+        "negativeDetection": {
+          "verified": true,
+          "evidence": "clean run exited 0"
+        },
+        "faultInjection": {
+          "verified": true,
+          "evidence": "a real violation was planted and observed"
+        },
+        "falsePositiveResistance": {
+          "verified": true,
+          "evidence": "derived from the clean run — not independently measured",
+          "confidence": "derived"
+        },
+        "falseNegativeResistance": {
+          "verified": true,
+          "evidence": "derived from the faulted run — not independently measured",
+          "confidence": "derived"
+        },
+        "deterministicReplay": {
+          "verified": true,
+          "evidence": "the faulted observation was repeated and produced an equivalent outcome",
+          "confidence": "measured"
+        }
+      }
+    },
+    {
+      "evidenceId": "proof:verify-change-control-completeness.js",
+      "gate": "verify-change-control-completeness.js",
+      "recordedAt": "2026-08-07T06:47:33.569Z",
+      "expiresAt": "2026-08-14T06:47:33.569Z",
+      "proved": false,
+      "replayed": true,
+      "violation": "ADR declaring an affected component that was never created",
+      "generator": "governance/verification/record-fault-proofs.js",
+      "generatorVersion": "2.0.0",
+      "executionContext": "node v24.14.1 on win32",
+      "repository": "DBiz_IntelligencePlane",
+      "branch": "main",
+      "commit": "a7821fd63f6fedc2c7888478d33fcd33e300b765",
+      "adrReference": [
+        "ADR-0019",
+        "ADR-0020"
+      ],
+      "ruleReference": [
+        "R-13.4",
+        "R-14.2",
+        "R-14.4",
+        "C-01.39",
+        "C-01.42",
+        "C-01.43"
+      ],
+      "verificationStatus": "failed",
+      "certificationStatus": "uncertified",
+      "observations": {
+        "cleanRunExit": 1,
+        "faultedRunExit": 1,
+        "causeNamedInOutput": true
+      },
+      "properties": {
+        "positiveDetection": {
+          "verified": true,
+          "evidence": "faulted run exited 1 and named the cause"
+        },
+        "negativeDetection": {
+          "verified": false,
+          "evidence": "clean run exited 0"
+        },
+        "faultInjection": {
+          "verified": true,
+          "evidence": "a real violation was planted and observed"
+        },
+        "falsePositiveResistance": {
+          "verified": false,
+          "evidence": "derived from the clean run — not independently measured",
+          "confidence": "derived"
+        },
+        "falseNegativeResistance": {
+          "verified": true,
+          "evidence": "derived from the faulted run — not independently measured",
+          "confidence": "derived"
+        },
+        "deterministicReplay": {
+          "verified": true,
+          "evidence": "the faulted observation was repeated and produced an equivalent outcome",
+          "confidence": "measured"
+        }
+      }
+    },
+    {
+      "evidenceId": "proof:verify-governance-self-validation.js",
+      "gate": "verify-governance-self-validation.js",
+      "recordedAt": "2026-08-07T06:47:33.569Z",
+      "expiresAt": "2026-08-14T06:47:33.569Z",
+      "proved": false,
+      "replayed": true,
+      "violation": "gate present on disk but not registered in the runner (NOT RUN, therefore FAIL)",
+      "generator": "governance/verification/record-fault-proofs.js",
+      "generatorVersion": "2.0.0",
+      "executionContext": "node v24.14.1 on win32",
+      "repository": "DBiz_IntelligencePlane",
+      "branch": "main",
+      "commit": "a7821fd63f6fedc2c7888478d33fcd33e300b765",
+      "adrReference": [
+        "ADR-0019",
+        "ADR-0020"
+      ],
+      "ruleReference": [
+        "R-13.4",
+        "R-14.2",
+        "R-14.4",
+        "C-01.39",
+        "C-01.42",
+        "C-01.43"
+      ],
+      "verificationStatus": "failed",
+      "certificationStatus": "uncertified",
+      "observations": {
+        "cleanRunExit": 1,
+        "faultedRunExit": 1,
+        "causeNamedInOutput": true
+      },
+      "properties": {
+        "positiveDetection": {
+          "verified": true,
+          "evidence": "faulted run exited 1 and named the cause"
+        },
+        "negativeDetection": {
+          "verified": false,
+          "evidence": "clean run exited 0"
+        },
+        "faultInjection": {
+          "verified": true,
+          "evidence": "a real violation was planted and observed"
+        },
+        "falsePositiveResistance": {
+          "verified": false,
+          "evidence": "derived from the clean run — not independently measured",
+          "confidence": "derived"
+        },
+        "falseNegativeResistance": {
+          "verified": true,
+          "evidence": "derived from the faulted run — not independently measured",
+          "confidence": "derived"
+        },
+        "deterministicReplay": {
+          "verified": true,
+          "evidence": "the faulted observation was repeated and produced an equivalent outcome",
+          "confidence": "measured"
+        }
+      }
+    },
+    {
+      "evidenceId": "proof:verify-architecture-fitness.js",
+      "gate": "verify-architecture-fitness.js",
+      "recordedAt": "2026-08-07T06:47:33.569Z",
+      "expiresAt": "2026-08-14T06:47:33.569Z",
+      "proved": true,
+      "replayed": true,
+      "violation": "a canonical document that is not frozen",
+      "generator": "governance/verification/record-fault-proofs.js",
+      "generatorVersion": "2.0.0",
+      "executionContext": "node v24.14.1 on win32",
+      "repository": "DBiz_IntelligencePlane",
+      "branch": "main",
+      "commit": "a7821fd63f6fedc2c7888478d33fcd33e300b765",
+      "adrReference": [
+        "ADR-0019",
+        "ADR-0020"
+      ],
+      "ruleReference": [
+        "R-13.4",
+        "R-14.2",
+        "R-14.4",
+        "C-01.39",
+        "C-01.42",
+        "C-01.43"
+      ],
+      "verificationStatus": "verified",
+      "certificationStatus": "certified",
+      "observations": {
+        "cleanRunExit": 0,
+        "faultedRunExit": 1,
+        "causeNamedInOutput": true
+      },
+      "properties": {
+        "positiveDetection": {
+          "verified": true,
+          "evidence": "faulted run exited 1 and named the cause"
+        },
+        "negativeDetection": {
+          "verified": true,
+          "evidence": "clean run exited 0"
+        },
+        "faultInjection": {
+          "verified": true,
+          "evidence": "a real violation was planted and observed"
+        },
+        "falsePositiveResistance": {
+          "verified": true,
+          "evidence": "derived from the clean run — not independently measured",
+          "confidence": "derived"
+        },
+        "falseNegativeResistance": {
+          "verified": true,
+          "evidence": "derived from the faulted run — not independently measured",
+          "confidence": "derived"
+        },
+        "deterministicReplay": {
+          "verified": true,
+          "evidence": "the faulted observation was repeated and produced an equivalent outcome",
+          "confidence": "measured"
+        }
+      }
+    },
+    {
+      "evidenceId": "proof:verify-contract-compatibility.js",
+      "gate": "verify-contract-compatibility.js",
+      "recordedAt": "2026-08-07T06:47:33.569Z",
+      "expiresAt": "2026-08-14T06:47:33.569Z",
+      "proved": true,
+      "replayed": true,
+      "violation": "a retained fixture that no longer parses under the current build",
+      "generator": "governance/verification/record-fault-proofs.js",
+      "generatorVersion": "2.0.0",
+      "executionContext": "node v24.14.1 on win32",
+      "repository": "DBiz_IntelligencePlane",
+      "branch": "main",
+      "commit": "a7821fd63f6fedc2c7888478d33fcd33e300b765",
+      "adrReference": [
+        "ADR-0019",
+        "ADR-0020"
+      ],
+      "ruleReference": [
+        "R-13.4",
+        "R-14.2",
+        "R-14.4",
+        "C-01.39",
+        "C-01.42",
+        "C-01.43"
+      ],
+      "verificationStatus": "verified",
+      "certificationStatus": "certified",
+      "observations": {
+        "cleanRunExit": 0,
+        "faultedRunExit": 1,
+        "causeNamedInOutput": true
+      },
+      "properties": {
+        "positiveDetection": {
+          "verified": true,
+          "evidence": "faulted run exited 1 and named the cause"
+        },
+        "negativeDetection": {
+          "verified": true,
+          "evidence": "clean run exited 0"
+        },
+        "faultInjection": {
+          "verified": true,
+          "evidence": "a real violation was planted and observed"
+        },
+        "falsePositiveResistance": {
+          "verified": true,
+          "evidence": "derived from the clean run — not independently measured",
+          "confidence": "derived"
+        },
+        "falseNegativeResistance": {
+          "verified": true,
+          "evidence": "derived from the faulted run — not independently measured",
+          "confidence": "derived"
+        },
+        "deterministicReplay": {
+          "verified": true,
+          "evidence": "the faulted observation was repeated and produced an equivalent outcome",
+          "confidence": "measured"
+        }
+      }
+    },
+    {
+      "evidenceId": "proof:verify-supply-chain.js",
+      "gate": "verify-supply-chain.js",
+      "recordedAt": "2026-08-07T06:47:33.569Z",
+      "expiresAt": "2026-08-14T06:47:33.569Z",
+      "proved": false,
+      "replayed": true,
+      "violation": "build output containing an artefact no build produced",
+      "generator": "governance/verification/record-fault-proofs.js",
+      "generatorVersion": "2.0.0",
+      "executionContext": "node v24.14.1 on win32",
+      "repository": "DBiz_IntelligencePlane",
+      "branch": "main",
+      "commit": "a7821fd63f6fedc2c7888478d33fcd33e300b765",
+      "adrReference": [
+        "ADR-0019",
+        "ADR-0020"
+      ],
+      "ruleReference": [
+        "R-13.4",
+        "R-14.2",
+        "R-14.4",
+        "C-01.39",
+        "C-01.42",
+        "C-01.43"
+      ],
+      "verificationStatus": "failed",
+      "certificationStatus": "uncertified",
+      "observations": {
+        "cleanRunExit": 1,
+        "faultedRunExit": 1,
+        "causeNamedInOutput": true
+      },
+      "properties": {
+        "positiveDetection": {
+          "verified": true,
+          "evidence": "faulted run exited 1 and named the cause"
+        },
+        "negativeDetection": {
+          "verified": false,
+          "evidence": "clean run exited 0"
+        },
+        "faultInjection": {
+          "verified": true,
+          "evidence": "a real violation was planted and observed"
+        },
+        "falsePositiveResistance": {
+          "verified": false,
+          "evidence": "derived from the clean run — not independently measured",
+          "confidence": "derived"
+        },
+        "falseNegativeResistance": {
+          "verified": true,
+          "evidence": "derived from the faulted run — not independently measured",
+          "confidence": "derived"
+        },
+        "deterministicReplay": {
+          "verified": true,
+          "evidence": "the faulted observation was repeated and produced an equivalent outcome",
+          "confidence": "measured"
+        }
+      }
+    },
+    {
+      "evidenceId": "proof:verify-traceability.js",
+      "gate": "verify-traceability.js",
+      "recordedAt": "2026-08-07T06:47:33.569Z",
+      "expiresAt": "2026-08-14T06:47:33.569Z",
+      "proved": true,
+      "replayed": true,
+      "violation": "an architecture document with no implementation milestone — an orphan",
+      "generator": "governance/verification/record-fault-proofs.js",
+      "generatorVersion": "2.0.0",
+      "executionContext": "node v24.14.1 on win32",
+      "repository": "DBiz_IntelligencePlane",
+      "branch": "main",
+      "commit": "a7821fd63f6fedc2c7888478d33fcd33e300b765",
+      "adrReference": [
+        "ADR-0019",
+        "ADR-0020"
+      ],
+      "ruleReference": [
+        "R-13.4",
+        "R-14.2",
+        "R-14.4",
+        "C-01.39",
+        "C-01.42",
+        "C-01.43"
+      ],
+      "verificationStatus": "verified",
+      "certificationStatus": "certified",
+      "observations": {
+        "cleanRunExit": 0,
+        "faultedRunExit": 1,
+        "causeNamedInOutput": true
+      },
+      "properties": {
+        "positiveDetection": {
+          "verified": true,
+          "evidence": "faulted run exited 1 and named the cause"
+        },
+        "negativeDetection": {
+          "verified": true,
+          "evidence": "clean run exited 0"
+        },
+        "faultInjection": {
+          "verified": true,
+          "evidence": "a real violation was planted and observed"
+        },
+        "falsePositiveResistance": {
+          "verified": true,
+          "evidence": "derived from the clean run — not independently measured",
+          "confidence": "derived"
+        },
+        "falseNegativeResistance": {
+          "verified": true,
+          "evidence": "derived from the faulted run — not independently measured",
+          "confidence": "derived"
+        },
+        "deterministicReplay": {
+          "verified": true,
+          "evidence": "the faulted observation was repeated and produced an equivalent outcome",
+          "confidence": "measured"
+        }
+      }
+    },
+    {
+      "evidenceId": "proof:verify-operational-readiness.js",
+      "gate": "verify-operational-readiness.js",
+      "recordedAt": "2026-08-07T06:47:33.569Z",
+      "expiresAt": "2026-08-14T06:47:33.569Z",
+      "proved": false,
+      "replayed": true,
+      "violation": "a customer screenshot retained in Intelligence Plane storage",
+      "generator": "governance/verification/record-fault-proofs.js",
+      "generatorVersion": "2.0.0",
+      "executionContext": "node v24.14.1 on win32",
+      "repository": "DBiz_IntelligencePlane",
+      "branch": "main",
+      "commit": "a7821fd63f6fedc2c7888478d33fcd33e300b765",
+      "adrReference": [
+        "ADR-0019",
+        "ADR-0020"
+      ],
+      "ruleReference": [
+        "R-13.4",
+        "R-14.2",
+        "R-14.4",
+        "C-01.39",
+        "C-01.42",
+        "C-01.43"
+      ],
+      "verificationStatus": "failed",
+      "certificationStatus": "uncertified",
+      "observations": {
+        "cleanRunExit": 1,
+        "faultedRunExit": 1,
+        "causeNamedInOutput": true
+      },
+      "properties": {
+        "positiveDetection": {
+          "verified": true,
+          "evidence": "faulted run exited 1 and named the cause"
+        },
+        "negativeDetection": {
+          "verified": false,
+          "evidence": "clean run exited 0"
+        },
+        "faultInjection": {
+          "verified": true,
+          "evidence": "a real violation was planted and observed"
+        },
+        "falsePositiveResistance": {
+          "verified": false,
+          "evidence": "derived from the clean run — not independently measured",
+          "confidence": "derived"
+        },
+        "falseNegativeResistance": {
+          "verified": true,
+          "evidence": "derived from the faulted run — not independently measured",
+          "confidence": "derived"
+        },
+        "deterministicReplay": {
+          "verified": true,
+          "evidence": "the faulted observation was repeated and produced an equivalent outcome",
+          "confidence": "measured"
+        }
+      }
+    },
+    {
+      "evidenceId": "proof:verify-operational-readiness.js#permissive-gateway",
+      "gate": "verify-operational-readiness.js",
+      "recordedAt": "2026-08-07T06:47:33.569Z",
+      "expiresAt": "2026-08-14T06:47:33.569Z",
+      "proved": false,
+      "replayed": true,
+      "violation": "an API gateway that serves unauthenticated and cross-tenant callers",
+      "generator": "governance/verification/record-fault-proofs.js",
+      "generatorVersion": "2.0.0",
+      "executionContext": "node v24.14.1 on win32",
+      "repository": "DBiz_IntelligencePlane",
+      "branch": "main",
+      "commit": "a7821fd63f6fedc2c7888478d33fcd33e300b765",
+      "adrReference": [
+        "ADR-0019",
+        "ADR-0020"
+      ],
+      "ruleReference": [
+        "R-13.4",
+        "R-14.2",
+        "R-14.4",
+        "C-01.39",
+        "C-01.42",
+        "C-01.43"
+      ],
+      "verificationStatus": "failed",
+      "certificationStatus": "uncertified",
+      "observations": {
+        "cleanRunExit": 1,
+        "faultedRunExit": 1,
+        "causeNamedInOutput": true
+      },
+      "properties": {
+        "positiveDetection": {
+          "verified": true,
+          "evidence": "faulted run exited 1 and named the cause"
+        },
+        "negativeDetection": {
+          "verified": false,
+          "evidence": "clean run exited 0"
+        },
+        "faultInjection": {
+          "verified": true,
+          "evidence": "a real violation was planted and observed"
+        },
+        "falsePositiveResistance": {
+          "verified": false,
+          "evidence": "derived from the clean run — not independently measured",
+          "confidence": "derived"
+        },
+        "falseNegativeResistance": {
+          "verified": true,
+          "evidence": "derived from the faulted run — not independently measured",
+          "confidence": "derived"
+        },
+        "deterministicReplay": {
+          "verified": true,
+          "evidence": "the faulted observation was repeated and produced an equivalent outcome",
+          "confidence": "measured"
+        }
+      }
+    },
+    {
+      "evidenceId": "proof:verify-customer-readiness.js#wrong-language-generator",
+      "gate": "verify-customer-readiness.js",
+      "recordedAt": "2026-08-07T06:47:33.569Z",
+      "expiresAt": "2026-08-14T06:47:33.569Z",
+      "proved": false,
+      "replayed": true,
+      "violation": "a generator emitting TypeScript for every declared supported language",
+      "generator": "governance/verification/record-fault-proofs.js",
+      "generatorVersion": "2.0.0",
+      "executionContext": "node v24.14.1 on win32",
+      "repository": "DBiz_IntelligencePlane",
+      "branch": "main",
+      "commit": "a7821fd63f6fedc2c7888478d33fcd33e300b765",
+      "adrReference": [
+        "ADR-0019",
+        "ADR-0020"
+      ],
+      "ruleReference": [
+        "R-13.4",
+        "R-14.2",
+        "R-14.4",
+        "C-01.39",
+        "C-01.42",
+        "C-01.43"
+      ],
+      "verificationStatus": "failed",
+      "certificationStatus": "uncertified",
+      "observations": {
+        "cleanRunExit": 1,
+        "faultedRunExit": 1,
+        "causeNamedInOutput": true
+      },
+      "properties": {
+        "positiveDetection": {
+          "verified": true,
+          "evidence": "faulted run exited 1 and named the cause"
+        },
+        "negativeDetection": {
+          "verified": false,
+          "evidence": "clean run exited 0"
+        },
+        "faultInjection": {
+          "verified": true,
+          "evidence": "a real violation was planted and observed"
+        },
+        "falsePositiveResistance": {
+          "verified": false,
+          "evidence": "derived from the clean run — not independently measured",
+          "confidence": "derived"
+        },
+        "falseNegativeResistance": {
+          "verified": true,
+          "evidence": "derived from the faulted run — not independently measured",
+          "confidence": "derived"
+        },
+        "deterministicReplay": {
+          "verified": true,
+          "evidence": "the faulted observation was repeated and produced an equivalent outcome",
+          "confidence": "measured"
+        }
+      }
+    },
+    {
+      "evidenceId": "proof:verify-production-readiness.js#health-reports-green-while-silent",
+      "gate": "verify-production-readiness.js",
+      "recordedAt": "2026-08-07T06:47:33.569Z",
+      "expiresAt": "2026-08-14T06:47:33.569Z",
+      "proved": false,
+      "replayed": true,
+      "violation": "a health endpoint that reports healthy while nothing is reporting",
+      "generator": "governance/verification/record-fault-proofs.js",
+      "generatorVersion": "2.0.0",
+      "executionContext": "node v24.14.1 on win32",
+      "repository": "DBiz_IntelligencePlane",
+      "branch": "main",
+      "commit": "a7821fd63f6fedc2c7888478d33fcd33e300b765",
+      "adrReference": [
+        "ADR-0019",
+        "ADR-0020"
+      ],
+      "ruleReference": [
+        "R-13.4",
+        "R-14.2",
+        "R-14.4",
+        "C-01.39",
+        "C-01.42",
+        "C-01.43"
+      ],
+      "verificationStatus": "failed",
+      "certificationStatus": "uncertified",
+      "observations": {
+        "cleanRunExit": 1,
+        "faultedRunExit": 1,
+        "causeNamedInOutput": true
+      },
+      "properties": {
+        "positiveDetection": {
+          "verified": true,
+          "evidence": "faulted run exited 1 and named the cause"
+        },
+        "negativeDetection": {
+          "verified": false,
+          "evidence": "clean run exited 0"
+        },
+        "faultInjection": {
+          "verified": true,
+          "evidence": "a real violation was planted and observed"
+        },
+        "falsePositiveResistance": {
+          "verified": false,
+          "evidence": "derived from the clean run — not independently measured",
+          "confidence": "derived"
+        },
+        "falseNegativeResistance": {
+          "verified": true,
+          "evidence": "derived from the faulted run — not independently measured",
+          "confidence": "derived"
+        },
+        "deterministicReplay": {
+          "verified": true,
+          "evidence": "the faulted observation was repeated and produced an equivalent outcome",
+          "confidence": "measured"
+        }
+      }
+    },
+    {
+      "evidenceId": "proof:verify-general-availability.js#false-ga-claim",
+      "gate": "verify-general-availability.js",
+      "recordedAt": "2026-08-07T06:47:33.569Z",
+      "expiresAt": "2026-08-14T06:47:33.569Z",
+      "proved": true,
+      "replayed": true,
+      "violation": "a document claiming General Availability while E-2 is unmeasured",
+      "generator": "governance/verification/record-fault-proofs.js",
+      "generatorVersion": "2.0.0",
+      "executionContext": "node v24.14.1 on win32",
+      "repository": "DBiz_IntelligencePlane",
+      "branch": "main",
+      "commit": "a7821fd63f6fedc2c7888478d33fcd33e300b765",
+      "adrReference": [
+        "ADR-0019",
+        "ADR-0020"
+      ],
+      "ruleReference": [
+        "R-13.4",
+        "R-14.2",
+        "R-14.4",
+        "C-01.39",
+        "C-01.42",
+        "C-01.43"
+      ],
+      "verificationStatus": "verified",
+      "certificationStatus": "certified",
+      "observations": {
+        "cleanRunExit": 0,
+        "faultedRunExit": 1,
+        "causeNamedInOutput": true
+      },
+      "properties": {
+        "positiveDetection": {
+          "verified": true,
+          "evidence": "faulted run exited 1 and named the cause"
+        },
+        "negativeDetection": {
+          "verified": true,
+          "evidence": "clean run exited 0"
+        },
+        "faultInjection": {
+          "verified": true,
+          "evidence": "a real violation was planted and observed"
+        },
+        "falsePositiveResistance": {
+          "verified": true,
+          "evidence": "derived from the clean run — not independently measured",
+          "confidence": "derived"
+        },
+        "falseNegativeResistance": {
+          "verified": true,
+          "evidence": "derived from the faulted run — not independently measured",
+          "confidence": "derived"
+        },
+        "deterministicReplay": {
+          "verified": true,
+          "evidence": "the faulted observation was repeated and produced an equivalent outcome",
+          "confidence": "measured"
+        }
+      }
+    },
+    {
+      "evidenceId": "proof:verify-programme-closure.js#silent-architecture-amendment",
+      "gate": "verify-programme-closure.js",
+      "recordedAt": "2026-08-07T06:47:33.569Z",
+      "expiresAt": "2026-08-14T06:47:33.569Z",
+      "proved": true,
+      "replayed": true,
+      "violation": "an architecture document added after the closure baseline was frozen",
+      "generator": "governance/verification/record-fault-proofs.js",
+      "generatorVersion": "2.0.0",
+      "executionContext": "node v24.14.1 on win32",
+      "repository": "DBiz_IntelligencePlane",
+      "branch": "main",
+      "commit": "a7821fd63f6fedc2c7888478d33fcd33e300b765",
+      "adrReference": [
+        "ADR-0019",
+        "ADR-0020"
+      ],
+      "ruleReference": [
+        "R-13.4",
+        "R-14.2",
+        "R-14.4",
+        "C-01.39",
+        "C-01.42",
+        "C-01.43"
+      ],
+      "verificationStatus": "verified",
+      "certificationStatus": "certified",
+      "observations": {
+        "cleanRunExit": 0,
+        "faultedRunExit": 1,
+        "causeNamedInOutput": true
+      },
+      "properties": {
+        "positiveDetection": {
+          "verified": true,
+          "evidence": "faulted run exited 1 and named the cause"
+        },
+        "negativeDetection": {
+          "verified": true,
+          "evidence": "clean run exited 0"
+        },
+        "faultInjection": {
+          "verified": true,
+          "evidence": "a real violation was planted and observed"
+        },
+        "falsePositiveResistance": {
+          "verified": true,
+          "evidence": "derived from the clean run — not independently measured",
+          "confidence": "derived"
+        },
+        "falseNegativeResistance": {
+          "verified": true,
+          "evidence": "derived from the faulted run — not independently measured",
+          "confidence": "derived"
+        },
+        "deterministicReplay": {
+          "verified": true,
+          "evidence": "the faulted observation was repeated and produced an equivalent outcome",
+          "confidence": "measured"
+        }
+      }
+    },
+    {
+      "evidenceId": "proof:verify-platform-contract-framework.js#platform-contract-over-claiming-its-state",
+      "gate": "verify-platform-contract-framework.js",
+      "recordedAt": "2026-08-07T06:47:33.569Z",
+      "expiresAt": "2026-08-14T06:47:33.569Z",
+      "proved": true,
+      "replayed": true,
+      "violation": "a platform contract declared implemented while its canonical type is not on disk (over-claim)",
+      "generator": "governance/verification/record-fault-proofs.js",
+      "generatorVersion": "2.0.0",
+      "executionContext": "node v24.14.1 on win32",
+      "repository": "DBiz_IntelligencePlane",
+      "branch": "main",
+      "commit": "a7821fd63f6fedc2c7888478d33fcd33e300b765",
+      "adrReference": [
+        "ADR-0019",
+        "ADR-0020"
+      ],
+      "ruleReference": [
+        "R-13.4",
+        "R-14.2",
+        "R-14.4",
+        "C-01.39",
+        "C-01.42",
+        "C-01.43"
+      ],
+      "verificationStatus": "verified",
+      "certificationStatus": "certified",
+      "observations": {
+        "cleanRunExit": 0,
+        "faultedRunExit": 1,
+        "causeNamedInOutput": true
+      },
+      "properties": {
+        "positiveDetection": {
+          "verified": true,
+          "evidence": "faulted run exited 1 and named the cause"
+        },
+        "negativeDetection": {
+          "verified": true,
+          "evidence": "clean run exited 0"
+        },
+        "faultInjection": {
+          "verified": true,
+          "evidence": "a real violation was planted and observed"
+        },
+        "falsePositiveResistance": {
+          "verified": true,
+          "evidence": "derived from the clean run — not independently measured",
+          "confidence": "derived"
+        },
+        "falseNegativeResistance": {
+          "verified": true,
+          "evidence": "derived from the faulted run — not independently measured",
+          "confidence": "derived"
+        },
+        "deterministicReplay": {
+          "verified": true,
+          "evidence": "the faulted observation was repeated and produced an equivalent outcome",
+          "confidence": "measured"
+        }
+      }
+    },
+    {
+      "evidenceId": "proof:verify-http-surface.js#transport-that-stops-enforcing-security-headers",
+      "gate": "verify-http-surface.js",
+      "recordedAt": "2026-08-07T06:47:33.569Z",
+      "expiresAt": "2026-08-14T06:47:33.569Z",
+      "proved": true,
+      "replayed": true,
+      "violation": "a transport that answers requests without any security headers",
+      "generator": "governance/verification/record-fault-proofs.js",
+      "generatorVersion": "2.0.0",
+      "executionContext": "node v24.14.1 on win32",
+      "repository": "DBiz_IntelligencePlane",
+      "branch": "main",
+      "commit": "a7821fd63f6fedc2c7888478d33fcd33e300b765",
+      "adrReference": [
+        "ADR-0019",
+        "ADR-0020"
+      ],
+      "ruleReference": [
+        "R-13.4",
+        "R-14.2",
+        "R-14.4",
+        "C-01.39",
+        "C-01.42",
+        "C-01.43"
+      ],
+      "verificationStatus": "verified",
+      "certificationStatus": "certified",
+      "observations": {
+        "cleanRunExit": 0,
+        "faultedRunExit": 1,
+        "causeNamedInOutput": true
+      },
+      "properties": {
+        "positiveDetection": {
+          "verified": true,
+          "evidence": "faulted run exited 1 and named the cause"
+        },
+        "negativeDetection": {
+          "verified": true,
+          "evidence": "clean run exited 0"
+        },
+        "faultInjection": {
+          "verified": true,
+          "evidence": "a real violation was planted and observed"
+        },
+        "falsePositiveResistance": {
+          "verified": true,
+          "evidence": "derived from the clean run — not independently measured",
+          "confidence": "derived"
+        },
+        "falseNegativeResistance": {
+          "verified": true,
+          "evidence": "derived from the faulted run — not independently measured",
+          "confidence": "derived"
+        },
+        "deterministicReplay": {
+          "verified": true,
+          "evidence": "the faulted observation was repeated and produced an equivalent outcome",
+          "confidence": "measured"
+        }
+      }
+    },
+    {
+      "evidenceId": "proof:verify-execution-contracts.js#execution-context-that-is-not-immutable",
+      "gate": "verify-execution-contracts.js",
+      "recordedAt": "2026-08-07T06:47:33.569Z",
+      "expiresAt": "2026-08-14T06:47:33.569Z",
+      "proved": true,
+      "replayed": true,
+      "violation": "a sealed execution context that is not deep-frozen (immutability broken)",
+      "generator": "governance/verification/record-fault-proofs.js",
+      "generatorVersion": "2.0.0",
+      "executionContext": "node v24.14.1 on win32",
+      "repository": "DBiz_IntelligencePlane",
+      "branch": "main",
+      "commit": "a7821fd63f6fedc2c7888478d33fcd33e300b765",
+      "adrReference": [
+        "ADR-0019",
+        "ADR-0020"
+      ],
+      "ruleReference": [
+        "R-13.4",
+        "R-14.2",
+        "R-14.4",
+        "C-01.39",
+        "C-01.42",
+        "C-01.43"
+      ],
+      "verificationStatus": "verified",
+      "certificationStatus": "certified",
+      "observations": {
+        "cleanRunExit": 0,
+        "faultedRunExit": 1,
+        "causeNamedInOutput": true
+      },
+      "properties": {
+        "positiveDetection": {
+          "verified": true,
+          "evidence": "faulted run exited 1 and named the cause"
+        },
+        "negativeDetection": {
+          "verified": true,
+          "evidence": "clean run exited 0"
+        },
+        "faultInjection": {
+          "verified": true,
+          "evidence": "a real violation was planted and observed"
+        },
+        "falsePositiveResistance": {
+          "verified": true,
+          "evidence": "derived from the clean run — not independently measured",
+          "confidence": "derived"
+        },
+        "falseNegativeResistance": {
+          "verified": true,
+          "evidence": "derived from the faulted run — not independently measured",
+          "confidence": "derived"
+        },
+        "deterministicReplay": {
+          "verified": true,
+          "evidence": "the faulted observation was repeated and produced an equivalent outcome",
+          "confidence": "measured"
+        }
+      }
+    },
+    {
+      "evidenceId": "proof:verify-connector-spi.js#connector-spi-naming-a-provider",
+      "gate": "verify-connector-spi.js",
+      "recordedAt": "2026-08-07T06:47:33.569Z",
+      "expiresAt": "2026-08-14T06:47:33.569Z",
+      "proved": true,
+      "replayed": true,
+      "violation": "a provider brand named inside a capability-neutral connector SPI descriptor",
+      "generator": "governance/verification/record-fault-proofs.js",
+      "generatorVersion": "2.0.0",
+      "executionContext": "node v24.14.1 on win32",
+      "repository": "DBiz_IntelligencePlane",
+      "branch": "main",
+      "commit": "a7821fd63f6fedc2c7888478d33fcd33e300b765",
+      "adrReference": [
+        "ADR-0019",
+        "ADR-0020"
+      ],
+      "ruleReference": [
+        "R-13.4",
+        "R-14.2",
+        "R-14.4",
+        "C-01.39",
+        "C-01.42",
+        "C-01.43"
+      ],
+      "verificationStatus": "verified",
+      "certificationStatus": "certified",
+      "observations": {
+        "cleanRunExit": 0,
+        "faultedRunExit": 1,
+        "causeNamedInOutput": true
+      },
+      "properties": {
+        "positiveDetection": {
+          "verified": true,
+          "evidence": "faulted run exited 1 and named the cause"
+        },
+        "negativeDetection": {
+          "verified": true,
+          "evidence": "clean run exited 0"
+        },
+        "faultInjection": {
+          "verified": true,
+          "evidence": "a real violation was planted and observed"
+        },
+        "falsePositiveResistance": {
+          "verified": true,
+          "evidence": "derived from the clean run — not independently measured",
+          "confidence": "derived"
+        },
+        "falseNegativeResistance": {
+          "verified": true,
+          "evidence": "derived from the faulted run — not independently measured",
+          "confidence": "derived"
+        },
+        "deterministicReplay": {
+          "verified": true,
+          "evidence": "the faulted observation was repeated and produced an equivalent outcome",
+          "confidence": "measured"
+        }
+      }
+    },
+    {
+      "evidenceId": "proof:verify-decision-engine.js#decision-engine-nondeterminism",
+      "gate": "verify-decision-engine.js",
+      "recordedAt": "2026-08-07T06:47:33.569Z",
+      "expiresAt": "2026-08-14T06:47:33.569Z",
+      "proved": true,
+      "replayed": true,
+      "violation": "a Decision Engine that produces different decisions for identical inputs (nondeterminism)",
+      "generator": "governance/verification/record-fault-proofs.js",
+      "generatorVersion": "2.0.0",
+      "executionContext": "node v24.14.1 on win32",
+      "repository": "DBiz_IntelligencePlane",
+      "branch": "main",
+      "commit": "a7821fd63f6fedc2c7888478d33fcd33e300b765",
+      "adrReference": [
+        "ADR-0019",
+        "ADR-0020"
+      ],
+      "ruleReference": [
+        "R-13.4",
+        "R-14.2",
+        "R-14.4",
+        "C-01.39",
+        "C-01.42",
+        "C-01.43"
+      ],
+      "verificationStatus": "verified",
+      "certificationStatus": "certified",
+      "observations": {
+        "cleanRunExit": 0,
+        "faultedRunExit": 1,
+        "causeNamedInOutput": true
+      },
+      "properties": {
+        "positiveDetection": {
+          "verified": true,
+          "evidence": "faulted run exited 1 and named the cause"
+        },
+        "negativeDetection": {
+          "verified": true,
+          "evidence": "clean run exited 0"
+        },
+        "faultInjection": {
+          "verified": true,
+          "evidence": "a real violation was planted and observed"
+        },
+        "falsePositiveResistance": {
+          "verified": true,
+          "evidence": "derived from the clean run — not independently measured",
+          "confidence": "derived"
+        },
+        "falseNegativeResistance": {
+          "verified": true,
+          "evidence": "derived from the faulted run — not independently measured",
+          "confidence": "derived"
+        },
+        "deterministicReplay": {
+          "verified": true,
+          "evidence": "the faulted observation was repeated and produced an equivalent outcome",
+          "confidence": "measured"
+        }
+      }
+    },
+    {
+      "evidenceId": "proof:verify-decision-engine.js#decision-engine-ai-override",
+      "gate": "verify-decision-engine.js",
+      "recordedAt": "2026-08-07T06:47:33.569Z",
+      "expiresAt": "2026-08-14T06:47:33.569Z",
+      "proved": true,
+      "replayed": true,
+      "violation": "a Decision Engine in which an AI recommendation overrides a higher-precedence governance rule",
+      "generator": "governance/verification/record-fault-proofs.js",
+      "generatorVersion": "2.0.0",
+      "executionContext": "node v24.14.1 on win32",
+      "repository": "DBiz_IntelligencePlane",
+      "branch": "main",
+      "commit": "a7821fd63f6fedc2c7888478d33fcd33e300b765",
+      "adrReference": [
+        "ADR-0019",
+        "ADR-0020"
+      ],
+      "ruleReference": [
+        "R-13.4",
+        "R-14.2",
+        "R-14.4",
+        "C-01.39",
+        "C-01.42",
+        "C-01.43"
+      ],
+      "verificationStatus": "verified",
+      "certificationStatus": "certified",
+      "observations": {
+        "cleanRunExit": 0,
+        "faultedRunExit": 1,
+        "causeNamedInOutput": true
+      },
+      "properties": {
+        "positiveDetection": {
+          "verified": true,
+          "evidence": "faulted run exited 1 and named the cause"
+        },
+        "negativeDetection": {
+          "verified": true,
+          "evidence": "clean run exited 0"
+        },
+        "faultInjection": {
+          "verified": true,
+          "evidence": "a real violation was planted and observed"
+        },
+        "falsePositiveResistance": {
+          "verified": true,
+          "evidence": "derived from the clean run — not independently measured",
+          "confidence": "derived"
+        },
+        "falseNegativeResistance": {
+          "verified": true,
+          "evidence": "derived from the faulted run — not independently measured",
+          "confidence": "derived"
+        },
+        "deterministicReplay": {
+          "verified": true,
+          "evidence": "the faulted observation was repeated and produced an equivalent outcome",
+          "confidence": "measured"
+        }
+      }
+    },
+    {
+      "evidenceId": "proof:verify-decision-engine.js#decision-engine-mutable-decision",
+      "gate": "verify-decision-engine.js",
+      "recordedAt": "2026-08-07T06:47:33.569Z",
+      "expiresAt": "2026-08-14T06:47:33.569Z",
+      "proved": true,
+      "replayed": true,
+      "violation": "a Decision Engine that returns a mutable (non-frozen) Decision Object",
+      "generator": "governance/verification/record-fault-proofs.js",
+      "generatorVersion": "2.0.0",
+      "executionContext": "node v24.14.1 on win32",
+      "repository": "DBiz_IntelligencePlane",
+      "branch": "main",
+      "commit": "a7821fd63f6fedc2c7888478d33fcd33e300b765",
+      "adrReference": [
+        "ADR-0019",
+        "ADR-0020"
+      ],
+      "ruleReference": [
+        "R-13.4",
+        "R-14.2",
+        "R-14.4",
+        "C-01.39",
+        "C-01.42",
+        "C-01.43"
+      ],
+      "verificationStatus": "verified",
+      "certificationStatus": "certified",
+      "observations": {
+        "cleanRunExit": 0,
+        "faultedRunExit": 1,
+        "causeNamedInOutput": true
+      },
+      "properties": {
+        "positiveDetection": {
+          "verified": true,
+          "evidence": "faulted run exited 1 and named the cause"
+        },
+        "negativeDetection": {
+          "verified": true,
+          "evidence": "clean run exited 0"
+        },
+        "faultInjection": {
+          "verified": true,
+          "evidence": "a real violation was planted and observed"
+        },
+        "falsePositiveResistance": {
+          "verified": true,
+          "evidence": "derived from the clean run — not independently measured",
+          "confidence": "derived"
+        },
+        "falseNegativeResistance": {
+          "verified": true,
+          "evidence": "derived from the faulted run — not independently measured",
+          "confidence": "derived"
+        },
+        "deterministicReplay": {
+          "verified": true,
+          "evidence": "the faulted observation was repeated and produced an equivalent outcome",
+          "confidence": "measured"
+        }
+      }
+    },
+    {
+      "evidenceId": "proof:verify-intelligence-models.js#intelligence-model-mutable",
+      "gate": "verify-intelligence-models.js",
+      "recordedAt": "2026-08-07T06:47:33.569Z",
+      "expiresAt": "2026-08-14T06:47:33.569Z",
+      "proved": true,
+      "replayed": true,
+      "violation": "a Repository Intelligence model that is not deep-frozen (mutable model)",
+      "generator": "governance/verification/record-fault-proofs.js",
+      "generatorVersion": "2.0.0",
+      "executionContext": "node v24.14.1 on win32",
+      "repository": "DBiz_IntelligencePlane",
+      "branch": "main",
+      "commit": "a7821fd63f6fedc2c7888478d33fcd33e300b765",
+      "adrReference": [
+        "ADR-0019",
+        "ADR-0020"
+      ],
+      "ruleReference": [
+        "R-13.4",
+        "R-14.2",
+        "R-14.4",
+        "C-01.39",
+        "C-01.42",
+        "C-01.43"
+      ],
+      "verificationStatus": "verified",
+      "certificationStatus": "certified",
+      "observations": {
+        "cleanRunExit": 0,
+        "faultedRunExit": 1,
+        "causeNamedInOutput": true
+      },
+      "properties": {
+        "positiveDetection": {
+          "verified": true,
+          "evidence": "faulted run exited 1 and named the cause"
+        },
+        "negativeDetection": {
+          "verified": true,
+          "evidence": "clean run exited 0"
+        },
+        "faultInjection": {
+          "verified": true,
+          "evidence": "a real violation was planted and observed"
+        },
+        "falsePositiveResistance": {
+          "verified": true,
+          "evidence": "derived from the clean run — not independently measured",
+          "confidence": "derived"
+        },
+        "falseNegativeResistance": {
+          "verified": true,
+          "evidence": "derived from the faulted run — not independently measured",
+          "confidence": "derived"
+        },
+        "deterministicReplay": {
+          "verified": true,
+          "evidence": "the faulted observation was repeated and produced an equivalent outcome",
+          "confidence": "measured"
+        }
+      }
+    },
+    {
+      "evidenceId": "proof:verify-intelligence-models.js#intelligence-model-capability-specific-field",
+      "gate": "verify-intelligence-models.js",
+      "recordedAt": "2026-08-07T06:47:33.569Z",
+      "expiresAt": "2026-08-14T06:47:33.569Z",
+      "proved": true,
+      "replayed": true,
+      "violation": "a capability-specific (provider-named) field inside a capability-neutral platform model",
+      "generator": "governance/verification/record-fault-proofs.js",
+      "generatorVersion": "2.0.0",
+      "executionContext": "node v24.14.1 on win32",
+      "repository": "DBiz_IntelligencePlane",
+      "branch": "main",
+      "commit": "a7821fd63f6fedc2c7888478d33fcd33e300b765",
+      "adrReference": [
+        "ADR-0019",
+        "ADR-0020"
+      ],
+      "ruleReference": [
+        "R-13.4",
+        "R-14.2",
+        "R-14.4",
+        "C-01.39",
+        "C-01.42",
+        "C-01.43"
+      ],
+      "verificationStatus": "verified",
+      "certificationStatus": "certified",
+      "observations": {
+        "cleanRunExit": 0,
+        "faultedRunExit": 1,
+        "causeNamedInOutput": true
+      },
+      "properties": {
+        "positiveDetection": {
+          "verified": true,
+          "evidence": "faulted run exited 1 and named the cause"
+        },
+        "negativeDetection": {
+          "verified": true,
+          "evidence": "clean run exited 0"
+        },
+        "faultInjection": {
+          "verified": true,
+          "evidence": "a real violation was planted and observed"
+        },
+        "falsePositiveResistance": {
+          "verified": true,
+          "evidence": "derived from the clean run — not independently measured",
+          "confidence": "derived"
+        },
+        "falseNegativeResistance": {
+          "verified": true,
+          "evidence": "derived from the faulted run — not independently measured",
+          "confidence": "derived"
+        },
+        "deterministicReplay": {
+          "verified": true,
+          "evidence": "the faulted observation was repeated and produced an equivalent outcome",
+          "confidence": "measured"
+        }
+      }
+    },
+    {
+      "evidenceId": "proof:verify-intelligence-models.js#intelligence-model-duplicate-definition",
+      "gate": "verify-intelligence-models.js",
+      "recordedAt": "2026-08-07T06:47:33.569Z",
+      "expiresAt": "2026-08-14T06:47:33.569Z",
+      "proved": true,
+      "replayed": true,
+      "violation": "a second canonical definition of RepositoryIntelligenceModel (duplicate definition)",
+      "generator": "governance/verification/record-fault-proofs.js",
+      "generatorVersion": "2.0.0",
+      "executionContext": "node v24.14.1 on win32",
+      "repository": "DBiz_IntelligencePlane",
+      "branch": "main",
+      "commit": "a7821fd63f6fedc2c7888478d33fcd33e300b765",
+      "adrReference": [
+        "ADR-0019",
+        "ADR-0020"
+      ],
+      "ruleReference": [
+        "R-13.4",
+        "R-14.2",
+        "R-14.4",
+        "C-01.39",
+        "C-01.42",
+        "C-01.43"
+      ],
+      "verificationStatus": "verified",
+      "certificationStatus": "certified",
+      "observations": {
+        "cleanRunExit": 0,
+        "faultedRunExit": 1,
+        "causeNamedInOutput": true
+      },
+      "properties": {
+        "positiveDetection": {
+          "verified": true,
+          "evidence": "faulted run exited 1 and named the cause"
+        },
+        "negativeDetection": {
+          "verified": true,
+          "evidence": "clean run exited 0"
+        },
+        "faultInjection": {
+          "verified": true,
+          "evidence": "a real violation was planted and observed"
+        },
+        "falsePositiveResistance": {
+          "verified": true,
+          "evidence": "derived from the clean run — not independently measured",
+          "confidence": "derived"
+        },
+        "falseNegativeResistance": {
+          "verified": true,
+          "evidence": "derived from the faulted run — not independently measured",
+          "confidence": "derived"
+        },
+        "deterministicReplay": {
+          "verified": true,
+          "evidence": "the faulted observation was repeated and produced an equivalent outcome",
+          "confidence": "measured"
+        }
+      }
+    },
+    {
+      "evidenceId": "proof:verify-reporting-model.js#reporting-model-mutable",
+      "gate": "verify-reporting-model.js",
+      "recordedAt": "2026-08-07T06:47:33.569Z",
+      "expiresAt": "2026-08-14T06:47:33.569Z",
+      "proved": true,
+      "replayed": true,
+      "violation": "a Reporting model that is not deep-frozen (mutable model)",
+      "generator": "governance/verification/record-fault-proofs.js",
+      "generatorVersion": "2.0.0",
+      "executionContext": "node v24.14.1 on win32",
+      "repository": "DBiz_IntelligencePlane",
+      "branch": "main",
+      "commit": "a7821fd63f6fedc2c7888478d33fcd33e300b765",
+      "adrReference": [
+        "ADR-0019",
+        "ADR-0020"
+      ],
+      "ruleReference": [
+        "R-13.4",
+        "R-14.2",
+        "R-14.4",
+        "C-01.39",
+        "C-01.42",
+        "C-01.43"
+      ],
+      "verificationStatus": "verified",
+      "certificationStatus": "certified",
+      "observations": {
+        "cleanRunExit": 0,
+        "faultedRunExit": 1,
+        "causeNamedInOutput": true
+      },
+      "properties": {
+        "positiveDetection": {
+          "verified": true,
+          "evidence": "faulted run exited 1 and named the cause"
+        },
+        "negativeDetection": {
+          "verified": true,
+          "evidence": "clean run exited 0"
+        },
+        "faultInjection": {
+          "verified": true,
+          "evidence": "a real violation was planted and observed"
+        },
+        "falsePositiveResistance": {
+          "verified": true,
+          "evidence": "derived from the clean run — not independently measured",
+          "confidence": "derived"
+        },
+        "falseNegativeResistance": {
+          "verified": true,
+          "evidence": "derived from the faulted run — not independently measured",
+          "confidence": "derived"
+        },
+        "deterministicReplay": {
+          "verified": true,
+          "evidence": "the faulted observation was repeated and produced an equivalent outcome",
+          "confidence": "measured"
+        }
+      }
+    },
+    {
+      "evidenceId": "proof:verify-reporting-model.js#reporting-model-capability-specific-field",
+      "gate": "verify-reporting-model.js",
+      "recordedAt": "2026-08-07T06:47:33.569Z",
+      "expiresAt": "2026-08-14T06:47:33.569Z",
+      "proved": true,
+      "replayed": true,
+      "violation": "a capability-specific (provider-named) reporting field in a capability-neutral model",
+      "generator": "governance/verification/record-fault-proofs.js",
+      "generatorVersion": "2.0.0",
+      "executionContext": "node v24.14.1 on win32",
+      "repository": "DBiz_IntelligencePlane",
+      "branch": "main",
+      "commit": "a7821fd63f6fedc2c7888478d33fcd33e300b765",
+      "adrReference": [
+        "ADR-0019",
+        "ADR-0020"
+      ],
+      "ruleReference": [
+        "R-13.4",
+        "R-14.2",
+        "R-14.4",
+        "C-01.39",
+        "C-01.42",
+        "C-01.43"
+      ],
+      "verificationStatus": "verified",
+      "certificationStatus": "certified",
+      "observations": {
+        "cleanRunExit": 0,
+        "faultedRunExit": 1,
+        "causeNamedInOutput": true
+      },
+      "properties": {
+        "positiveDetection": {
+          "verified": true,
+          "evidence": "faulted run exited 1 and named the cause"
+        },
+        "negativeDetection": {
+          "verified": true,
+          "evidence": "clean run exited 0"
+        },
+        "faultInjection": {
+          "verified": true,
+          "evidence": "a real violation was planted and observed"
+        },
+        "falsePositiveResistance": {
+          "verified": true,
+          "evidence": "derived from the clean run — not independently measured",
+          "confidence": "derived"
+        },
+        "falseNegativeResistance": {
+          "verified": true,
+          "evidence": "derived from the faulted run — not independently measured",
+          "confidence": "derived"
+        },
+        "deterministicReplay": {
+          "verified": true,
+          "evidence": "the faulted observation was repeated and produced an equivalent outcome",
+          "confidence": "measured"
+        }
+      }
+    },
+    {
+      "evidenceId": "proof:verify-reporting-model.js#reporting-model-embedded-payload",
+      "gate": "verify-reporting-model.js",
+      "recordedAt": "2026-08-07T06:47:33.569Z",
+      "expiresAt": "2026-08-14T06:47:33.569Z",
+      "proved": true,
+      "replayed": true,
+      "violation": "an embedded execution payload instead of an evidence reference",
+      "generator": "governance/verification/record-fault-proofs.js",
+      "generatorVersion": "2.0.0",
+      "executionContext": "node v24.14.1 on win32",
+      "repository": "DBiz_IntelligencePlane",
+      "branch": "main",
+      "commit": "a7821fd63f6fedc2c7888478d33fcd33e300b765",
+      "adrReference": [
+        "ADR-0019",
+        "ADR-0020"
+      ],
+      "ruleReference": [
+        "R-13.4",
+        "R-14.2",
+        "R-14.4",
+        "C-01.39",
+        "C-01.42",
+        "C-01.43"
+      ],
+      "verificationStatus": "verified",
+      "certificationStatus": "certified",
+      "observations": {
+        "cleanRunExit": 0,
+        "faultedRunExit": 1,
+        "causeNamedInOutput": true
+      },
+      "properties": {
+        "positiveDetection": {
+          "verified": true,
+          "evidence": "faulted run exited 1 and named the cause"
+        },
+        "negativeDetection": {
+          "verified": true,
+          "evidence": "clean run exited 0"
+        },
+        "faultInjection": {
+          "verified": true,
+          "evidence": "a real violation was planted and observed"
+        },
+        "falsePositiveResistance": {
+          "verified": true,
+          "evidence": "derived from the clean run — not independently measured",
+          "confidence": "derived"
+        },
+        "falseNegativeResistance": {
+          "verified": true,
+          "evidence": "derived from the faulted run — not independently measured",
+          "confidence": "derived"
+        },
+        "deterministicReplay": {
+          "verified": true,
+          "evidence": "the faulted observation was repeated and produced an equivalent outcome",
+          "confidence": "measured"
+        }
+      }
+    },
+    {
+      "evidenceId": "proof:verify-reporting-model.js#reporting-model-duplicate-definition",
+      "gate": "verify-reporting-model.js",
+      "recordedAt": "2026-08-07T06:47:33.569Z",
+      "expiresAt": "2026-08-14T06:47:33.569Z",
+      "proved": true,
+      "replayed": true,
+      "violation": "a second canonical definition of ReportingModel (duplicate definition)",
+      "generator": "governance/verification/record-fault-proofs.js",
+      "generatorVersion": "2.0.0",
+      "executionContext": "node v24.14.1 on win32",
+      "repository": "DBiz_IntelligencePlane",
+      "branch": "main",
+      "commit": "a7821fd63f6fedc2c7888478d33fcd33e300b765",
+      "adrReference": [
+        "ADR-0019",
+        "ADR-0020"
+      ],
+      "ruleReference": [
+        "R-13.4",
+        "R-14.2",
+        "R-14.4",
+        "C-01.39",
+        "C-01.42",
+        "C-01.43"
+      ],
+      "verificationStatus": "verified",
+      "certificationStatus": "certified",
+      "observations": {
+        "cleanRunExit": 0,
+        "faultedRunExit": 1,
+        "causeNamedInOutput": true
+      },
+      "properties": {
+        "positiveDetection": {
+          "verified": true,
+          "evidence": "faulted run exited 1 and named the cause"
+        },
+        "negativeDetection": {
+          "verified": true,
+          "evidence": "clean run exited 0"
+        },
+        "faultInjection": {
+          "verified": true,
+          "evidence": "a real violation was planted and observed"
+        },
+        "falsePositiveResistance": {
+          "verified": true,
+          "evidence": "derived from the clean run — not independently measured",
+          "confidence": "derived"
+        },
+        "falseNegativeResistance": {
+          "verified": true,
+          "evidence": "derived from the faulted run — not independently measured",
+          "confidence": "derived"
+        },
+        "deterministicReplay": {
+          "verified": true,
+          "evidence": "the faulted observation was repeated and produced an equivalent outcome",
+          "confidence": "measured"
+        }
+      }
+    },
+    {
+      "evidenceId": "proof:verify-platform-events.js#platform-event-mutable",
+      "gate": "verify-platform-events.js",
+      "recordedAt": "2026-08-07T06:47:33.569Z",
+      "expiresAt": "2026-08-14T06:47:33.569Z",
+      "proved": true,
+      "replayed": true,
+      "violation": "a PlatformEvent/Observability object that is not deep-frozen (mutable event)",
+      "generator": "governance/verification/record-fault-proofs.js",
+      "generatorVersion": "2.0.0",
+      "executionContext": "node v24.14.1 on win32",
+      "repository": "DBiz_IntelligencePlane",
+      "branch": "main",
+      "commit": "a7821fd63f6fedc2c7888478d33fcd33e300b765",
+      "adrReference": [
+        "ADR-0019",
+        "ADR-0020"
+      ],
+      "ruleReference": [
+        "R-13.4",
+        "R-14.2",
+        "R-14.4",
+        "C-01.39",
+        "C-01.42",
+        "C-01.43"
+      ],
+      "verificationStatus": "verified",
+      "certificationStatus": "certified",
+      "observations": {
+        "cleanRunExit": 0,
+        "faultedRunExit": 1,
+        "causeNamedInOutput": true
+      },
+      "properties": {
+        "positiveDetection": {
+          "verified": true,
+          "evidence": "faulted run exited 1 and named the cause"
+        },
+        "negativeDetection": {
+          "verified": true,
+          "evidence": "clean run exited 0"
+        },
+        "faultInjection": {
+          "verified": true,
+          "evidence": "a real violation was planted and observed"
+        },
+        "falsePositiveResistance": {
+          "verified": true,
+          "evidence": "derived from the clean run — not independently measured",
+          "confidence": "derived"
+        },
+        "falseNegativeResistance": {
+          "verified": true,
+          "evidence": "derived from the faulted run — not independently measured",
+          "confidence": "derived"
+        },
+        "deterministicReplay": {
+          "verified": true,
+          "evidence": "the faulted observation was repeated and produced an equivalent outcome",
+          "confidence": "measured"
+        }
+      }
+    },
+    {
+      "evidenceId": "proof:verify-platform-events.js#platform-event-business-payload",
+      "gate": "verify-platform-events.js",
+      "recordedAt": "2026-08-07T06:47:33.569Z",
+      "expiresAt": "2026-08-14T06:47:33.569Z",
+      "proved": true,
+      "replayed": true,
+      "violation": "a business payload embedded in a PlatformEvent instead of a reference",
+      "generator": "governance/verification/record-fault-proofs.js",
+      "generatorVersion": "2.0.0",
+      "executionContext": "node v24.14.1 on win32",
+      "repository": "DBiz_IntelligencePlane",
+      "branch": "main",
+      "commit": "a7821fd63f6fedc2c7888478d33fcd33e300b765",
+      "adrReference": [
+        "ADR-0019",
+        "ADR-0020"
+      ],
+      "ruleReference": [
+        "R-13.4",
+        "R-14.2",
+        "R-14.4",
+        "C-01.39",
+        "C-01.42",
+        "C-01.43"
+      ],
+      "verificationStatus": "verified",
+      "certificationStatus": "certified",
+      "observations": {
+        "cleanRunExit": 0,
+        "faultedRunExit": 1,
+        "causeNamedInOutput": true
+      },
+      "properties": {
+        "positiveDetection": {
+          "verified": true,
+          "evidence": "faulted run exited 1 and named the cause"
+        },
+        "negativeDetection": {
+          "verified": true,
+          "evidence": "clean run exited 0"
+        },
+        "faultInjection": {
+          "verified": true,
+          "evidence": "a real violation was planted and observed"
+        },
+        "falsePositiveResistance": {
+          "verified": true,
+          "evidence": "derived from the clean run — not independently measured",
+          "confidence": "derived"
+        },
+        "falseNegativeResistance": {
+          "verified": true,
+          "evidence": "derived from the faulted run — not independently measured",
+          "confidence": "derived"
+        },
+        "deterministicReplay": {
+          "verified": true,
+          "evidence": "the faulted observation was repeated and produced an equivalent outcome",
+          "confidence": "measured"
+        }
+      }
+    },
+    {
+      "evidenceId": "proof:verify-platform-events.js#platform-event-execution-control-field",
+      "gate": "verify-platform-events.js",
+      "recordedAt": "2026-08-07T06:47:33.569Z",
+      "expiresAt": "2026-08-14T06:47:33.569Z",
+      "proved": true,
+      "replayed": true,
+      "violation": "an execution-control field on a PlatformEvent (events must be observational only)",
+      "generator": "governance/verification/record-fault-proofs.js",
+      "generatorVersion": "2.0.0",
+      "executionContext": "node v24.14.1 on win32",
+      "repository": "DBiz_IntelligencePlane",
+      "branch": "main",
+      "commit": "a7821fd63f6fedc2c7888478d33fcd33e300b765",
+      "adrReference": [
+        "ADR-0019",
+        "ADR-0020"
+      ],
+      "ruleReference": [
+        "R-13.4",
+        "R-14.2",
+        "R-14.4",
+        "C-01.39",
+        "C-01.42",
+        "C-01.43"
+      ],
+      "verificationStatus": "verified",
+      "certificationStatus": "certified",
+      "observations": {
+        "cleanRunExit": 0,
+        "faultedRunExit": 1,
+        "causeNamedInOutput": true
+      },
+      "properties": {
+        "positiveDetection": {
+          "verified": true,
+          "evidence": "faulted run exited 1 and named the cause"
+        },
+        "negativeDetection": {
+          "verified": true,
+          "evidence": "clean run exited 0"
+        },
+        "faultInjection": {
+          "verified": true,
+          "evidence": "a real violation was planted and observed"
+        },
+        "falsePositiveResistance": {
+          "verified": true,
+          "evidence": "derived from the clean run — not independently measured",
+          "confidence": "derived"
+        },
+        "falseNegativeResistance": {
+          "verified": true,
+          "evidence": "derived from the faulted run — not independently measured",
+          "confidence": "derived"
+        },
+        "deterministicReplay": {
+          "verified": true,
+          "evidence": "the faulted observation was repeated and produced an equivalent outcome",
+          "confidence": "measured"
+        }
+      }
+    },
+    {
+      "evidenceId": "proof:verify-platform-events.js#platform-event-duplicate-definition",
+      "gate": "verify-platform-events.js",
+      "recordedAt": "2026-08-07T06:47:33.569Z",
+      "expiresAt": "2026-08-14T06:47:33.569Z",
+      "proved": true,
+      "replayed": true,
+      "violation": "a second canonical definition of PlatformEvent (duplicate definition)",
+      "generator": "governance/verification/record-fault-proofs.js",
+      "generatorVersion": "2.0.0",
+      "executionContext": "node v24.14.1 on win32",
+      "repository": "DBiz_IntelligencePlane",
+      "branch": "main",
+      "commit": "a7821fd63f6fedc2c7888478d33fcd33e300b765",
+      "adrReference": [
+        "ADR-0019",
+        "ADR-0020"
+      ],
+      "ruleReference": [
+        "R-13.4",
+        "R-14.2",
+        "R-14.4",
+        "C-01.39",
+        "C-01.42",
+        "C-01.43"
+      ],
+      "verificationStatus": "verified",
+      "certificationStatus": "certified",
+      "observations": {
+        "cleanRunExit": 0,
+        "faultedRunExit": 1,
+        "causeNamedInOutput": true
+      },
+      "properties": {
+        "positiveDetection": {
+          "verified": true,
+          "evidence": "faulted run exited 1 and named the cause"
+        },
+        "negativeDetection": {
+          "verified": true,
+          "evidence": "clean run exited 0"
+        },
+        "faultInjection": {
+          "verified": true,
+          "evidence": "a real violation was planted and observed"
+        },
+        "falsePositiveResistance": {
+          "verified": true,
+          "evidence": "derived from the clean run — not independently measured",
+          "confidence": "derived"
+        },
+        "falseNegativeResistance": {
+          "verified": true,
+          "evidence": "derived from the faulted run — not independently measured",
+          "confidence": "derived"
+        },
+        "deterministicReplay": {
+          "verified": true,
+          "evidence": "the faulted observation was repeated and produced an equivalent outcome",
+          "confidence": "measured"
+        }
+      }
+    },
+    {
+      "evidenceId": "proof:verify-provider-platform.js#provider-platform-second-env-reader",
+      "gate": "verify-provider-platform.js",
+      "recordedAt": "2026-08-07T06:47:33.569Z",
+      "expiresAt": "2026-08-14T06:47:33.569Z",
+      "proved": true,
+      "replayed": true,
+      "violation": "a second reader of process.env outside the Configuration Provider",
+      "generator": "governance/verification/record-fault-proofs.js",
+      "generatorVersion": "2.0.0",
+      "executionContext": "node v24.14.1 on win32",
+      "repository": "DBiz_IntelligencePlane",
+      "branch": "main",
+      "commit": "a7821fd63f6fedc2c7888478d33fcd33e300b765",
+      "adrReference": [
+        "ADR-0019",
+        "ADR-0020"
+      ],
+      "ruleReference": [
+        "R-13.4",
+        "R-14.2",
+        "R-14.4",
+        "C-01.39",
+        "C-01.42",
+        "C-01.43"
+      ],
+      "verificationStatus": "verified",
+      "certificationStatus": "certified",
+      "observations": {
+        "cleanRunExit": 0,
+        "faultedRunExit": 1,
+        "causeNamedInOutput": true
+      },
+      "properties": {
+        "positiveDetection": {
+          "verified": true,
+          "evidence": "faulted run exited 1 and named the cause"
+        },
+        "negativeDetection": {
+          "verified": true,
+          "evidence": "clean run exited 0"
+        },
+        "faultInjection": {
+          "verified": true,
+          "evidence": "a real violation was planted and observed"
+        },
+        "falsePositiveResistance": {
+          "verified": true,
+          "evidence": "derived from the clean run — not independently measured",
+          "confidence": "derived"
+        },
+        "falseNegativeResistance": {
+          "verified": true,
+          "evidence": "derived from the faulted run — not independently measured",
+          "confidence": "derived"
+        },
+        "deterministicReplay": {
+          "verified": true,
+          "evidence": "the faulted observation was repeated and produced an equivalent outcome",
+          "confidence": "measured"
+        }
+      }
+    },
+    {
+      "evidenceId": "proof:verify-provider-platform.js#provider-platform-azure-lock-in",
+      "gate": "verify-provider-platform.js",
+      "recordedAt": "2026-08-07T06:47:33.569Z",
+      "expiresAt": "2026-08-14T06:47:33.569Z",
+      "proved": true,
+      "replayed": true,
+      "violation": "an @azure/* import introducing cloud lock-in into the provider platform",
+      "generator": "governance/verification/record-fault-proofs.js",
+      "generatorVersion": "2.0.0",
+      "executionContext": "node v24.14.1 on win32",
+      "repository": "DBiz_IntelligencePlane",
+      "branch": "main",
+      "commit": "a7821fd63f6fedc2c7888478d33fcd33e300b765",
+      "adrReference": [
+        "ADR-0019",
+        "ADR-0020"
+      ],
+      "ruleReference": [
+        "R-13.4",
+        "R-14.2",
+        "R-14.4",
+        "C-01.39",
+        "C-01.42",
+        "C-01.43"
+      ],
+      "verificationStatus": "verified",
+      "certificationStatus": "certified",
+      "observations": {
+        "cleanRunExit": 0,
+        "faultedRunExit": 1,
+        "causeNamedInOutput": true
+      },
+      "properties": {
+        "positiveDetection": {
+          "verified": true,
+          "evidence": "faulted run exited 1 and named the cause"
+        },
+        "negativeDetection": {
+          "verified": true,
+          "evidence": "clean run exited 0"
+        },
+        "faultInjection": {
+          "verified": true,
+          "evidence": "a real violation was planted and observed"
+        },
+        "falsePositiveResistance": {
+          "verified": true,
+          "evidence": "derived from the clean run — not independently measured",
+          "confidence": "derived"
+        },
+        "falseNegativeResistance": {
+          "verified": true,
+          "evidence": "derived from the faulted run — not independently measured",
+          "confidence": "derived"
+        },
+        "deterministicReplay": {
+          "verified": true,
+          "evidence": "the faulted observation was repeated and produced an equivalent outcome",
+          "confidence": "measured"
+        }
+      }
+    },
+    {
+      "evidenceId": "proof:verify-provider-platform.js#provider-platform-runtime-coupling",
+      "gate": "verify-provider-platform.js",
+      "recordedAt": "2026-08-07T06:47:33.569Z",
+      "expiresAt": "2026-08-14T06:47:33.569Z",
+      "proved": true,
+      "replayed": true,
+      "violation": "the additive provider platform importing a deferred runtime/legacy component",
+      "generator": "governance/verification/record-fault-proofs.js",
+      "generatorVersion": "2.0.0",
+      "executionContext": "node v24.14.1 on win32",
+      "repository": "DBiz_IntelligencePlane",
+      "branch": "main",
+      "commit": "a7821fd63f6fedc2c7888478d33fcd33e300b765",
+      "adrReference": [
+        "ADR-0019",
+        "ADR-0020"
+      ],
+      "ruleReference": [
+        "R-13.4",
+        "R-14.2",
+        "R-14.4",
+        "C-01.39",
+        "C-01.42",
+        "C-01.43"
+      ],
+      "verificationStatus": "verified",
+      "certificationStatus": "certified",
+      "observations": {
+        "cleanRunExit": 0,
+        "faultedRunExit": 1,
+        "causeNamedInOutput": true
+      },
+      "properties": {
+        "positiveDetection": {
+          "verified": true,
+          "evidence": "faulted run exited 1 and named the cause"
+        },
+        "negativeDetection": {
+          "verified": true,
+          "evidence": "clean run exited 0"
+        },
+        "faultInjection": {
+          "verified": true,
+          "evidence": "a real violation was planted and observed"
+        },
+        "falsePositiveResistance": {
+          "verified": true,
+          "evidence": "derived from the clean run — not independently measured",
+          "confidence": "derived"
+        },
+        "falseNegativeResistance": {
+          "verified": true,
+          "evidence": "derived from the faulted run — not independently measured",
+          "confidence": "derived"
+        },
+        "deterministicReplay": {
+          "verified": true,
+          "evidence": "the faulted observation was repeated and produced an equivalent outcome",
+          "confidence": "measured"
+        }
+      }
+    },
+    {
+      "evidenceId": "proof:verify-provider-platform.js#provider-platform-stray-fs",
+      "gate": "verify-provider-platform.js",
+      "recordedAt": "2026-08-07T06:47:33.569Z",
+      "expiresAt": "2026-08-14T06:47:33.569Z",
+      "proved": true,
+      "replayed": true,
+      "violation": "node:fs used outside the Storage/Secret providers",
+      "generator": "governance/verification/record-fault-proofs.js",
+      "generatorVersion": "2.0.0",
+      "executionContext": "node v24.14.1 on win32",
+      "repository": "DBiz_IntelligencePlane",
+      "branch": "main",
+      "commit": "a7821fd63f6fedc2c7888478d33fcd33e300b765",
+      "adrReference": [
+        "ADR-0019",
+        "ADR-0020"
+      ],
+      "ruleReference": [
+        "R-13.4",
+        "R-14.2",
+        "R-14.4",
+        "C-01.39",
+        "C-01.42",
+        "C-01.43"
+      ],
+      "verificationStatus": "verified",
+      "certificationStatus": "certified",
+      "observations": {
+        "cleanRunExit": 0,
+        "faultedRunExit": 1,
+        "causeNamedInOutput": true
+      },
+      "properties": {
+        "positiveDetection": {
+          "verified": true,
+          "evidence": "faulted run exited 1 and named the cause"
+        },
+        "negativeDetection": {
+          "verified": true,
+          "evidence": "clean run exited 0"
+        },
+        "faultInjection": {
+          "verified": true,
+          "evidence": "a real violation was planted and observed"
+        },
+        "falsePositiveResistance": {
+          "verified": true,
+          "evidence": "derived from the clean run — not independently measured",
+          "confidence": "derived"
+        },
+        "falseNegativeResistance": {
+          "verified": true,
+          "evidence": "derived from the faulted run — not independently measured",
+          "confidence": "derived"
+        },
+        "deterministicReplay": {
+          "verified": true,
+          "evidence": "the faulted observation was repeated and produced an equivalent outcome",
+          "confidence": "measured"
+        }
+      }
+    },
+    {
+      "evidenceId": "proof:verify-discovery-conformance.js#adapters-declared-but-never-invoked",
+      "gate": "verify-discovery-conformance.js",
+      "recordedAt": "2026-08-07T06:47:33.569Z",
+      "expiresAt": "2026-08-14T06:47:33.569Z",
+      "proved": false,
+      "replayed": true,
+      "violation": "adapters that are configured and typed but whose invocation is never recorded",
+      "generator": "governance/verification/record-fault-proofs.js",
+      "generatorVersion": "2.0.0",
+      "executionContext": "node v24.14.1 on win32",
+      "repository": "DBiz_IntelligencePlane",
+      "branch": "main",
+      "commit": "a7821fd63f6fedc2c7888478d33fcd33e300b765",
+      "adrReference": [
+        "ADR-0019",
+        "ADR-0020"
+      ],
+      "ruleReference": [
+        "R-13.4",
+        "R-14.2",
+        "R-14.4",
+        "C-01.39",
+        "C-01.42",
+        "C-01.43"
+      ],
+      "verificationStatus": "failed",
+      "certificationStatus": "uncertified",
+      "observations": {
+        "cleanRunExit": 1,
+        "faultedRunExit": 1,
+        "causeNamedInOutput": true
+      },
+      "properties": {
+        "positiveDetection": {
+          "verified": true,
+          "evidence": "faulted run exited 1 and named the cause"
+        },
+        "negativeDetection": {
+          "verified": false,
+          "evidence": "clean run exited 0"
+        },
+        "faultInjection": {
+          "verified": true,
+          "evidence": "a real violation was planted and observed"
+        },
+        "falsePositiveResistance": {
+          "verified": false,
+          "evidence": "derived from the clean run — not independently measured",
+          "confidence": "derived"
+        },
+        "falseNegativeResistance": {
+          "verified": true,
+          "evidence": "derived from the faulted run — not independently measured",
+          "confidence": "derived"
+        },
+        "deterministicReplay": {
+          "verified": true,
+          "evidence": "the faulted observation was repeated and produced an equivalent outcome",
+          "confidence": "measured"
+        }
+      }
+    },
+    {
+      "evidenceId": "proof:verify-platform-certification.js#platform-certified-claim-without-evidence",
+      "gate": "verify-platform-certification.js",
+      "recordedAt": "2026-08-07T06:47:33.569Z",
+      "expiresAt": "2026-08-14T06:47:33.569Z",
+      "proved": true,
+      "replayed": true,
+      "violation": "a document asserting the platform is CERTIFIED while the evidence says NOT CERTIFIED",
+      "generator": "governance/verification/record-fault-proofs.js",
+      "generatorVersion": "2.0.0",
+      "executionContext": "node v24.14.1 on win32",
+      "repository": "DBiz_IntelligencePlane",
+      "branch": "main",
+      "commit": "a7821fd63f6fedc2c7888478d33fcd33e300b765",
+      "adrReference": [
+        "ADR-0019",
+        "ADR-0020"
+      ],
+      "ruleReference": [
+        "R-13.4",
+        "R-14.2",
+        "R-14.4",
+        "C-01.39",
+        "C-01.42",
+        "C-01.43"
+      ],
+      "verificationStatus": "verified",
+      "certificationStatus": "certified",
+      "observations": {
+        "cleanRunExit": 0,
+        "faultedRunExit": 1,
+        "causeNamedInOutput": true
+      },
+      "properties": {
+        "positiveDetection": {
+          "verified": true,
+          "evidence": "faulted run exited 1 and named the cause"
+        },
+        "negativeDetection": {
+          "verified": true,
+          "evidence": "clean run exited 0"
+        },
+        "faultInjection": {
+          "verified": true,
+          "evidence": "a real violation was planted and observed"
+        },
+        "falsePositiveResistance": {
+          "verified": true,
+          "evidence": "derived from the clean run — not independently measured",
+          "confidence": "derived"
+        },
+        "falseNegativeResistance": {
+          "verified": true,
+          "evidence": "derived from the faulted run — not independently measured",
+          "confidence": "derived"
+        },
+        "deterministicReplay": {
+          "verified": true,
+          "evidence": "the faulted observation was repeated and produced an equivalent outcome",
+          "confidence": "measured"
+        }
+      }
+    },
+    {
+      "evidenceId": "proof:verify-platform-certification.js#harness-emitting-a-false-certified-verdict",
+      "gate": "verify-platform-certification.js",
+      "recordedAt": "2026-08-07T06:47:33.569Z",
+      "expiresAt": "2026-08-14T06:47:33.569Z",
+      "proved": true,
+      "replayed": true,
+      "violation": "the measuring harness emitting six CERTIFIED capabilities and a CERTIFIED platform with no passing gate behind any of it",
+      "generator": "governance/verification/record-fault-proofs.js",
+      "generatorVersion": "2.0.0",
+      "executionContext": "node v24.14.1 on win32",
+      "repository": "DBiz_IntelligencePlane",
+      "branch": "main",
+      "commit": "a7821fd63f6fedc2c7888478d33fcd33e300b765",
+      "adrReference": [
+        "ADR-0019",
+        "ADR-0020"
+      ],
+      "ruleReference": [
+        "R-13.4",
+        "R-14.2",
+        "R-14.4",
+        "C-01.39",
+        "C-01.42",
+        "C-01.43"
+      ],
+      "verificationStatus": "verified",
+      "certificationStatus": "certified",
+      "observations": {
+        "cleanRunExit": 0,
+        "faultedRunExit": 1,
+        "causeNamedInOutput": true
+      },
+      "properties": {
+        "positiveDetection": {
+          "verified": true,
+          "evidence": "faulted run exited 1 and named the cause"
+        },
+        "negativeDetection": {
+          "verified": true,
+          "evidence": "clean run exited 0"
+        },
+        "faultInjection": {
+          "verified": true,
+          "evidence": "a real violation was planted and observed"
+        },
+        "falsePositiveResistance": {
+          "verified": true,
+          "evidence": "derived from the clean run — not independently measured",
+          "confidence": "derived"
+        },
+        "falseNegativeResistance": {
+          "verified": true,
+          "evidence": "derived from the faulted run — not independently measured",
+          "confidence": "derived"
+        },
+        "deterministicReplay": {
+          "verified": true,
+          "evidence": "the faulted observation was repeated and produced an equivalent outcome",
+          "confidence": "measured"
+        }
+      }
+    },
+    {
+      "evidenceId": "proof:verify-devchange-conformance.js#catalogue-omitting-the-governance-triad",
+      "gate": "verify-devchange-conformance.js",
+      "recordedAt": "2026-08-07T06:47:33.569Z",
+      "expiresAt": "2026-08-14T06:47:33.569Z",
+      "proved": false,
+      "replayed": true,
+      "violation": "a catalogue that registers every domain agent but none of the governance agents, so no stage can be certified",
+      "generator": "governance/verification/record-fault-proofs.js",
+      "generatorVersion": "2.0.0",
+      "executionContext": "node v24.14.1 on win32",
+      "repository": "DBiz_IntelligencePlane",
+      "branch": "main",
+      "commit": "a7821fd63f6fedc2c7888478d33fcd33e300b765",
+      "adrReference": [
+        "ADR-0019",
+        "ADR-0020"
+      ],
+      "ruleReference": [
+        "R-13.4",
+        "R-14.2",
+        "R-14.4",
+        "C-01.39",
+        "C-01.42",
+        "C-01.43"
+      ],
+      "verificationStatus": "failed",
+      "certificationStatus": "uncertified",
+      "observations": {
+        "cleanRunExit": 1,
+        "faultedRunExit": 1,
+        "causeNamedInOutput": true
+      },
+      "properties": {
+        "positiveDetection": {
+          "verified": true,
+          "evidence": "faulted run exited 1 and named the cause"
+        },
+        "negativeDetection": {
+          "verified": false,
+          "evidence": "clean run exited 0"
+        },
+        "faultInjection": {
+          "verified": true,
+          "evidence": "a real violation was planted and observed"
+        },
+        "falsePositiveResistance": {
+          "verified": false,
+          "evidence": "derived from the clean run — not independently measured",
+          "confidence": "derived"
+        },
+        "falseNegativeResistance": {
+          "verified": true,
+          "evidence": "derived from the faulted run — not independently measured",
+          "confidence": "derived"
+        },
+        "deterministicReplay": {
+          "verified": true,
+          "evidence": "the faulted observation was repeated and produced an equivalent outcome",
+          "confidence": "measured"
+        }
+      }
+    },
+    {
+      "evidenceId": "proof:verify-performance-conformance.js#architecture-document-added-for-the-performance-engine",
+      "gate": "verify-performance-conformance.js",
+      "recordedAt": "2026-08-07T06:47:33.569Z",
+      "expiresAt": "2026-08-14T06:47:33.569Z",
+      "proved": true,
+      "replayed": true,
+      "violation": "an architecture document added for the Performance Engine (forbidden by ADR-0026; capability 4 needs none)",
+      "generator": "governance/verification/record-fault-proofs.js",
+      "generatorVersion": "2.0.0",
+      "executionContext": "node v24.14.1 on win32",
+      "repository": "DBiz_IntelligencePlane",
+      "branch": "main",
+      "commit": "a7821fd63f6fedc2c7888478d33fcd33e300b765",
+      "adrReference": [
+        "ADR-0019",
+        "ADR-0020"
+      ],
+      "ruleReference": [
+        "R-13.4",
+        "R-14.2",
+        "R-14.4",
+        "C-01.39",
+        "C-01.42",
+        "C-01.43"
+      ],
+      "verificationStatus": "verified",
+      "certificationStatus": "certified",
+      "observations": {
+        "cleanRunExit": 0,
+        "faultedRunExit": 1,
+        "causeNamedInOutput": true
+      },
+      "properties": {
+        "positiveDetection": {
+          "verified": true,
+          "evidence": "faulted run exited 1 and named the cause"
+        },
+        "negativeDetection": {
+          "verified": true,
+          "evidence": "clean run exited 0"
+        },
+        "faultInjection": {
+          "verified": true,
+          "evidence": "a real violation was planted and observed"
+        },
+        "falsePositiveResistance": {
+          "verified": true,
+          "evidence": "derived from the clean run — not independently measured",
+          "confidence": "derived"
+        },
+        "falseNegativeResistance": {
+          "verified": true,
+          "evidence": "derived from the faulted run — not independently measured",
+          "confidence": "derived"
+        },
+        "deterministicReplay": {
+          "verified": true,
+          "evidence": "the faulted observation was repeated and produced an equivalent outcome",
+          "confidence": "measured"
+        }
+      }
+    },
+    {
+      "evidenceId": "proof:verify-sectest-conformance.js#architecture-document-added-for-the-security-testing-engine",
+      "gate": "verify-sectest-conformance.js",
+      "recordedAt": "2026-08-07T06:47:33.569Z",
+      "expiresAt": "2026-08-14T06:47:33.569Z",
+      "proved": true,
+      "replayed": true,
+      "violation": "an architecture document added for the Security Testing Engine (forbidden by ADR-0028; capability 5 needs none)",
+      "generator": "governance/verification/record-fault-proofs.js",
+      "generatorVersion": "2.0.0",
+      "executionContext": "node v24.14.1 on win32",
+      "repository": "DBiz_IntelligencePlane",
+      "branch": "main",
+      "commit": "a7821fd63f6fedc2c7888478d33fcd33e300b765",
+      "adrReference": [
+        "ADR-0019",
+        "ADR-0020"
+      ],
+      "ruleReference": [
+        "R-13.4",
+        "R-14.2",
+        "R-14.4",
+        "C-01.39",
+        "C-01.42",
+        "C-01.43"
+      ],
+      "verificationStatus": "verified",
+      "certificationStatus": "certified",
+      "observations": {
+        "cleanRunExit": 0,
+        "faultedRunExit": 1,
+        "causeNamedInOutput": true
+      },
+      "properties": {
+        "positiveDetection": {
+          "verified": true,
+          "evidence": "faulted run exited 1 and named the cause"
+        },
+        "negativeDetection": {
+          "verified": true,
+          "evidence": "clean run exited 0"
+        },
+        "faultInjection": {
+          "verified": true,
+          "evidence": "a real violation was planted and observed"
+        },
+        "falsePositiveResistance": {
+          "verified": true,
+          "evidence": "derived from the clean run — not independently measured",
+          "confidence": "derived"
+        },
+        "falseNegativeResistance": {
+          "verified": true,
+          "evidence": "derived from the faulted run — not independently measured",
+          "confidence": "derived"
+        },
+        "deterministicReplay": {
+          "verified": true,
+          "evidence": "the faulted observation was repeated and produced an equivalent outcome",
+          "confidence": "measured"
+        }
+      }
+    },
+    {
+      "evidenceId": "proof:verify-pentest-conformance.js#architecture-document-added-for-the-penetration-testing-engine",
+      "gate": "verify-pentest-conformance.js",
+      "recordedAt": "2026-08-07T06:47:33.569Z",
+      "expiresAt": "2026-08-14T06:47:33.569Z",
+      "proved": true,
+      "replayed": true,
+      "violation": "an architecture document added for the Penetration Testing Engine (forbidden by ADR-0027; capability 6 needs none)",
+      "generator": "governance/verification/record-fault-proofs.js",
+      "generatorVersion": "2.0.0",
+      "executionContext": "node v24.14.1 on win32",
+      "repository": "DBiz_IntelligencePlane",
+      "branch": "main",
+      "commit": "a7821fd63f6fedc2c7888478d33fcd33e300b765",
+      "adrReference": [
+        "ADR-0019",
+        "ADR-0020"
+      ],
+      "ruleReference": [
+        "R-13.4",
+        "R-14.2",
+        "R-14.4",
+        "C-01.39",
+        "C-01.42",
+        "C-01.43"
+      ],
+      "verificationStatus": "verified",
+      "certificationStatus": "certified",
+      "observations": {
+        "cleanRunExit": 0,
+        "faultedRunExit": 1,
+        "causeNamedInOutput": true
+      },
+      "properties": {
+        "positiveDetection": {
+          "verified": true,
+          "evidence": "faulted run exited 1 and named the cause"
+        },
+        "negativeDetection": {
+          "verified": true,
+          "evidence": "clean run exited 0"
+        },
+        "faultInjection": {
+          "verified": true,
+          "evidence": "a real violation was planted and observed"
+        },
+        "falsePositiveResistance": {
+          "verified": true,
+          "evidence": "derived from the clean run — not independently measured",
+          "confidence": "derived"
+        },
+        "falseNegativeResistance": {
+          "verified": true,
+          "evidence": "derived from the faulted run — not independently measured",
+          "confidence": "derived"
+        },
+        "deterministicReplay": {
+          "verified": true,
+          "evidence": "the faulted observation was repeated and produced an equivalent outcome",
+          "confidence": "measured"
+        }
+      }
+    },
+    {
+      "evidenceId": "proof:verify-devchange-certification.js#learning-orchestrator-that-enumerates-instead-of-invoking",
+      "gate": "verify-devchange-certification.js",
+      "recordedAt": "2026-08-07T06:47:33.569Z",
+      "expiresAt": "2026-08-14T06:47:33.569Z",
+      "proved": true,
+      "replayed": true,
+      "violation": "a domain orchestrator (learning) that enumerates its agents instead of invoking them, leaving learning.capture dormant and runtime completeness below 100%",
+      "generator": "governance/verification/record-fault-proofs.js",
+      "generatorVersion": "2.0.0",
+      "executionContext": "node v24.14.1 on win32",
+      "repository": "DBiz_IntelligencePlane",
+      "branch": "main",
+      "commit": "a7821fd63f6fedc2c7888478d33fcd33e300b765",
+      "adrReference": [
+        "ADR-0019",
+        "ADR-0020"
+      ],
+      "ruleReference": [
+        "R-13.4",
+        "R-14.2",
+        "R-14.4",
+        "C-01.39",
+        "C-01.42",
+        "C-01.43"
+      ],
+      "verificationStatus": "verified",
+      "certificationStatus": "certified",
+      "observations": {
+        "cleanRunExit": 0,
+        "faultedRunExit": 1,
+        "causeNamedInOutput": true
+      },
+      "properties": {
+        "positiveDetection": {
+          "verified": true,
+          "evidence": "faulted run exited 1 and named the cause"
+        },
+        "negativeDetection": {
+          "verified": true,
+          "evidence": "clean run exited 0"
+        },
+        "faultInjection": {
+          "verified": true,
+          "evidence": "a real violation was planted and observed"
+        },
+        "falsePositiveResistance": {
+          "verified": true,
+          "evidence": "derived from the clean run — not independently measured",
+          "confidence": "derived"
+        },
+        "falseNegativeResistance": {
+          "verified": true,
+          "evidence": "derived from the faulted run — not independently measured",
+          "confidence": "derived"
+        },
+        "deterministicReplay": {
+          "verified": true,
+          "evidence": "the faulted observation was repeated and produced an equivalent outcome",
+          "confidence": "measured"
+        }
+      }
+    },
+    {
+      "evidenceId": "proof:verify-pentest-completeness.js#threat-agent-left-dormant",
+      "gate": "verify-pentest-completeness.js",
+      "recordedAt": "2026-08-07T06:47:33.569Z",
+      "expiresAt": "2026-08-14T06:47:33.569Z",
+      "proved": true,
+      "replayed": true,
+      "violation": "a registered agent (threat.zero-day-awareness) that is never invoked, leaving it dormant and runtime completeness below 100%",
+      "generator": "governance/verification/record-fault-proofs.js",
+      "generatorVersion": "2.0.0",
+      "executionContext": "node v24.14.1 on win32",
+      "repository": "DBiz_IntelligencePlane",
+      "branch": "main",
+      "commit": "a7821fd63f6fedc2c7888478d33fcd33e300b765",
+      "adrReference": [
+        "ADR-0019",
+        "ADR-0020"
+      ],
+      "ruleReference": [
+        "R-13.4",
+        "R-14.2",
+        "R-14.4",
+        "C-01.39",
+        "C-01.42",
+        "C-01.43"
+      ],
+      "verificationStatus": "verified",
+      "certificationStatus": "certified",
+      "observations": {
+        "cleanRunExit": 0,
+        "faultedRunExit": 1,
+        "causeNamedInOutput": true
+      },
+      "properties": {
+        "positiveDetection": {
+          "verified": true,
+          "evidence": "faulted run exited 1 and named the cause"
+        },
+        "negativeDetection": {
+          "verified": true,
+          "evidence": "clean run exited 0"
+        },
+        "faultInjection": {
+          "verified": true,
+          "evidence": "a real violation was planted and observed"
+        },
+        "falsePositiveResistance": {
+          "verified": true,
+          "evidence": "derived from the clean run — not independently measured",
+          "confidence": "derived"
+        },
+        "falseNegativeResistance": {
+          "verified": true,
+          "evidence": "derived from the faulted run — not independently measured",
+          "confidence": "derived"
+        },
+        "deterministicReplay": {
+          "verified": true,
+          "evidence": "the faulted observation was repeated and produced an equivalent outcome",
+          "confidence": "measured"
+        }
+      }
+    },
+    {
+      "evidenceId": "proof:verify-tenant-lifecycle-conformance.js#onboarding-that-provisions-on-assumption",
+      "gate": "verify-tenant-lifecycle-conformance.js",
+      "recordedAt": "2026-08-07T06:47:33.569Z",
+      "expiresAt": "2026-08-14T06:47:33.569Z",
+      "proved": true,
+      "replayed": true,
+      "violation": "an onboarding orchestrator reporting the deferred stages 8-14 as done rather than pending, provisioning a tenant on assumption",
+      "generator": "governance/verification/record-fault-proofs.js",
+      "generatorVersion": "2.0.0",
+      "executionContext": "node v24.14.1 on win32",
+      "repository": "DBiz_IntelligencePlane",
+      "branch": "main",
+      "commit": "a7821fd63f6fedc2c7888478d33fcd33e300b765",
+      "adrReference": [
+        "ADR-0019",
+        "ADR-0020"
+      ],
+      "ruleReference": [
+        "R-13.4",
+        "R-14.2",
+        "R-14.4",
+        "C-01.39",
+        "C-01.42",
+        "C-01.43"
+      ],
+      "verificationStatus": "verified",
+      "certificationStatus": "certified",
+      "observations": {
+        "cleanRunExit": 0,
+        "faultedRunExit": 1,
+        "causeNamedInOutput": true
+      },
+      "properties": {
+        "positiveDetection": {
+          "verified": true,
+          "evidence": "faulted run exited 1 and named the cause"
+        },
+        "negativeDetection": {
+          "verified": true,
+          "evidence": "clean run exited 0"
+        },
+        "faultInjection": {
+          "verified": true,
+          "evidence": "a real violation was planted and observed"
+        },
+        "falsePositiveResistance": {
+          "verified": true,
+          "evidence": "derived from the clean run — not independently measured",
+          "confidence": "derived"
+        },
+        "falseNegativeResistance": {
+          "verified": true,
+          "evidence": "derived from the faulted run — not independently measured",
+          "confidence": "derived"
+        },
+        "deterministicReplay": {
+          "verified": true,
+          "evidence": "the faulted observation was repeated and produced an equivalent outcome",
+          "confidence": "measured"
+        }
+      }
+    },
+    {
+      "evidenceId": "proof:verify-registration-conformance.js#registration-that-permits-otc-replay",
+      "gate": "verify-registration-conformance.js",
+      "recordedAt": "2026-08-07T06:47:33.569Z",
+      "expiresAt": "2026-08-14T06:47:33.569Z",
+      "proved": true,
+      "replayed": true,
+      "violation": "an OTC store that accepts a consumed credential a second time — single-use broken, replay permitted (R-36.2)",
+      "generator": "governance/verification/record-fault-proofs.js",
+      "generatorVersion": "2.0.0",
+      "executionContext": "node v24.14.1 on win32",
+      "repository": "DBiz_IntelligencePlane",
+      "branch": "main",
+      "commit": "a7821fd63f6fedc2c7888478d33fcd33e300b765",
+      "adrReference": [
+        "ADR-0019",
+        "ADR-0020"
+      ],
+      "ruleReference": [
+        "R-13.4",
+        "R-14.2",
+        "R-14.4",
+        "C-01.39",
+        "C-01.42",
+        "C-01.43"
+      ],
+      "verificationStatus": "verified",
+      "certificationStatus": "certified",
+      "observations": {
+        "cleanRunExit": 0,
+        "faultedRunExit": 1,
+        "causeNamedInOutput": true
+      },
+      "properties": {
+        "positiveDetection": {
+          "verified": true,
+          "evidence": "faulted run exited 1 and named the cause"
+        },
+        "negativeDetection": {
+          "verified": true,
+          "evidence": "clean run exited 0"
+        },
+        "faultInjection": {
+          "verified": true,
+          "evidence": "a real violation was planted and observed"
+        },
+        "falsePositiveResistance": {
+          "verified": true,
+          "evidence": "derived from the clean run — not independently measured",
+          "confidence": "derived"
+        },
+        "falseNegativeResistance": {
+          "verified": true,
+          "evidence": "derived from the faulted run — not independently measured",
+          "confidence": "derived"
+        },
+        "deterministicReplay": {
+          "verified": true,
+          "evidence": "the faulted observation was repeated and produced an equivalent outcome",
+          "confidence": "measured"
+        }
+      }
+    },
+    {
+      "evidenceId": "proof:verify-repository-hygiene.js#a-stub-shipped-in-the-source-tree",
+      "gate": "verify-repository-hygiene.js",
+      "recordedAt": "2026-08-07T06:47:33.569Z",
+      "expiresAt": "2026-08-14T06:47:33.569Z",
+      "proved": true,
+      "replayed": true,
+      "violation": "a stub carrying a TODO and a not-implemented throw, shipped in the source tree",
+      "generator": "governance/verification/record-fault-proofs.js",
+      "generatorVersion": "2.0.0",
+      "executionContext": "node v24.14.1 on win32",
+      "repository": "DBiz_IntelligencePlane",
+      "branch": "main",
+      "commit": "a7821fd63f6fedc2c7888478d33fcd33e300b765",
+      "adrReference": [
+        "ADR-0019",
+        "ADR-0020"
+      ],
+      "ruleReference": [
+        "R-13.4",
+        "R-14.2",
+        "R-14.4",
+        "C-01.39",
+        "C-01.42",
+        "C-01.43"
+      ],
+      "verificationStatus": "verified",
+      "certificationStatus": "certified",
+      "observations": {
+        "cleanRunExit": 0,
+        "faultedRunExit": 1,
+        "causeNamedInOutput": true
+      },
+      "properties": {
+        "positiveDetection": {
+          "verified": true,
+          "evidence": "faulted run exited 1 and named the cause"
+        },
+        "negativeDetection": {
+          "verified": true,
+          "evidence": "clean run exited 0"
+        },
+        "faultInjection": {
+          "verified": true,
+          "evidence": "a real violation was planted and observed"
+        },
+        "falsePositiveResistance": {
+          "verified": true,
+          "evidence": "derived from the clean run — not independently measured",
+          "confidence": "derived"
+        },
+        "falseNegativeResistance": {
+          "verified": true,
+          "evidence": "derived from the faulted run — not independently measured",
+          "confidence": "derived"
+        },
+        "deterministicReplay": {
+          "verified": true,
+          "evidence": "the faulted observation was repeated and produced an equivalent outcome",
+          "confidence": "measured"
+        }
+      }
+    },
+    {
+      "evidenceId": "proof:verify-ep-certification.js#tampered-ep-certification-accepted",
+      "gate": "verify-ep-certification.js",
+      "recordedAt": "2026-08-07T06:47:33.569Z",
+      "expiresAt": "2026-08-14T06:47:33.569Z",
+      "proved": true,
+      "replayed": true,
+      "violation": "a tampered EP certification (content hash mismatch / forged signature) presented to the IP",
+      "generator": "governance/verification/record-fault-proofs.js",
+      "generatorVersion": "2.0.0",
+      "executionContext": "node v24.14.1 on win32",
+      "repository": "DBiz_IntelligencePlane",
+      "branch": "main",
+      "commit": "a7821fd63f6fedc2c7888478d33fcd33e300b765",
+      "adrReference": [
+        "ADR-0019",
+        "ADR-0020"
+      ],
+      "ruleReference": [
+        "R-13.4",
+        "R-14.2",
+        "R-14.4",
+        "C-01.39",
+        "C-01.42",
+        "C-01.43"
+      ],
+      "verificationStatus": "verified",
+      "certificationStatus": "certified",
+      "observations": {
+        "cleanRunExit": 0,
+        "faultedRunExit": 1,
+        "causeNamedInOutput": true
+      },
+      "properties": {
+        "positiveDetection": {
+          "verified": true,
+          "evidence": "faulted run exited 1 and named the cause"
+        },
+        "negativeDetection": {
+          "verified": true,
+          "evidence": "clean run exited 0"
+        },
+        "faultInjection": {
+          "verified": true,
+          "evidence": "a real violation was planted and observed"
+        },
+        "falsePositiveResistance": {
+          "verified": true,
+          "evidence": "derived from the clean run — not independently measured",
+          "confidence": "derived"
+        },
+        "falseNegativeResistance": {
+          "verified": true,
+          "evidence": "derived from the faulted run — not independently measured",
+          "confidence": "derived"
+        },
+        "deterministicReplay": {
+          "verified": true,
+          "evidence": "the faulted observation was repeated and produced an equivalent outcome",
+          "confidence": "measured"
+        }
+      }
+    },
+    {
+      "evidenceId": "proof:verify-execution-plane-boundary.js",
+      "gate": "verify-execution-plane-boundary.js",
+      "recordedAt": "2026-08-07T06:47:33.569Z",
+      "expiresAt": "2026-08-14T06:47:33.569Z",
+      "proved": true,
+      "replayed": true,
+      "violation": "an Intelligence-Plane source file that live-imports playwright and launches a browser",
+      "generator": "governance/verification/record-fault-proofs.js",
+      "generatorVersion": "2.0.0",
+      "executionContext": "node v24.14.1 on win32",
+      "repository": "DBiz_IntelligencePlane",
+      "branch": "main",
+      "commit": "a7821fd63f6fedc2c7888478d33fcd33e300b765",
+      "adrReference": [
+        "ADR-0019",
+        "ADR-0020"
+      ],
+      "ruleReference": [
+        "R-13.4",
+        "R-14.2",
+        "R-14.4",
+        "C-01.39",
+        "C-01.42",
+        "C-01.43"
+      ],
+      "verificationStatus": "verified",
+      "certificationStatus": "certified",
+      "observations": {
+        "cleanRunExit": 0,
+        "faultedRunExit": 1,
+        "causeNamedInOutput": true
+      },
+      "properties": {
+        "positiveDetection": {
+          "verified": true,
+          "evidence": "faulted run exited 1 and named the cause"
+        },
+        "negativeDetection": {
+          "verified": true,
+          "evidence": "clean run exited 0"
+        },
+        "faultInjection": {
+          "verified": true,
+          "evidence": "a real violation was planted and observed"
+        },
+        "falsePositiveResistance": {
+          "verified": true,
+          "evidence": "derived from the clean run — not independently measured",
+          "confidence": "derived"
+        },
+        "falseNegativeResistance": {
+          "verified": true,
+          "evidence": "derived from the faulted run — not independently measured",
+          "confidence": "derived"
+        },
+        "deterministicReplay": {
+          "verified": true,
+          "evidence": "the faulted observation was repeated and produced an equivalent outcome",
+          "confidence": "measured"
+        }
+      }
+    },
+    {
+      "evidenceId": "proof:verify-http-surface-parity.js#http-surface-unmapped-tenant-action",
+      "gate": "verify-http-surface-parity.js",
+      "recordedAt": "2026-08-07T06:47:33.569Z",
+      "expiresAt": "2026-08-14T06:47:33.569Z",
+      "proved": true,
+      "replayed": true,
+      "violation": "a route() action with no controller mapping — the live server 404s while every route()-level test passes",
+      "generator": "governance/verification/record-fault-proofs.js",
+      "generatorVersion": "2.0.0",
+      "executionContext": "node v24.14.1 on win32",
+      "repository": "DBiz_IntelligencePlane",
+      "branch": "main",
+      "commit": "a7821fd63f6fedc2c7888478d33fcd33e300b765",
+      "adrReference": [
+        "ADR-0019",
+        "ADR-0020"
+      ],
+      "ruleReference": [
+        "R-13.4",
+        "R-14.2",
+        "R-14.4",
+        "C-01.39",
+        "C-01.42",
+        "C-01.43"
+      ],
+      "verificationStatus": "verified",
+      "certificationStatus": "certified",
+      "observations": {
+        "cleanRunExit": 0,
+        "faultedRunExit": 1,
+        "causeNamedInOutput": true
+      },
+      "properties": {
+        "positiveDetection": {
+          "verified": true,
+          "evidence": "faulted run exited 1 and named the cause"
+        },
+        "negativeDetection": {
+          "verified": true,
+          "evidence": "clean run exited 0"
+        },
+        "faultInjection": {
+          "verified": true,
+          "evidence": "a real violation was planted and observed"
+        },
+        "falsePositiveResistance": {
+          "verified": true,
+          "evidence": "derived from the clean run — not independently measured",
+          "confidence": "derived"
+        },
+        "falseNegativeResistance": {
+          "verified": true,
+          "evidence": "derived from the faulted run — not independently measured",
+          "confidence": "derived"
+        },
+        "deterministicReplay": {
+          "verified": true,
+          "evidence": "the faulted observation was repeated and produced an equivalent outcome",
+          "confidence": "measured"
+        }
+      }
+    },
+    {
+      "evidenceId": "proof:verify-http-surface-parity.js#http-surface-verb-mismatch",
+      "gate": "verify-http-surface-parity.js",
+      "recordedAt": "2026-08-07T06:47:33.569Z",
+      "expiresAt": "2026-08-14T06:47:33.569Z",
+      "proved": true,
+      "replayed": true,
+      "violation": "a route() action accepted under a verb no controller maps — the action exists on both sides, so only the method comparison can see it",
+      "generator": "governance/verification/record-fault-proofs.js",
+      "generatorVersion": "2.0.0",
+      "executionContext": "node v24.14.1 on win32",
+      "repository": "DBiz_IntelligencePlane",
+      "branch": "main",
+      "commit": "a7821fd63f6fedc2c7888478d33fcd33e300b765",
+      "adrReference": [
+        "ADR-0019",
+        "ADR-0020"
+      ],
+      "ruleReference": [
+        "R-13.4",
+        "R-14.2",
+        "R-14.4",
+        "C-01.39",
+        "C-01.42",
+        "C-01.43"
+      ],
+      "verificationStatus": "verified",
+      "certificationStatus": "certified",
+      "observations": {
+        "cleanRunExit": 0,
+        "faultedRunExit": 1,
+        "causeNamedInOutput": true
+      },
+      "properties": {
+        "positiveDetection": {
+          "verified": true,
+          "evidence": "faulted run exited 1 and named the cause"
+        },
+        "negativeDetection": {
+          "verified": true,
+          "evidence": "clean run exited 0"
+        },
+        "faultInjection": {
+          "verified": true,
+          "evidence": "a real violation was planted and observed"
+        },
+        "falsePositiveResistance": {
+          "verified": true,
+          "evidence": "derived from the clean run — not independently measured",
+          "confidence": "derived"
+        },
+        "falseNegativeResistance": {
+          "verified": true,
+          "evidence": "derived from the faulted run — not independently measured",
+          "confidence": "derived"
+        },
+        "deterministicReplay": {
+          "verified": true,
+          "evidence": "the faulted observation was repeated and produced an equivalent outcome",
+          "confidence": "measured"
+        }
+      }
+    },
+    {
+      "evidenceId": "proof:verify-intelligence-plane-egress.js#ip-egress-direct-fetch-to-customer-system",
+      "gate": "verify-intelligence-plane-egress.js",
+      "recordedAt": "2026-08-07T06:47:33.569Z",
+      "expiresAt": "2026-08-14T06:47:33.569Z",
+      "proved": true,
+      "replayed": true,
+      "violation": "an Intelligence-Plane source file opening an outbound connection to a customer system (R-3.2), carrying a customer credential (R-3.3)",
+      "generator": "governance/verification/record-fault-proofs.js",
+      "generatorVersion": "2.0.0",
+      "executionContext": "node v24.14.1 on win32",
+      "repository": "DBiz_IntelligencePlane",
+      "branch": "main",
+      "commit": "a7821fd63f6fedc2c7888478d33fcd33e300b765",
+      "adrReference": [
+        "ADR-0019",
+        "ADR-0020"
+      ],
+      "ruleReference": [
+        "R-13.4",
+        "R-14.2",
+        "R-14.4",
+        "C-01.39",
+        "C-01.42",
+        "C-01.43"
+      ],
+      "verificationStatus": "verified",
+      "certificationStatus": "certified",
+      "observations": {
+        "cleanRunExit": 0,
+        "faultedRunExit": 1,
+        "causeNamedInOutput": true
+      },
+      "properties": {
+        "positiveDetection": {
+          "verified": true,
+          "evidence": "faulted run exited 1 and named the cause"
+        },
+        "negativeDetection": {
+          "verified": true,
+          "evidence": "clean run exited 0"
+        },
+        "faultInjection": {
+          "verified": true,
+          "evidence": "a real violation was planted and observed"
+        },
+        "falsePositiveResistance": {
+          "verified": true,
+          "evidence": "derived from the clean run — not independently measured",
+          "confidence": "derived"
+        },
+        "falseNegativeResistance": {
+          "verified": true,
+          "evidence": "derived from the faulted run — not independently measured",
+          "confidence": "derived"
+        },
+        "deterministicReplay": {
+          "verified": true,
+          "evidence": "the faulted observation was repeated and produced an equivalent outcome",
+          "confidence": "measured"
+        }
+      }
+    },
+    {
+      "evidenceId": "proof:verify-intelligence-plane-egress.js#ip-egress-http-client-dependency",
+      "gate": "verify-intelligence-plane-egress.js",
+      "recordedAt": "2026-08-07T06:47:33.569Z",
+      "expiresAt": "2026-08-14T06:47:33.569Z",
+      "proved": true,
+      "replayed": true,
+      "violation": "an Intelligence-Plane source file importing an HTTP client library",
+      "generator": "governance/verification/record-fault-proofs.js",
+      "generatorVersion": "2.0.0",
+      "executionContext": "node v24.14.1 on win32",
+      "repository": "DBiz_IntelligencePlane",
+      "branch": "main",
+      "commit": "a7821fd63f6fedc2c7888478d33fcd33e300b765",
+      "adrReference": [
+        "ADR-0019",
+        "ADR-0020"
+      ],
+      "ruleReference": [
+        "R-13.4",
+        "R-14.2",
+        "R-14.4",
+        "C-01.39",
+        "C-01.42",
+        "C-01.43"
+      ],
+      "verificationStatus": "verified",
+      "certificationStatus": "certified",
+      "observations": {
+        "cleanRunExit": 0,
+        "faultedRunExit": 1,
+        "causeNamedInOutput": true
+      },
+      "properties": {
+        "positiveDetection": {
+          "verified": true,
+          "evidence": "faulted run exited 1 and named the cause"
+        },
+        "negativeDetection": {
+          "verified": true,
+          "evidence": "clean run exited 0"
+        },
+        "faultInjection": {
+          "verified": true,
+          "evidence": "a real violation was planted and observed"
+        },
+        "falsePositiveResistance": {
+          "verified": true,
+          "evidence": "derived from the clean run — not independently measured",
+          "confidence": "derived"
+        },
+        "falseNegativeResistance": {
+          "verified": true,
+          "evidence": "derived from the faulted run — not independently measured",
+          "confidence": "derived"
+        },
+        "deterministicReplay": {
+          "verified": true,
+          "evidence": "the faulted observation was repeated and produced an equivalent outcome",
+          "confidence": "measured"
+        }
+      }
+    },
+    {
+      "evidenceId": "proof:verify-intelligence-plane-egress.js#ip-egress-aliased-fetch-capture",
+      "gate": "verify-intelligence-plane-egress.js",
+      "recordedAt": "2026-08-07T06:47:33.569Z",
+      "expiresAt": "2026-08-14T06:47:33.569Z",
+      "proved": true,
+      "replayed": true,
+      "violation": "an Intelligence-Plane source file capturing fetch as a VALUE — const capture, globalThis reference and argument passing — without ever calling it directly",
+      "generator": "governance/verification/record-fault-proofs.js",
+      "generatorVersion": "2.0.0",
+      "executionContext": "node v24.14.1 on win32",
+      "repository": "DBiz_IntelligencePlane",
+      "branch": "main",
+      "commit": "a7821fd63f6fedc2c7888478d33fcd33e300b765",
+      "adrReference": [
+        "ADR-0019",
+        "ADR-0020"
+      ],
+      "ruleReference": [
+        "R-13.4",
+        "R-14.2",
+        "R-14.4",
+        "C-01.39",
+        "C-01.42",
+        "C-01.43"
+      ],
+      "verificationStatus": "verified",
+      "certificationStatus": "certified",
+      "observations": {
+        "cleanRunExit": 0,
+        "faultedRunExit": 1,
+        "causeNamedInOutput": true
+      },
+      "properties": {
+        "positiveDetection": {
+          "verified": true,
+          "evidence": "faulted run exited 1 and named the cause"
+        },
+        "negativeDetection": {
+          "verified": true,
+          "evidence": "clean run exited 0"
+        },
+        "faultInjection": {
+          "verified": true,
+          "evidence": "a real violation was planted and observed"
+        },
+        "falsePositiveResistance": {
+          "verified": true,
+          "evidence": "derived from the clean run — not independently measured",
+          "confidence": "derived"
+        },
+        "falseNegativeResistance": {
+          "verified": true,
+          "evidence": "derived from the faulted run — not independently measured",
+          "confidence": "derived"
+        },
+        "deterministicReplay": {
+          "verified": true,
+          "evidence": "the faulted observation was repeated and produced an equivalent outcome",
+          "confidence": "measured"
+        }
+      }
+    },
+    {
+      "evidenceId": "proof:verify-run-record-write-surface.js#run-record-unpermitted-write-caller",
+      "gate": "verify-run-record-write-surface.js",
+      "recordedAt": "2026-08-07T06:47:33.569Z",
+      "expiresAt": "2026-08-14T06:47:33.569Z",
+      "proved": true,
+      "replayed": true,
+      "violation": "a third module driving the run record write surface, so a cause ADR-0082 never authorised enters through an existing event-named method",
+      "generator": "governance/verification/record-fault-proofs.js",
+      "generatorVersion": "2.0.0",
+      "executionContext": "node v24.14.1 on win32",
+      "repository": "DBiz_IntelligencePlane",
+      "branch": "main",
+      "commit": "a7821fd63f6fedc2c7888478d33fcd33e300b765",
+      "adrReference": [
+        "ADR-0019",
+        "ADR-0020"
+      ],
+      "ruleReference": [
+        "R-13.4",
+        "R-14.2",
+        "R-14.4",
+        "C-01.39",
+        "C-01.42",
+        "C-01.43"
+      ],
+      "verificationStatus": "verified",
+      "certificationStatus": "certified",
+      "observations": {
+        "cleanRunExit": 0,
+        "faultedRunExit": 1,
+        "causeNamedInOutput": true
+      },
+      "properties": {
+        "positiveDetection": {
+          "verified": true,
+          "evidence": "faulted run exited 1 and named the cause"
+        },
+        "negativeDetection": {
+          "verified": true,
+          "evidence": "clean run exited 0"
+        },
+        "faultInjection": {
+          "verified": true,
+          "evidence": "a real violation was planted and observed"
+        },
+        "falsePositiveResistance": {
+          "verified": true,
+          "evidence": "derived from the clean run — not independently measured",
+          "confidence": "derived"
+        },
+        "falseNegativeResistance": {
+          "verified": true,
+          "evidence": "derived from the faulted run — not independently measured",
+          "confidence": "derived"
+        },
+        "deterministicReplay": {
+          "verified": true,
+          "evidence": "the faulted observation was repeated and produced an equivalent outcome",
+          "confidence": "measured"
+        }
+      }
+    },
+    {
+      "evidenceId": "proof:verify-data-sovereignty-store.js#data-sovereignty-undeclared-c1-store",
+      "gate": "verify-data-sovereignty-store.js",
+      "recordedAt": "2026-08-07T06:47:33.569Z",
+      "expiresAt": "2026-08-14T06:47:33.569Z",
+      "proved": true,
+      "replayed": true,
+      "violation": "a second persisting module in the storage layer with no authorising ADR, no declared retention, and a C1 credential on its write path",
+      "generator": "governance/verification/record-fault-proofs.js",
+      "generatorVersion": "2.0.0",
+      "executionContext": "node v24.14.1 on win32",
+      "repository": "DBiz_IntelligencePlane",
+      "branch": "main",
+      "commit": "a7821fd63f6fedc2c7888478d33fcd33e300b765",
+      "adrReference": [
+        "ADR-0019",
+        "ADR-0020"
+      ],
+      "ruleReference": [
+        "R-13.4",
+        "R-14.2",
+        "R-14.4",
+        "C-01.39",
+        "C-01.42",
+        "C-01.43"
+      ],
+      "verificationStatus": "verified",
+      "certificationStatus": "certified",
+      "observations": {
+        "cleanRunExit": 0,
+        "faultedRunExit": 1,
+        "causeNamedInOutput": true
+      },
+      "properties": {
+        "positiveDetection": {
+          "verified": true,
+          "evidence": "faulted run exited 1 and named the cause"
+        },
+        "negativeDetection": {
+          "verified": true,
+          "evidence": "clean run exited 0"
+        },
+        "faultInjection": {
+          "verified": true,
+          "evidence": "a real violation was planted and observed"
+        },
+        "falsePositiveResistance": {
+          "verified": true,
+          "evidence": "derived from the clean run — not independently measured",
+          "confidence": "derived"
+        },
+        "falseNegativeResistance": {
+          "verified": true,
+          "evidence": "derived from the faulted run — not independently measured",
+          "confidence": "derived"
+        },
+        "deterministicReplay": {
+          "verified": true,
+          "evidence": "the faulted observation was repeated and produced an equivalent outcome",
+          "confidence": "measured"
+        }
+      }
+    },
+    {
+      "evidenceId": "proof:verify-data-sovereignty-store.js#data-sovereignty-unscheduled-swallowing-purge",
+      "gate": "verify-data-sovereignty-store.js",
+      "recordedAt": "2026-08-07T06:47:33.569Z",
+      "expiresAt": "2026-08-14T06:47:33.569Z",
+      "proved": false,
+      "replayed": true,
+      "violation": "a purge driver that is operator-initiated rather than scheduled, and that swallows a purge failure instead of alerting",
+      "generator": "governance/verification/record-fault-proofs.js",
+      "generatorVersion": "2.0.0",
+      "executionContext": "node v24.14.1 on win32",
+      "repository": "DBiz_IntelligencePlane",
+      "branch": "main",
+      "commit": "a7821fd63f6fedc2c7888478d33fcd33e300b765",
+      "adrReference": [
+        "ADR-0019",
+        "ADR-0020"
+      ],
+      "ruleReference": [
+        "R-13.4",
+        "R-14.2",
+        "R-14.4",
+        "C-01.39",
+        "C-01.42",
+        "C-01.43"
+      ],
+      "verificationStatus": "failed",
+      "certificationStatus": "uncertified",
+      "observations": {
+        "cleanRunExit": 0,
+        "faultedRunExit": 0,
+        "causeNamedInOutput": true
+      },
+      "properties": {
+        "positiveDetection": {
+          "verified": false,
+          "evidence": "faulted run exited 1 and named the cause"
+        },
+        "negativeDetection": {
+          "verified": true,
+          "evidence": "clean run exited 0"
+        },
+        "faultInjection": {
+          "verified": false,
+          "evidence": "a real violation was planted and observed"
+        },
+        "falsePositiveResistance": {
+          "verified": true,
+          "evidence": "derived from the clean run — not independently measured",
+          "confidence": "derived"
+        },
+        "falseNegativeResistance": {
+          "verified": false,
+          "evidence": "derived from the faulted run — not independently measured",
+          "confidence": "derived"
+        },
+        "deterministicReplay": {
+          "verified": true,
+          "evidence": "the faulted observation was repeated and produced an equivalent outcome",
+          "confidence": "measured"
+        }
+      }
+    },
+    {
+      "evidenceId": "proof:verify-composition-root.js#composition-root-unmounted-surface",
+      "gate": "verify-composition-root.js",
+      "recordedAt": "2026-08-07T06:47:33.569Z",
+      "expiresAt": "2026-08-14T06:47:33.569Z",
+      "proved": true,
+      "replayed": true,
+      "violation": "a controller mounted behind an optional ApiDeps field that the composition root never sets — a surface declared, gated, and unreachable in every deployment",
+      "generator": "governance/verification/record-fault-proofs.js",
+      "generatorVersion": "2.0.0",
+      "executionContext": "node v24.14.1 on win32",
+      "repository": "DBiz_IntelligencePlane",
+      "branch": "main",
+      "commit": "a7821fd63f6fedc2c7888478d33fcd33e300b765",
+      "adrReference": [
+        "ADR-0019",
+        "ADR-0020"
+      ],
+      "ruleReference": [
+        "R-13.4",
+        "R-14.2",
+        "R-14.4",
+        "C-01.39",
+        "C-01.42",
+        "C-01.43"
+      ],
+      "verificationStatus": "verified",
+      "certificationStatus": "certified",
+      "observations": {
+        "cleanRunExit": 0,
+        "faultedRunExit": 1,
+        "causeNamedInOutput": true
+      },
+      "properties": {
+        "positiveDetection": {
+          "verified": true,
+          "evidence": "faulted run exited 1 and named the cause"
+        },
+        "negativeDetection": {
+          "verified": true,
+          "evidence": "clean run exited 0"
+        },
+        "faultInjection": {
+          "verified": true,
+          "evidence": "a real violation was planted and observed"
+        },
+        "falsePositiveResistance": {
+          "verified": true,
+          "evidence": "derived from the clean run — not independently measured",
+          "confidence": "derived"
+        },
+        "falseNegativeResistance": {
+          "verified": true,
+          "evidence": "derived from the faulted run — not independently measured",
+          "confidence": "derived"
+        },
+        "deterministicReplay": {
+          "verified": true,
+          "evidence": "the faulted observation was repeated and produced an equivalent outcome",
+          "confidence": "measured"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "name": "@dbiz/penetration-testing-engine",
+  "version": "1.0.0",
+  "private": true,
+  "description": "The Penetration Testing Engine - capability 6 of 6, implemented across the twelve-stage lifecycle, with an internal Threat Intelligence engine.",
+  "license": "UNLICENSED",
+  "type": "module",
+  "main": "./dist/src/index.js",
+  "types": "./dist/src/index.d.ts",
+  "exports": { ".": { "types": "./dist/src/index.d.ts", "default": "./dist/src/index.js" } },
+  "engines": { "node": ">=24.0.0 <25" },
+  "scripts": { "build": "tsc -p tsconfig.json", "test": "node --test \"dist/test/*.test.js\"" },
+  "dependencies": { "@dbiz/contracts": "workspace:*", "@dbiz/capability-framework": "workspace:*" },
+  "devDependencies": { "typescript": "^5.7.0", "@types/node": "^24.0.0" }
+}

@@ -1,0 +1,184 @@
+{
+  "$id": "https://contracts.dbiz.platform/evidence-reference/v1.0.0",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "allOf": [
+    {
+      "type": "object",
+      "properties": {
+        "contractVersion": {
+          "type": "string",
+          "minLength": 1
+        },
+        "evidenceId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "packageHash": {
+          "type": "object",
+          "properties": {
+            "algorithm": {
+              "type": "string",
+              "enum": [
+                "sha256-jcs-v1"
+              ]
+            },
+            "domain": {
+              "type": "string",
+              "enum": [
+                "dbiz.execution-package@1",
+                "dbiz.evidence-record@1",
+                "dbiz.evidence-payload@1",
+                "dbiz.decision@1"
+              ]
+            },
+            "value": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          },
+          "required": [
+            "algorithm",
+            "domain",
+            "value"
+          ]
+        },
+        "contentHash": {
+          "type": "object",
+          "properties": {
+            "algorithm": {
+              "type": "string",
+              "enum": [
+                "sha256-jcs-v1"
+              ]
+            },
+            "domain": {
+              "type": "string",
+              "enum": [
+                "dbiz.execution-package@1",
+                "dbiz.evidence-record@1",
+                "dbiz.evidence-payload@1",
+                "dbiz.decision@1"
+              ]
+            },
+            "value": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          },
+          "required": [
+            "algorithm",
+            "domain",
+            "value"
+          ]
+        },
+        "classification": {
+          "type": "string",
+          "enum": [
+            "C1",
+            "C2",
+            "C3",
+            "C4",
+            "C5"
+          ]
+        },
+        "capturedAt": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+        },
+        "expiresAt": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+        },
+        "assuranceState": {
+          "type": "string",
+          "enum": [
+            "CERTIFIED",
+            "DEGRADED",
+            "DEGRADED_UNCERTIFIED",
+            "HALTED"
+          ]
+        }
+      },
+      "required": [
+        "contractVersion",
+        "evidenceId",
+        "packageHash",
+        "contentHash",
+        "classification",
+        "capturedAt",
+        "expiresAt",
+        "assuranceState"
+      ]
+    },
+    {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "outcome": {
+              "type": "string",
+              "const": "captured"
+            }
+          },
+          "required": [
+            "outcome"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "outcome": {
+              "type": "string",
+              "const": "empty"
+            }
+          },
+          "required": [
+            "outcome"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "outcome": {
+              "type": "string",
+              "const": "not-applicable"
+            },
+            "reason": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "outcome",
+            "reason"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "outcome": {
+              "type": "string",
+              "const": "failed"
+            },
+            "reason": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "outcome",
+            "reason"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "object",
+      "properties": {},
+      "additionalProperties": {}
+    }
+  ]
+}

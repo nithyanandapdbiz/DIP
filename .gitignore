@@ -1,0 +1,148 @@
+# ---------------------------------------------------------------------------
+# DBiz Intelligence Plane — ignore rules
+#
+# Directory-type entries are anchored with a trailing "/" so they cannot shadow
+# a source or governance FILE of the same name (e.g. build.ts, coverage.json).
+# Source, documentation, ADRs, governance evidence and lockfiles are never
+# ignored — see the explicit guards at the foot of this file.
+# ---------------------------------------------------------------------------
+
+# --- Dependencies ---
+node_modules/
+
+# --- Build output ---
+dist/
+build/
+out/
+generated/
+*.tsbuildinfo
+
+# --- Caches ---
+.cache/
+.vite/
+.turbo/
+.next/
+.eslintcache
+
+# --- Scratch / temporary ---
+temp/
+tmp/
+
+# --- Logs ---
+logs/
+*.log
+
+# --- Test, coverage and report output ---
+coverage/
+playwright-report/
+test-results/
+allure-results/
+allure-report/
+artifacts/
+screenshots/
+
+# --- OS metadata ---
+.DS_Store
+Thumbs.db
+
+# --- Editor / IDE ---
+.idea/
+.vscode/
+
+# --- Secrets and per-instance runtime state ---
+# Env/secret files must never be committed to the Intelligence Plane (INV-6, E-5 non-retention).
+# Configuration is read from the process environment (see run-server.mjs / the deployment secret store).
+.env
+.env.*
+# The environment TEMPLATE is bootstrap configuration, not a secret: every value is a placeholder or a
+# labelled local-only throwaway (ADR-0060 closes "no .env.example" as a defect). It must survive the
+# .env.* glob above, or a clean clone cannot run `docker compose up`. Keep this negation after the glob.
+!.env.example
+# Per-instance signing secret + registration OTC store (hashes + audit). Dev-instance state only;
+# production uses a secret manager / shared store (ADR-0036). Never committed.
+.session-secret
+# Per-instance ed25519 package-signing key (ADR-0035 Software Update Management). Dev-instance only;
+# production loads/persists the key on the state mount / a secret manager. Never committed.
+.package-signing-key.pem
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+/registration/
+# Per-instance tenant SSOT (tenants/<slug>/tenant.json) — dev/runtime state written by the launcher.
+# Same class of file-backed runtime state as /registration/ and generated/. Production persists it on
+# the state mount (Azure Files /state), never in the repo. Never committed.
+/tenants/
+
+# ---------------------------------------------------------------------------
+# Never-ignore guards. These re-include paths that a broad rule above must not
+# capture. Keep them last; git applies the last matching pattern.
+# ---------------------------------------------------------------------------
+!pnpm-lock.yaml
+!package-lock.json
+!package.json
+!docs/**
+!docs/adr/**
+!governance/**
+!program/**
+
+# ---------------------------------------------------------------------------
+# Generated supply-chain evidence — build output, never source (ADR-0063).
+# The SBOM is derived from the resolved dependency graph and regenerated on
+# every gate run and every CI build; the repository stores only the generator
+# (governance/supply-chain/generate-sbom.js), not its output. Its committed copy
+# was removed. This rule MUST sit after the !governance/** guard above: git
+# applies the last matching pattern, so it has to follow the re-include to win.
+# ---------------------------------------------------------------------------
+governance/supply-chain/sbom.cdx.json
+
+# ---------------------------------------------------------------------------
+# Generated governance EVIDENCE — regenerated on every run-all / CI run, never
+# source (ADR-0063). Each verify-*.js REGENERATES its evidence and refuses a
+# stale one (R-14.2, "produced by this run, not left behind"); verify-traceability
+# regenerates the two matrices via generate-matrices.js. Committing these produced
+# only churn (47 were dirty at audit time) and the risk of gating on a historical
+# claim. The repository keeps the generators; the evidence is produced, not stored.
+#
+# These rules MUST follow the !governance/**, !program/** guards above — last
+# matching pattern wins. Scoped so they never capture the consumed BASELINES that
+# ARE source: governance/verification/proofs.json (fault-injection registry) and
+# governance/closure/baseline.json (programme-closure baseline), nor the
+# hand-authored program/MULTITENANCY_REVIEW/08_COMPLIANCE_MATRIX.md.
+# ---------------------------------------------------------------------------
+governance/**/evidence.json
+governance/**/*-evidence.json
+
+# ---------------------------------------------------------------------------
+# THE ONE EXCEPTION, AND IT IS AN EXCEPTION TO THE REASON RATHER THAN TO THE RULE.
+#
+# Every pattern above rests on one premise: the evidence can be regenerated, so
+# storing it buys churn and the risk of gating on a historical claim. That premise
+# is true of all 57 artefacts under governance/ except this one.
+#
+# ADR-0077 §5, in the ADR's own words: "CU-6a is measurable ONCE, on a tree where
+# both paths exist, and RC-4'(3) preserves that measurement by digest rather than by
+# re-running it." After §6 step 6 deletes the legacy modules there is no second
+# implementation to compare against — so this file is not a cache of a computation,
+# it is the ONLY RECORD THAT THE COMPUTATION EVER HAPPENED.
+#
+# Two consequences, and the second is the dangerous one:
+#   · ignored, it does not survive a clean clone, so RC-4'(3) is red for everyone
+#     but the machine that ran the measurement — and RC-4' permits the legacy
+#     modules to be absent ONLY where this evidence is present and current.
+#   · that red invites the repair that destroys the evidence: REGENERATING IT ON A
+#     POST-DELETION TREE. With one path left there is nothing to compare, and what
+#     such a run writes is a document, not a measurement. A green gate would then
+#     assert an equivalence nobody ever measured.
+#
+# Tracked for the same reason as the two baselines named above — it is CONSUMED
+# evidence, not produced output. Debt D-085.
+# ---------------------------------------------------------------------------
+!governance/capability/authoring-equivalence-evidence.json
+
+governance/traceability/ARCHITECTURE-COVERAGE-MATRIX.md
+governance/traceability/ENTERPRISE-TRACEABILITY-MATRIX.md
+packages/contracts/compat/evidence.json
+program/ENGINEERING_SCORECARD.md
+program/PLATFORM_MATURITY.md

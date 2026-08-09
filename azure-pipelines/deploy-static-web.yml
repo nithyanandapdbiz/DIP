@@ -1,0 +1,158 @@
+# Deploy @dbiz/tenant-onboarding-web to Azure Storage static website ($web).
+# Setup: deploy/azure/AZURE_DEVOPS.md (SP, sc-dbiz-ip-rg, vg-dbiz-ip-dev).
+
+trigger:
+  branches:
+    include:
+      - main
+  paths:
+    include:
+      - packages/tenant-onboarding-web/**
+      - packages/tenant-onboarding-engine/**
+      - packages/contracts/**
+      - packages/platform-core/**
+      - packages/platform-runtime/**
+      - packages/platform-providers/**
+      - azure-pipelines/deploy-static-web.yml
+
+pr: none
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  - group: vg-dbiz-ip-dev
+
+steps:
+  - checkout: self
+
+  - task: NodeTool@0
+    displayName: Use Node.js 24
+    inputs:
+      versionSpec: '24.x'
+
+  - script: |
+      set -euo pipefail
+      corepack enable
+      corepack prepare pnpm@$(node -p "require('./package.json').packageManager.split('@')[1]") --activate
+      pnpm --version
+    displayName: Enable corepack (pnpm)
+
+  - script: pnpm install --frozen-lockfile
+    displayName: Install dependencies
+
+  - script: |
+      set -euo pipefail
+      unset VITE_API_URL || true
+      export VITE_AZURE_CLIENT_ID="$(VITE_AZURE_CLIENT_ID)"
+      export VITE_AZURE_TENANT_ID="$(VITE_AZURE_TENANT_ID)"
+      pnpm --filter "@dbiz/tenant-onboarding-web..." build
+    displayName: Build SPA and workspace dependencies
+
+  - task: AzureCLI@2
+    displayName: Upload dist to storage $web
+    inputs:
+      azureSubscription: $(AZURE_SERVICE_CONNECTION)
+      scriptType: bash
+      scriptLocation: inlineScript
+      inlineScript: |
+        set -euo pipefail
+        DIST="packages/tenant-onboarding-web/dist"
+        if [ ! -d "$DIST" ]; then
+          echo "dist not found at $DIST"
+          exit 1
+        fi
+        echo "Uploading $DIST -> $(STORAGE_ACCOUNT)/\$web"
+        az storage blob upload-batch \
+          --account-name "$(STORAGE_ACCOUNT)" \
+          --auth-mode login \
+          --destination '$web' \
+          --source "$DIST" \
+          --overwrite true
+
+        # The bundle filename is content-hashed, so this is what the purge below must make live.
+        # Read it off index.html's module script tag — NOT off a chunk name. The entry chunk is named
+        # after its rollupOptions.input key (currently 'main', was 'index'), so matching a literal name
+        # silently breaks the moment vite.config.ts changes, and pipefail turns that into a failed
+        # deploy AFTER the upload has already landed — new files in $web, cache never purged.
+        EXPECTED_BUNDLE="$(sed -n 's|.*<script[^>]*src="/\(assets/[^"]*\.js\)".*|\1|p' "$DIST/index.html" | head -1 || true)"
+        if [ -z "$EXPECTED_BUNDLE" ]; then
+          echo "##vso[task.logissue type=warning]Could not read the entry bundle from $DIST/index.html; the purge still runs, only the post-deploy check is blind."
+        fi
+        echo "Uploaded bundle: ${EXPECTED_BUNDLE}"
+        echo "##vso[task.setvariable variable=EXPECTED_BUNDLE]${EXPECTED_BUNDLE}"
+
+  # Front Door caches index.html and /assets/*. WITHOUT THIS STEP A SUCCESSFUL UPLOAD CHANGES NOTHING
+  # THAT ANY USER CAN SEE: the edge keeps serving the previous bundle, so a real fix looks like a
+  # no-op and gets diagnosed as a code problem. The purge is part of the deploy, not an afterthought.
+  - task: AzureCLI@2
+    displayName: Purge Front Door cache
+    inputs:
+      azureSubscription: $(AZURE_SERVICE_CONNECTION)
+      scriptType: bash
+      scriptLocation: inlineScript
+      inlineScript: |
+        set -euo pipefail
+        RG="$(RESOURCE_GROUP)"
+
+        # ADO leaves $(VAR) as a literal when the variable is undefined (same idiom as deploy-api.yml).
+        resolve() {
+          case "$1" in
+            ""|\$\(*\)) echo "" ;;
+            *) echo "$1" ;;
+          esac
+        }
+        PROFILE="$(resolve "$(FRONTDOOR_PROFILE)")"
+        ENDPOINT="$(resolve "$(FRONTDOOR_ENDPOINT)")"
+
+        # Fall back to discovery so the step works before the variable group is updated. Only when the
+        # answer is UNAMBIGUOUS — guessing which of several profiles fronts production is not a thing a
+        # deploy pipeline should do silently.
+        if [ -z "$PROFILE" ]; then
+          mapfile -t PROFILES < <(az afd profile list -g "$RG" --query "[].name" -o tsv)
+          if [ "${#PROFILES[@]}" -eq 1 ]; then
+            PROFILE="${PROFILES[0]}"
+            echo "Discovered Front Door profile: ${PROFILE}"
+          else
+            echo "##vso[task.logissue type=warning]Set FRONTDOOR_PROFILE in vg-dbiz-ip-dev — found ${#PROFILES[@]} profiles in ${RG}, cannot choose. CACHE NOT PURGED; the old bundle is still being served."
+            exit 0
+          fi
+        fi
+
+        if [ -z "$ENDPOINT" ]; then
+          mapfile -t ENDPOINTS < <(az afd endpoint list -g "$RG" --profile-name "$PROFILE" --query "[].name" -o tsv)
+          if [ "${#ENDPOINTS[@]}" -eq 1 ]; then
+            ENDPOINT="${ENDPOINTS[0]}"
+            echo "Discovered Front Door endpoint: ${ENDPOINT}"
+          else
+            echo "##vso[task.logissue type=warning]Set FRONTDOOR_ENDPOINT in vg-dbiz-ip-dev — found ${#ENDPOINTS[@]} endpoints on ${PROFILE}, cannot choose. CACHE NOT PURGED; the old bundle is still being served."
+            exit 0
+          fi
+        fi
+
+        # Purge everything: index.html and the hashed assets must not be served from different
+        # generations of the bundle. A failure here FAILS THE DEPLOY — an unpurged deploy has not
+        # reached any user, and reporting success would be a lie. The service principal needs
+        # Microsoft.Cdn/profiles/afdEndpoints/purge/action (see deploy/azure/AZURE_DEVOPS.md).
+        echo "Purging ${PROFILE}/${ENDPOINT} ..."
+        az afd endpoint purge \
+          --resource-group "$RG" \
+          --profile-name "$PROFILE" \
+          --endpoint-name "$ENDPOINT" \
+          --content-paths '/*'
+        echo "Purge complete."
+
+  - script: |
+      set -uo pipefail
+      # Informational only. Purge propagation is not instant, so a stale answer here is not a failure —
+      # it is the number to re-check before concluding a deploy did not work.
+      EXPECTED="${EXPECTED_BUNDLE:-}"
+      LIVE="$(curl -sS --max-time 30 https://inteligenceplane.dbizsolution.com/ \
+              | sed -n 's|.*<script[^>]*src="/\(assets/[^"]*\.js\)".*|\1|p' | head -1 || true)"
+      echo "expected bundle: ${EXPECTED:-<unknown>}"
+      echo "live bundle    : ${LIVE:-<none>}"
+      if [ -n "$EXPECTED" ] && [ "$EXPECTED" != "$LIVE" ]; then
+        echo "##vso[task.logissue type=warning]The edge is still serving ${LIVE:-nothing}. Re-check in a minute; if it persists the purge did not take effect."
+      fi
+      echo "Done. https://inteligenceplane.dbizsolution.com/"
+    displayName: Report which bundle is live

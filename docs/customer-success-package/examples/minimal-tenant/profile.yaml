@@ -1,0 +1,20 @@
+# DBiz Execution Plane — tenant configuration
+# Synthetic values throughout. Replace tenantId and registrationEndpoint with the
+# ones issued to you during onboarding.
+tenant:
+  tenantId: tenant-example
+  registrationEndpoint: https://gateway.example.test/v1/register
+technologyProfile:
+  profileVersion: 1.0.0
+  language: typescript
+  framework: playwright
+  testRunner: playwright-test
+  ciSystem: github-actions
+  gitProvider: github
+  cloudProvider: azure
+  deploymentModel: container
+  packageManager: npm
+  reportingFramework: html
+  frameworkVersions:
+    @playwright/test: "1.49.0"
+    typescript: "5.7.2"

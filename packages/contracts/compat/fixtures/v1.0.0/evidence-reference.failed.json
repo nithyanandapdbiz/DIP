@@ -1,0 +1,20 @@
+{
+  "contractVersion": "1.0.0",
+  "evidenceId": "ev-failed",
+  "packageHash": {
+    "algorithm": "sha256-jcs-v1",
+    "domain": "dbiz.execution-package@1",
+    "value": "2222222222222222222222222222222222222222222222222222222222222222"
+  },
+  "contentHash": {
+    "algorithm": "sha256-jcs-v1",
+    "domain": "dbiz.evidence-record@1",
+    "value": "3333333333333333333333333333333333333333333333333333333333333333"
+  },
+  "classification": "C1",
+  "capturedAt": "2026-07-22T10:30:00Z",
+  "expiresAt": "2027-07-22T10:30:00Z",
+  "assuranceState": "DEGRADED",
+  "outcome": "failed",
+  "reason": "driver crashed"
+}

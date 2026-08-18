@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, type CSSProperties } from 'react';
 import { Link } from 'react-router-dom';
 import { useApi } from '../api';
 import { useAuth } from '../auth/AuthContext';
@@ -29,6 +29,7 @@ export function Dashboard(): JSX.Element {
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
   const [selected, setSelected] = useState<TenantSummary | null>(null);
+  const [deleteOpen, setDeleteOpen] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState('');
   const [activity, setActivity] = useState<string[]>([]);
 
@@ -63,9 +64,9 @@ export function Dashboard(): JSX.Element {
           api.updateHistory(tenant.slug),
         ]);
         const checks = [
-          manifest.onboarding.slug === tenant.slug ? 'tenant identity' : 'tenant identity mismatch',
-          manifest.configuration.dbiz.contractVersion ? 'contract version' : 'contract version missing',
-          manifest.onboarding.status ? 'lifecycle state' : 'lifecycle state missing',
+          manifest.onboarding.slug === tenant.slug ? 'tenant identity OK' : 'tenant identity mismatch',
+          manifest.configuration.dbiz.contractVersion ? 'contract version OK' : 'contract version missing',
+          manifest.onboarding.status ? 'lifecycle state OK' : 'lifecycle state missing',
           `${updates.length} pending update${updates.length === 1 ? '' : 's'}`,
           `${history.length} update history entr${history.length === 1 ? 'y' : 'ies'}`,
         ];
@@ -84,7 +85,7 @@ export function Dashboard(): JSX.Element {
       if (operation === 'delete') {
         await api.deleteTenant(tenant.slug);
         setActivity((a) => [`${tenant.displayName}: tenant permanently deleted`, ...a].slice(0, 8));
-        setSelected(null); setDeleteConfirm(''); await load();
+        setDeleteOpen(false); setDeleteConfirm(''); setSelected(null); await load();
       }
     } catch (e) {
       setError(`${tenant.displayName}: ${(e as Error).message}`);
@@ -112,7 +113,7 @@ export function Dashboard(): JSX.Element {
         <article className="metric-card"><span className="metric-label">OPERATIONAL</span><strong>{metrics.active}</strong><span>ready to operate</span><b className="metric-good">{metrics.total ? Math.round((metrics.active / metrics.total) * 100) : 0}% active</b></article>
         <article className="metric-card"><span className="metric-label">ATTENTION</span><strong className={metrics.attention ? 'metric-warn' : ''}>{metrics.attention}</strong><span>need operator attention</span><b>{metrics.attention ? 'Review required' : 'All clear'}</b></article>
         <article className="metric-card"><span className="metric-label">READINESS</span><strong>{metrics.health}%</strong><span>portfolio readiness index</span><b className="metric-good">{metrics.ready} ready</b></article>
-        <article className="health-card"><div className="health-ring" style={{ '--score': `${metrics.health * 3.6}deg` } as React.CSSProperties}><span>{metrics.health}</span></div><div><span className="metric-label">CONTROL HEALTH</span><strong>{metrics.health >= 80 ? 'Healthy' : metrics.health >= 50 ? 'Watch' : 'At risk'}</strong><span>based on current tenant state</span></div></article>
+        <article className="health-card"><div className="health-ring" style={{ '--score': `${metrics.health * 3.6}deg` } as CSSProperties}><span>{metrics.health}</span></div><div><span className="metric-label">CONTROL HEALTH</span><strong>{metrics.health >= 80 ? 'Healthy' : metrics.health >= 50 ? 'Watch' : 'At risk'}</strong><span>based on current tenant state</span></div></article>
       </section>
 
       <section className="ops-strip">
@@ -125,10 +126,7 @@ export function Dashboard(): JSX.Element {
 
       <section className="workspace">
         <div className="portfolio-card">
-          <div className="section-head">
-            <div><span className="eyebrow">TENANT PORTFOLIO</span><h2>All tenants</h2></div>
-            <span className="count-pill">{visible.length} shown</span>
-          </div>
+          <div className="section-head"><div><span className="eyebrow">TENANT PORTFOLIO</span><h2>All tenants</h2></div><span className="count-pill">{visible.length} shown</span></div>
           <div className="filters-pro">
             <div className="search-box"><span>⌕</span><input aria-label="Search tenants" placeholder="Search tenant, ID or slug…" value={search} onChange={(e) => setSearch(e.target.value)} /></div>
             <select value={status} onChange={(e) => setStatus(e.target.value as OnboardingStatus | '')}><option value="">All states</option><option value="Onboarding">Onboarding</option><option value="Certified">Certified</option><option value="Provisioned">Provisioned</option><option value="Failed">Failed</option></select>
@@ -163,7 +161,7 @@ export function Dashboard(): JSX.Element {
         </aside>
       </section>
 
-      {selected && <div className="modal-backdrop" role="presentation" onMouseDown={(e) => { if (e.target === e.currentTarget) setSelected(null); }}>
+      {selected && !deleteOpen && <div className="modal-backdrop" role="presentation" onMouseDown={(e) => { if (e.target === e.currentTarget) setSelected(null); }}>
         <section className="operation-modal" role="dialog" aria-modal="true" aria-labelledby="operation-title">
           <div className="modal-head"><div><span className="eyebrow">TENANT OPERATIONS</span><h2 id="operation-title">{selected.displayName}</h2><small>{selected.tenantId} · {selected.slug}</small></div><button className="modal-close" onClick={() => setSelected(null)}>×</button></div>
           <div className="operation-grid">
@@ -172,11 +170,11 @@ export function Dashboard(): JSX.Element {
             <button className="operation-tile correct" disabled={busy !== null} onClick={() => void run(selected, 'correct')}><span>✦</span><strong>{busy === `correct:${selected.slug}` ? 'Correcting…' : 'Apply correction'}</strong><small>Publish a signed EP update using the current tenant configuration.</small></button>
             <Link className="operation-tile" to={`/tenants/${selected.slug}`} onClick={() => setSelected(null)}><span>↗</span><strong>Open tenant control plane</strong><small>Manage lifecycle, capabilities, integrations, tokens and audit.</small></Link>
           </div>
-          {allowed('tenant:delete') && <div className="hard-delete-zone"><div><span className="eyebrow danger-eyebrow">IRREVERSIBLE ACTION</span><strong>Hard delete tenant</strong><small>Permanently removes the tenant through the authoritative DELETE API. This is not archive or suspend.</small></div><button className="hard-delete-btn" onClick={() => setDeleteConfirm(selected.slug)}>Hard delete</button></div>}
+          {allowed('tenant:delete') && <div className="hard-delete-zone"><div><span className="eyebrow danger-eyebrow">IRREVERSIBLE ACTION</span><strong>Hard delete tenant</strong><small>Permanently removes the tenant through the authoritative DELETE API. This is not archive or suspend.</small></div><button className="hard-delete-btn" onClick={() => { setDeleteConfirm(''); setDeleteOpen(true); }}>Hard delete</button></div>}
         </section>
       </div>}
 
-      {deleteConfirm && selected && <div className="modal-backdrop" role="presentation"><section className="delete-modal" role="dialog" aria-modal="true" aria-labelledby="delete-title"><span className="delete-icon">!</span><span className="eyebrow danger-eyebrow">PERMANENT DELETION</span><h2 id="delete-title">Delete {selected.displayName} permanently?</h2><p>This action cannot be undone. Type <code>{selected.slug}</code> to confirm. Archive and suspend remain available when you need a reversible action.</p><input autoFocus value={deleteConfirm === selected.slug ? selected.slug : ''} placeholder={selected.slug} onChange={(e) => setDeleteConfirm(e.target.value)} /><div className="delete-actions"><button onClick={() => setDeleteConfirm('')}>Cancel</button><button className="hard-delete-btn" disabled={deleteConfirm !== selected.slug || busy !== null} onClick={() => void run(selected, 'delete')}>{busy === `delete:${selected.slug}` ? 'Deleting…' : 'Permanently delete'}</button></div></section></div>}
+      {deleteOpen && selected && <div className="modal-backdrop" role="presentation"><section className="delete-modal" role="dialog" aria-modal="true" aria-labelledby="delete-title"><span className="delete-icon">!</span><span className="eyebrow danger-eyebrow">PERMANENT DELETION</span><h2 id="delete-title">Delete {selected.displayName} permanently?</h2><p>This action cannot be undone. Type <code>{selected.slug}</code> to confirm. Archive and suspend remain available when you need a reversible action.</p><input autoFocus value={deleteConfirm} placeholder={selected.slug} onChange={(e) => setDeleteConfirm(e.target.value)} /><div className="delete-actions"><button onClick={() => { setDeleteOpen(false); setDeleteConfirm(''); }}>Cancel</button><button className="hard-delete-btn" disabled={deleteConfirm !== selected.slug || busy !== null} onClick={() => void run(selected, 'delete')}>{busy === `delete:${selected.slug}` ? 'Deleting…' : 'Permanently delete'}</button></div></section></div>}
     </div>
   );
 }

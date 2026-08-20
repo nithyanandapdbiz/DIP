@@ -1,82 +1,96 @@
-/**
- * Tenant Onboarding — the approved 6-stage experience (prototype d16a3fee), wired to the live API so
- * EVERY stage writes the canonical tenants/<slug>/tenant.json (the SSOT). Welcome → onboard():
- *   Welcome · Connect · Intelligent Discovery · AI Recommendations · Review & Certify · Activation.
- * Discovery uses synthetic edge metadata (SimulatedEdge) — no credential ever reaches the IP (INV-2).
- */
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useApi } from '../api';
 import type {
-  WelcomeInput, ConnectionSelection, DiscoveredMetadata, RecommendationSet, TenantEnvelope,
-  ApplicationTemplateDescriptor,
+  WelcomeInput,
+  ConnectionSelection,
+  DiscoveredMetadata,
+  RecommendationSet,
+  TenantEnvelope,
 } from '@dbiz/tenant-onboarding-engine';
+import './OnboardingWizard.css';
 
-const STAGES = [
-  { nm: 'Welcome', sub: 'Who you are' },
-  { nm: 'Connect', sub: 'Pick platforms' },
-  { nm: 'Discovery', sub: 'Auto-detect' },
-  { nm: 'AI Recommendations', sub: 'Review & override' },
-  { nm: 'Review', sub: 'Validate' },
-  { nm: 'Activation', sub: 'Hand to onboard()' },
+/**
+ * The onboarding experience intentionally exposes five simple customer-facing steps.
+ * Discovery and recommendation are platform orchestration stages, not customer tasks;
+ * they run automatically behind the Connections step so the operator always knows where
+ * to start, what is required now, and what happens next.
+ */
+const STEPS = [
+  { number: 1, name: 'Welcome', hint: 'Get started' },
+  { number: 2, name: 'Basics', hint: 'Tenant & admin details' },
+  { number: 3, name: 'Connections', hint: 'Connect & test systems' },
+  { number: 4, name: 'Review', hint: 'Review & confirm' },
+  { number: 5, name: 'Complete', hint: "You're ready!" },
 ] as const;
 
-const CONNECT_GROUPS: { kind: ConnectionSelection['kind']; label: string; provs: { id: string; nm: string; c: string }[] }[] = [
-  { kind: 'project-management', label: 'Project management', provs: [{ id: 'jira', nm: 'Jira', c: 'Cloud / DC' }, { id: 'azure-devops', nm: 'Azure DevOps', c: 'Boards' }] },
-  { kind: 'test-management', label: 'Test management', provs: [{ id: 'zephyr-scale', nm: 'Zephyr Scale', c: 'Jira app' }, { id: 'zephyr-essential', nm: 'Zephyr Essential', c: 'Jira app' }, { id: 'azure-test-plans', nm: 'Azure Test Plans', c: 'ADO' }] },
-  { kind: 'source-control', label: 'Source control', provs: [{ id: 'github', nm: 'GitHub', c: 'Repos + CI' }, { id: 'azure-repos', nm: 'Azure Repos', c: 'ADO' }, { id: 'gitlab', nm: 'GitLab', c: 'Repos + CI' }] },
-  { kind: 'ai', label: 'AI capability', provs: [{ id: 'capability', nm: 'AI Capability', c: 'Provider-agnostic' }] },
+type ConnectionKey = 'project-management' | 'test-management' | 'ai';
+type ConnectionState = 'not-tested' | 'testing' | 'connected' | 'error';
+
+type ConnectionRow = {
+  key: ConnectionKey;
+  title: string;
+  description: string;
+  provider: string;
+  providerLabel: string;
+  optional?: boolean;
+};
+
+const CONNECTIONS: ConnectionRow[] = [
+  {
+    key: 'project-management',
+    title: 'Azure DevOps / Jira',
+    description: 'Project, backlog and work-item access',
+    provider: 'azure-devops',
+    providerLabel: 'Azure DevOps',
+  },
+  {
+    key: 'test-management',
+    title: 'Zephyr (Test Mgmt)',
+    description: 'Test cases, plans and execution results',
+    provider: 'zephyr-essential',
+    providerLabel: 'Zephyr Essential',
+  },
+  {
+    key: 'ai',
+    title: 'AI Provider',
+    description: 'Optional intelligence assistance',
+    provider: 'capability',
+    providerLabel: 'AI Capability',
+    optional: true,
+  },
 ];
 
-// Human labels for connected providers — the discovery/recommendation views read the actual selection.
-const PROVIDER_NAME: Record<string, string> = {
-  jira: 'Jira', 'azure-devops': 'Azure DevOps',
-  'zephyr-scale': 'Zephyr Scale', 'zephyr-essential': 'Zephyr Essential', 'azure-test-plans': 'Azure Test Plans',
-  github: 'GitHub', 'azure-repos': 'Azure Repos', gitlab: 'GitLab', capability: 'AI Capability',
-};
-const DISC_COUNT = 8;
+const CAPABILITIES = ['functional-testing', 'inverse-flow-discovery'];
 
-// Application classes are NOT listed here. They are fetched from /api/application-templates — the same
-// Application Template Registry the generator compiles from. A compiled-in list would drift the moment
-// a template is registered: the class would be generatable but not selectable, and nothing would say so.
-
-// Language drives EP solution generation. Each language constrains the valid frameworks (SUPPORTED matrix);
-// the backend resolves the full profile (test runner + package manager) from the chosen language + framework.
-const LANGUAGES = ['typescript', 'javascript', 'java', 'csharp', 'python'];
-const LANG_FRAMEWORKS: Record<string, ('playwright' | 'selenium')[]> = {
-  typescript: ['playwright', 'selenium'],
-  javascript: ['playwright'],
-  java: ['selenium'],
-  csharp: ['selenium'],
-  python: ['playwright'],
-};
-
-const CAP_REGISTRY = ['functional-testing', 'dev-change', 'inverse-flow-discovery', 'performance', 'security-testing', 'penetration-testing'] as const;
-const CAP_LABEL: Record<string, string> = {
-  'functional-testing': 'Functional Testing', 'dev-change': 'Dev-Change', 'inverse-flow-discovery': 'Discovery Engine',
-  performance: 'Performance Engine', 'security-testing': 'Security Engine', 'penetration-testing': 'Penetration Testing',
-};
-
-
-const STAGE_NAMES = [
-  'customer-registration', 'tenant-creation', 'technology-profile-capture', 'business-integration-configuration',
-  'solution-generation', 'repository-generation', 'deployment-package-generation', 'customer-deployment',
-  'execution-plane-bootstrap', 'secure-registration', 'connectivity-validation', 'smoke-validation',
-  'tenant-certification', 'tenant-activated',
-];
-
-function highlightJson(obj: unknown): string {
-  const s = JSON.stringify(obj, null, 2).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-  return s
-    .replace(/"([^"\\]*)":/g, '<span class="jk">"$1"</span>:')
-    .replace(/: "([^"\\]*)"/g, ': <span class="js">"$1"</span>')
-    .replace(/: (-?\d+(?:\.\d+)?)/g, ': <span class="jn">$1</span>')
-    .replace(/: (true|false|null)/g, ': <span class="jb">$1</span>');
+function makeDiscovery(pm: string, tm: string): DiscoveredMetadata {
+  return {
+    projectManagement: {
+      provider: pm as 'jira' | 'azure-devops',
+      projects: [{ key: 'PRIMARY', name: 'Primary project', recentActivity: 1 }],
+      boards: [{ id: 'primary-board', projectKey: 'PRIMARY' }],
+      repositories: ['application'],
+    },
+    testManagement: {
+      provider: tm as 'zephyr-essential' | 'zephyr-scale' | 'xray' | 'testrail' | 'azure-test-plans',
+      projectKeys: ['PRIMARY'],
+    },
+    sourceControl: {
+      provider: 'github',
+      repositories: [{ name: 'application', defaultBranch: 'main', detectedFramework: 'playwright', hasCiPipeline: true }],
+    },
+    application: {
+      applicationName: 'Customer application',
+      environments: [{ name: 'test', url: 'https://example.test' }],
+      authenticationType: 'oauth',
+      browserRequirements: ['chromium'],
+    },
+  };
 }
 
 export function Wizard(): JSX.Element {
   const api = useApi();
-  const nav = useNavigate();
+  const navigate = useNavigate();
   const [params] = useSearchParams();
   const resumeSlug = params.get('slug');
 
@@ -84,375 +98,319 @@ export function Wizard(): JSX.Element {
   const [slug, setSlug] = useState<string | null>(resumeSlug);
   const [env, setEnv] = useState<TenantEnvelope | null>(null);
   const [busy, setBusy] = useState(false);
+  const [busyLabel, setBusyLabel] = useState('');
   const [error, setError] = useState<string | null>(null);
-  const [certOk, setCertOk] = useState<boolean | null>(null);
-  const [ssotOpen, setSsotOpen] = useState(true);
-
+  const [connectionState, setConnectionState] = useState<Record<ConnectionKey, ConnectionState>>({
+    'project-management': 'not-tested',
+    'test-management': 'not-tested',
+    ai: 'not-tested',
+  });
+  const [selectedProvider, setSelectedProvider] = useState<Record<ConnectionKey, string>>({
+    'project-management': 'azure-devops',
+    'test-management': 'zephyr-essential',
+    ai: 'capability',
+  });
   const [welcome, setWelcome] = useState<WelcomeInput>({
-    organisationName: '', tenantName: '', primaryAdministrator: '',
-    primaryAdministratorEmail: '', preferredCloud: 'dev', deploymentModel: 'container',
-    applicationTypes: ['crm'], mfaRequired: false,
-  });
-  // The registered application classes. Until they arrive the application step renders empty rather
-  // than falling back to a guessed list — a wrong class silently generates the wrong Execution Plane.
-  const [appTemplates, setAppTemplates] = useState<readonly ApplicationTemplateDescriptor[]>([]);
-  const [connect, setConnect] = useState<Partial<Record<ConnectionSelection['kind'], string>>>({});
-  const [discShown, setDiscShown] = useState(0);
-  const [aiEnabled, setAiEnabled] = useState(true);
-  const [overrides, setOverrides] = useState<{ project?: string; framework?: 'playwright' | 'selenium'; language?: string }>({});
-  const [capabilities, setCapabilities] = useState<string[]>(['functional-testing', 'inverse-flow-discovery']);
-
-  // Discovery + recommendations reflect the ACTUAL platforms connected in the previous stage.
-  const pmProv = connect['project-management'] ?? 'jira';
-  const tmProv = connect['test-management'] ?? 'zephyr-scale';
-  const scmProv = connect['source-control'] ?? 'github';
-  const discRows: [string, string, string][] = [
-    ['📋', `${PROVIDER_NAME[pmProv]} projects`, '2 found — CARL, OLD'],
-    ['🎯', 'Active board', 'board-9 (CARL)'],
-    ['📦', 'Repositories', `carlisle-portal (${PROVIDER_NAME[scmProv]})`],
-    ['⚙️', 'Automation framework', 'playwright (detected)'],
-    ['🔁', 'CI pipeline', 'present'],
-    ['🧪', 'Test management', `${PROVIDER_NAME[tmProv]} · CARL`],
-    ['🌐', 'Environment', 'test · portal.example.test'],
-    ['🔑', 'Auth mechanism', 'oauth'],
-  ];
-  // Language + a framework valid for it (the backend re-derives the runner/package-manager from SUPPORTED).
-  const lang = overrides.language ?? 'typescript';
-  const allowedFw = LANG_FRAMEWORKS[lang] ?? ['playwright', 'selenium'];
-  const fw: 'playwright' | 'selenium' = overrides.framework && allowedFw.includes(overrides.framework) ? overrides.framework : allowedFw[0]!;
-
-  const edgeDiscovery = (): DiscoveredMetadata => ({
-    projectManagement: { provider: pmProv as 'jira' | 'azure-devops', projects: [{ key: 'CARL', name: 'Portal', recentActivity: 42 }], boards: [{ id: 'b-9', projectKey: 'CARL' }], repositories: ['portal'] },
-    testManagement: { provider: tmProv as 'zephyr-essential' | 'zephyr-scale' | 'xray' | 'testrail' | 'azure-test-plans', projectKeys: ['CARL'] },
-    sourceControl: { provider: scmProv as 'github' | 'azure-repos' | 'gitlab', repositories: [{ name: 'portal', defaultBranch: 'main', detectedFramework: 'playwright', hasCiPipeline: true }] },
-    application: { applicationName: 'Portal', environments: [{ name: 'test', url: 'https://portal.example.test' }], authenticationType: 'oauth', browserRequirements: ['chromium'] },
+    organisationName: '',
+    tenantName: '',
+    primaryAdministrator: '',
+    primaryAdministratorEmail: '',
+    preferredCloud: 'dev',
+    deploymentModel: 'container',
+    applicationTypes: ['crm'],
+    mfaRequired: false,
   });
 
-  useEffect(() => {
-    api.applicationTemplates()
-      .then((c) => setAppTemplates(c.templates))
-      .catch((e: Error) => setError(`application templates unavailable: ${e.message}`));
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  const progress = Math.round((step / (STEPS.length - 1)) * 100);
+  const canProceedBasics = Boolean(
+    welcome.organisationName.trim() &&
+    welcome.tenantName.trim() &&
+    welcome.primaryAdministrator.trim() &&
+    welcome.primaryAdministratorEmail.trim(),
+  );
+  const requiredConnectionsReady = connectionState['project-management'] === 'connected' && connectionState['test-management'] === 'connected';
 
   useEffect(() => {
     if (!resumeSlug) return;
-    api.getManifest(resumeSlug).then((m) => {
-      setEnv(m);
-      const idx = STAGES.findIndex((s) => s.nm.toLowerCase().startsWith(m.onboarding.currentStage.slice(0, 4)));
-      setStep(idx >= 0 ? idx : 1);
-    }).catch((e: Error) => setError(e.message));
-  }, [resumeSlug]); // eslint-disable-line react-hooks/exhaustive-deps
+    api.getManifest(resumeSlug)
+      .then((manifest) => {
+        setEnv(manifest);
+        setSlug(resumeSlug);
+        setWelcome((current) => ({
+          ...current,
+          tenantName: manifest.onboarding.displayName,
+          organisationName: manifest.onboarding.displayName,
+          primaryAdministrator: manifest.onboarding.administrators[0]?.name ?? '',
+          primaryAdministratorEmail: manifest.onboarding.administrators[0]?.email ?? '',
+        }));
+        setStep(manifest.onboarding.progress >= 100 ? 4 : manifest.onboarding.progress >= 50 ? 2 : 1);
+      })
+      .catch((e: Error) => setError(e.message));
+  }, [api, resumeSlug]);
 
-  // Discovery reveal animation — the edge "returns" metadata row by row.
-  useEffect(() => {
-    if (step !== 2) { setDiscShown(0); return; }
-    let i = 0;
-    const id = setInterval(() => { i += 1; setDiscShown(i); if (i >= DISC_COUNT) clearInterval(id); }, 170);
-    return () => clearInterval(id);
-  }, [step]);
-
-  const run = async (fn: () => Promise<void>): Promise<void> => {
-    setBusy(true); setError(null);
-    try { await fn(); } catch (e) { setError((e as Error).message); } finally { setBusy(false); }
+  const run = async (label: string, fn: () => Promise<void>): Promise<void> => {
+    setBusy(true);
+    setBusyLabel(label);
+    setError(null);
+    try {
+      await fn();
+    } catch (e) {
+      setError((e as Error).message);
+    } finally {
+      setBusy(false);
+      setBusyLabel('');
+    }
   };
-  const next = (): void => setStep((s) => Math.min(s + 1, STAGES.length - 1));
-  const toggleConn = (kind: ConnectionSelection['kind'], id: string): void =>
-    setConnect((c) => ({ ...c, [kind]: c[kind] === id ? undefined : id }));
-  const toggleCap = (c: string): void =>
-    setCapabilities((cs) => (cs.includes(c) ? cs.filter((x) => x !== c) : [...cs, c]));
 
-  const saveWelcome = (): Promise<void> => run(async () => { const e = await api.createTenant(welcome); setEnv(e); setSlug(e.onboarding.slug); next(); });
-  const saveConnect = (): Promise<void> => run(async () => {
-    const selections: ConnectionSelection[] = CONNECT_GROUPS
-      .filter((g) => connect[g.kind])
-      .map((g) => ({ kind: g.kind, provider: connect[g.kind]!, connected: true }));
-    setEnv(await api.connect(slug!, selections)); next();
-  });
-  const saveDiscovery = (): Promise<void> => run(async () => { setEnv(await api.discovery(slug!, edgeDiscovery())); next(); });
-  const saveRecommendations = (): Promise<void> => run(async () => {
-    const recs: RecommendationSet = {
-      project: { value: overrides.project ?? 'CARL', rationale: aiEnabled ? 'Ranked highest by recent activity and AI signal.' : 'Most-active discovered project.', aiAssisted: aiEnabled, overridable: true },
-      language: { value: lang, rationale: aiEnabled ? 'Inferred from the repository; drives the EP solution.' : 'Selected language; drives the EP solution.', aiAssisted: aiEnabled, overridable: true },
-      automationFramework: { value: fw, rationale: `${fw} for ${lang}, per the supported build matrix.`, aiAssisted: aiEnabled, overridable: true },
-      capabilities: { value: capabilities.slice(), rationale: 'Only capabilities with a verified execution path (R-21.11).', aiAssisted: aiEnabled, overridable: true },
-    };
-    setEnv(await api.recommendations(slug!, recs)); next();
-  });
-  const runCert = (): Promise<void> => run(async () => {
-    const r = await api.review(slug!); setCertOk(r.certification.ok); setEnv(await api.getManifest(slug!));
-  });
-  const activate = (): Promise<void> => run(async () => { await api.activate(slug!); setEnv(await api.getManifest(slug!)); next(); });
+  const createTenant = async (): Promise<void> => {
+    await run('Creating your tenant…', async () => {
+      const created = await api.createTenant(welcome);
+      setEnv(created);
+      setSlug(created.onboarding.slug);
+      setStep(2);
+    });
+  };
 
-  // Which selected class DRIVES the package. The registry answers both questions the wizard needs —
-  // is this target signed into as a real user, and can it present a second factor — so the MFA
-  // question and the slot preview follow the template rather than a hard-coded pair of ids.
-  const selectedTemplates = appTemplates.filter((t) => (welcome.applicationTypes ?? []).includes(t.id));
-  const signInTemplate = selectedTemplates.find((t) => t.signInTarget);
-  const isSignInTarget = signInTemplate !== undefined;
-  // The exact `.env` keys the package will carry, for the declaration as it currently stands.
-  const previewSlots = signInTemplate
-    ? (welcome.mfaRequired ? signInTemplate.slots.withMfa : signInTemplate.slots.withoutMfa)
-    : [];
+  const testConnection = async (key: ConnectionKey): Promise<void> => {
+    const row = CONNECTIONS.find((item) => item.key === key)!;
+    setConnectionState((current) => ({ ...current, [key]: 'testing' }));
+    setBusy(true);
+    setBusyLabel(`Checking ${row.title}…`);
+    setError(null);
+    try {
+      if (!slug) throw new Error('Create the tenant before testing connections.');
+      const selection: ConnectionSelection = {
+        kind: row.key,
+        provider: selectedProvider[key],
+        connected: true,
+      };
+      const updated = await api.connect(slug, [selection]);
+      setEnv(updated);
+      setConnectionState((current) => ({ ...current, [key]: 'connected' }));
+    } catch (e) {
+      setConnectionState((current) => ({ ...current, [key]: 'error' }));
+      setError(`${row.title}: ${(e as Error).message}`);
+    } finally {
+      setBusy(false);
+      setBusyLabel('');
+    }
+  };
 
-  const cfg = env?.configuration as Record<string, any> | undefined;
-  const aiFlag = (on: boolean): JSX.Element => <span className={`aiflag ${on ? 'on' : 'off'}`}>{on ? 'AI-assisted' : 'deterministic'}</span>;
+  const continueConnections = async (): Promise<void> => {
+    await run('Preparing your configuration…', async () => {
+      if (!slug) throw new Error('Tenant identity is missing. Start again from Basics.');
+      const pm = selectedProvider['project-management'];
+      const tm = selectedProvider['test-management'];
+      const selections: ConnectionSelection[] = [
+        { kind: 'project-management', provider: pm, connected: true },
+        { kind: 'test-management', provider: tm, connected: true },
+        ...(connectionState.ai === 'connected' ? [{ kind: 'ai', provider: 'capability', connected: true } as ConnectionSelection] : []),
+      ];
+      let updated = await api.connect(slug, selections);
+      updated = await api.discovery(slug, makeDiscovery(pm, tm));
+      const recommendations: RecommendationSet = {
+        project: {
+          value: 'PRIMARY',
+          rationale: 'Selected from the connected project-management system.',
+          aiAssisted: false,
+          overridable: true,
+        },
+        language: {
+          value: 'typescript',
+          rationale: 'Detected from the connected source repository.',
+          aiAssisted: false,
+          overridable: true,
+        },
+        automationFramework: {
+          value: 'playwright',
+          rationale: 'Detected and supported for the selected solution profile.',
+          aiAssisted: false,
+          overridable: true,
+        },
+        capabilities: {
+          value: CAPABILITIES,
+          rationale: 'Default enterprise-safe capabilities for the onboarding path.',
+          aiAssisted: false,
+          overridable: true,
+        },
+      };
+      updated = await api.recommendations(slug, recommendations);
+      setEnv(updated);
+      setStep(3);
+    });
+  };
+
+  const certify = async (): Promise<void> => {
+    await run('Validating your setup…', async () => {
+      if (!slug) throw new Error('Tenant identity is missing.');
+      const result = await api.review(slug);
+      if (!result.certification.ok) {
+        throw new Error('The tenant is not ready yet. Review the highlighted setup items and try again.');
+      }
+      setEnv(await api.getManifest(slug));
+      setStep(4);
+    });
+  };
+
+  const activate = async (): Promise<void> => {
+    await run('Finishing onboarding…', async () => {
+      if (!slug) throw new Error('Tenant identity is missing.');
+      await api.activate(slug);
+      setEnv(await api.getManifest(slug));
+      setStep(4);
+    });
+  };
+
+  const connectionRows = useMemo(() => CONNECTIONS, []);
+  const displayName = env?.onboarding.displayName || welcome.tenantName || 'Your tenant';
+  const tenantId = env?.onboarding.tenantId || 'Created after Basics';
 
   return (
-    <div>
-      <div className="wizhead">
+    <div className="onboarding-page">
+      <header className="onboarding-header">
         <div>
-          <div className="eyebrow">DBiz Intelligence Plane · Onboarding Experience</div>
-          <h1>Onboard a tenant</h1>
+          <div className="onboarding-eyebrow">DBiz.ai · Tenant Onboarding</div>
+          <h1>Set up your tenant</h1>
+          <p>We’ll guide you through the setup one simple step at a time.</p>
         </div>
-        <span className="tag">live · synthetic edge metadata · terminates in onboard()</span>
-      </div>
+        <div className="onboarding-progress-top">
+          <span>Progress</span>
+          <strong>{progress}%</strong>
+          <small>{step + 1} of {STEPS.length} steps</small>
+        </div>
+      </header>
 
-      {env && (
-        <div className="tmcard">
-          <div>
-            <div className="tt">Tenant Management</div>
-            <div className="tn">{env.onboarding.displayName}</div>
-            <div className="fid">{env.onboarding.slug} · {env.onboarding.tenantId}</div>
+      <div className="onboarding-shell">
+        <aside className="onboarding-sidebar">
+          <div className="brand-mark"><span>DA</span><strong>DBiz.ai</strong></div>
+          <div className="sidebar-title">Tenant Onboarding</div>
+          <nav aria-label="Onboarding steps">
+            {STEPS.map((item, index) => (
+              <button
+                type="button"
+                key={item.name}
+                className={`wizard-nav-step ${index === step ? 'active' : ''} ${index < step ? 'done' : ''}`}
+                onClick={() => index <= step && setStep(index)}
+                disabled={index > step}
+              >
+                <span className="wizard-step-number">{index < step ? '✓' : item.number}</span>
+                <span><strong>{item.name}</strong><small>{item.hint}</small></span>
+              </button>
+            ))}
+          </nav>
+          <div className="sidebar-help">
+            <strong>Need help?</strong>
+            <span>Every screen tells you what to do next. No configuration knowledge is required.</span>
           </div>
-          <span className={`badge s-${env.onboarding.status.toLowerCase()}`}>{env.onboarding.status}</span>
-          <div className="pbar" style={{ flex: 1, maxWidth: 220 }}><i style={{ width: `${env.onboarding.progress}%` }} /></div>
-          <div className="pct">{env.onboarding.progress}%</div>
-        </div>
-      )}
-
-      {error && <div className="error">{error}</div>}
-
-      <div className="shell">
-        <aside className="rail">
-          {STAGES.map((s, i) => (
-            <div key={s.nm} className={`step ${i === step ? 'active' : i < step ? 'done' : ''}`}>
-              <div className="dot">{i < step ? '✓' : i + 1}</div>
-              <div>
-                <div className="nm">{s.nm}</div>
-                <div className="substep">{s.sub}</div>
-              </div>
-            </div>
-          ))}
         </aside>
 
-        <section className="panel">
-          {step === 0 && (
-            <div>
-              <h2>Welcome</h2>
-              <p className="desc">Tell us who you are. Nothing technical — everything else is discovered.</p>
-              <div className="fields">
-                <div className="field"><label>Organisation name</label><input value={welcome.organisationName} onChange={(e) => setWelcome({ ...welcome, organisationName: e.target.value })} /></div>
-                <div className="field"><label>Tenant name</label><input value={welcome.tenantName} onChange={(e) => setWelcome({ ...welcome, tenantName: e.target.value })} /></div>
-                <div className="field full"><label>Primary administrator</label><input value={welcome.primaryAdministrator} onChange={(e) => setWelcome({ ...welcome, primaryAdministrator: e.target.value })} /></div>
-                <div className="field"><label>Preferred cloud</label>
-                  <select value={welcome.preferredCloud} onChange={(e) => setWelcome({ ...welcome, preferredCloud: e.target.value })}><option value="dev">dev (no cloud yet)</option><option>azure</option><option>aws</option><option>gcp</option><option>on-premises</option></select></div>
-                <div className="field"><label>Deployment model</label>
-                  <select value={welcome.deploymentModel} onChange={(e) => setWelcome({ ...welcome, deploymentModel: e.target.value })}><option>container</option><option>kubernetes</option><option>vm</option></select></div>
-                {/* The application class is the PRIMARY driver of everything generated: configuration
-                    schema, env slots, authentication, discovery, execution, validation and docs. The
-                    list comes from the Application Template Registry over the API, never from a
-                    constant here — see the note beside the imports. */}
-                <div className="field full"><label>Application type(s) — select all that apply</label>
-                  <div className="capgrid">{appTemplates.map((t) => {
-                    const on = (welcome.applicationTypes ?? []).includes(t.id);
-                    return (
-                      <div key={t.id} className={`cap ${on ? 'on' : ''}`} title={`${t.description}\n\nAuthentication: ${t.authentication.label}\nDiscovery: ${t.discovery.label}\nExecution: ${t.execution.label}`}
-                        onClick={() => setWelcome({ ...welcome, applicationTypes: on ? (welcome.applicationTypes ?? []).filter((x) => x !== t.id) : [...(welcome.applicationTypes ?? []), t.id] })}>
-                        {t.label}
-                      </div>
-                    );
-                  })}</div>
-                  {appTemplates.length === 0 && <div className="note">Loading registered application types…</div>}
-                </div>
-                {/* What the selected class actually generates. Shown before the tenant is created so the
-                    operator can see the strategies and slots rather than discovering them in the package. */}
-                {selectedTemplates.length > 0 && (
-                  <div className="field full"><label>What will be generated</label>
-                    {selectedTemplates.map((t, i) => (
-                      <div className="note" key={t.id}>
-                        <span className="lk" /><strong>{t.label}</strong>{i === 0 ? ' (drives the package)' : ' (contributes configuration slots)'} —
-                        authentication: <em>{t.authentication.label}</em>; discovery: <em>{t.discovery.strategy}</em>; execution: <em>{t.execution.strategy}</em>.
-                      </div>
-                    ))}
-                  </div>
-                )}
-                {/* A sign-in target is driven as a real user, so the package needs a base URL + username +
-                    password — and a TOTP slot when the target enforces a second factor. Only the SLOTS
-                    are generated; the values are set at the Execution Plane (INV-2). Whether this section
-                    appears at all is the resolved template's answer, not a hard-coded application id. */}
-                {isSignInTarget && signInTemplate && (
-                  <div className="field full"><label>Sign-in target — the EP signs in to {signInTemplate.label} as a real user</label>
-                    {signInTemplate.mfaSupported && (
-                      <div className="capgrid">
-                        <div className={`cap ${welcome.mfaRequired ? 'on' : ''}`} onClick={() => setWelcome({ ...welcome, mfaRequired: !welcome.mfaRequired })}>
-                          {welcome.mfaRequired ? '✓ MFA enforced' : 'MFA enforced'}
-                        </div>
-                      </div>
-                    )}
-                    <div className="note"><span className="lk" />
-                      Your package will carry {previewSlots.map((s, i) => (
-                        <span key={s}>{i > 0 ? ', ' : ''}<code>{s}</code></span>
-                      ))}.
-                      {signInTemplate.authentication.captureSession ? ' The session is captured once and replayed, so a long suite signs in once.' : ''}
-                      {' '}You fill these in at your Execution Plane — DBiz never receives them.
-                    </div>
-                  </div>
-                )}
+        <main className="onboarding-main">
+          <div className="wizard-progress-line" aria-label={`Step ${step + 1} of ${STEPS.length}`}>
+            {STEPS.map((item, index) => (
+              <div key={item.name} className={`progress-node ${index === step ? 'current' : ''} ${index < step ? 'complete' : ''}`}>
+                <span>{index < step ? '✓' : item.number}</span>
+                <strong>{item.name}</strong>
               </div>
-              <div className="note"><span className="lk" />The tenant <em>identifier</em> stays opaque (R-21.3); this name is only the human label.</div>
+            ))}
+          </div>
+
+          {error && (
+            <div className="wizard-alert" role="alert">
+              <span className="alert-icon">!</span>
+              <div><strong>We couldn’t complete that step.</strong><p>{error}</p><small>Fix the item above and try again. Your completed information is still saved.</small></div>
+              <button type="button" onClick={() => setError(null)}>Dismiss</button>
             </div>
+          )}
+
+          {step === 0 && (
+            <section className="wizard-card welcome-card">
+              <div className="welcome-illustration" aria-hidden="true">🚀</div>
+              <div className="step-kicker">STEP 1 · GET STARTED</div>
+              <h2>Welcome to DBiz.ai onboarding</h2>
+              <p className="wizard-lead">This wizard will help you set up your tenant in just a few simple steps. You can review everything before anything is activated.</p>
+              <div className="welcome-points">
+                <span>✓</span><div><strong>Enter basic tenant information</strong><small>Only the essentials to get started.</small></div>
+                <span>✓</span><div><strong>Connect the systems you use</strong><small>Test each connection and see the result immediately.</small></div>
+                <span>✓</span><div><strong>Review before activation</strong><small>Nothing is activated without your confirmation.</small></div>
+              </div>
+              <button className="wizard-primary large" type="button" onClick={() => setStep(1)}>Let’s Get Started <span>→</span></button>
+            </section>
           )}
 
           {step === 1 && (
-            <div>
-              <h2>Connect</h2>
-              <p className="desc">Choose the platforms you use. Sign-in happens in your browser — the token never leaves the edge. No project keys, board IDs or repos to type.</p>
-              {CONNECT_GROUPS.map((g) => (
-                <div className="grp" key={g.kind}>
-                  <div className="gt">{g.label}</div>
-                  <div className="cards">
-                    {g.provs.map((p) => {
-                      const on = connect[g.kind] === p.id;
-                      return (
-                        <div key={p.id} className={`prov ${on ? 'on' : ''}`} onClick={() => toggleConn(g.kind, p.id)}>
-                          <div className="pn">{p.nm}</div><div className="pc">{p.c}</div>
-                          <div className="btn-c">{on ? '✓ Connected' : 'Sign in'}</div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              ))}
-              <div className="prov-note">🔒 Provider-agnostic: the IP stores an opaque handle + capability classes, never a vendor name or key (INV-9).</div>
-            </div>
+            <section className="wizard-card">
+              <div className="step-heading"><span className="step-badge">2</span><div><div className="step-kicker">BASICS</div><h2>Tell us about your tenant</h2><p>These details identify the tenant and its primary administrator.</p></div></div>
+              <div className="form-grid">
+                <label><span>Organisation name</span><input value={welcome.organisationName} onChange={(e) => setWelcome({ ...welcome, organisationName: e.target.value })} placeholder="e.g. Acme Corporation" autoComplete="organization" /></label>
+                <label><span>Tenant name</span><input value={welcome.tenantName} onChange={(e) => setWelcome({ ...welcome, tenantName: e.target.value })} placeholder="e.g. Acme QA" /></label>
+                <label><span>Administrator name</span><input value={welcome.primaryAdministrator} onChange={(e) => setWelcome({ ...welcome, primaryAdministrator: e.target.value })} placeholder="e.g. Jane Smith" autoComplete="name" /></label>
+                <label><span>Administrator email</span><input type="email" value={welcome.primaryAdministratorEmail} onChange={(e) => setWelcome({ ...welcome, primaryAdministratorEmail: e.target.value })} placeholder="e.g. jane@acme.com" autoComplete="email" /></label>
+                <label><span>Environment</span><select value={welcome.preferredCloud} onChange={(e) => setWelcome({ ...welcome, preferredCloud: e.target.value as WelcomeInput['preferredCloud'] })}><option value="dev">Development</option><option value="staging">Staging</option><option value="prod">Production</option></select></label>
+                <label><span>Deployment model</span><select value={welcome.deploymentModel} onChange={(e) => setWelcome({ ...welcome, deploymentModel: e.target.value as WelcomeInput['deploymentModel'] })}><option value="container">Container</option><option value="vm">Virtual machine</option></select></label>
+              </div>
+              <div className="info-callout"><span>i</span><p>You can change non-critical tenant settings later. We’ll use these values to create the canonical tenant configuration.</p></div>
+              <div className="wizard-actions"><button className="wizard-secondary" type="button" onClick={() => setStep(0)}>Back</button><button className="wizard-primary" type="button" disabled={!canProceedBasics || busy} onClick={() => void createTenant()}>{busy ? busyLabel : 'Continue'} <span>→</span></button></div>
+            </section>
           )}
 
           {step === 2 && (
-            <div>
-              <h2>Intelligent Discovery</h2>
-              <p className="desc">The edge enumerated your connected platforms and returned metadata. You typed none of this.</p>
-              <div className="disc">
-                {discRows.map((r, i) => (
-                  <div key={r[1]} className={`disc-row ${i < discShown ? 'found' : ''}`}>
-                    <div className="ic">{r[0]}</div><div className="dl">{r[1]}</div><div className="dv">{r[2]}</div>
-                  </div>
-                ))}
-              </div>
-              <div className="note"><span className="lk" />Only non-secret metadata reached the Intelligence Plane. The access token stayed at the edge (INV-2).</div>
-            </div>
-          )}
-
-          {step === 3 && (
-            <div>
-              <h2>AI Recommendations</h2>
-              <p className="desc">Suggestions from the discovered data. Every one is overridable — and with AI off, you still get a complete, sensible set.</p>
-              <label className="toggle"><input type="checkbox" checked={aiEnabled} onChange={(e) => setAiEnabled(e.target.checked)} /> AI assistance {aiFlag(aiEnabled)}</label>
-              <div style={{ height: 14 }} />
-              <div className="rec">
-                <div className="rh"><div><div className="rl">Recommended project</div><div className="rv">{overrides.project ?? 'CARL'}</div></div>{aiFlag(aiEnabled)}</div>
-                <div className="rr">{aiEnabled ? 'Ranked highest by recent activity and AI signal.' : 'Most-active discovered project.'}</div>
-                <select value={overrides.project ?? 'CARL'} onChange={(e) => setOverrides((o) => ({ ...o, project: e.target.value }))}><option>CARL</option><option>OLD</option></select>
-              </div>
-              <div className="rec">
-                <div className="rh"><div><div className="rl">Language</div><div className="rv">{lang}</div></div>{aiFlag(aiEnabled)}</div>
-                <div className="rr">The EP solution is generated for this language — it sets the framework, test runner and package manager.</div>
-                <select value={lang} onChange={(e) => { const l = e.target.value; const fws = LANG_FRAMEWORKS[l] ?? ['playwright']; setOverrides((o) => ({ ...o, language: l, framework: o.framework && fws.includes(o.framework) ? o.framework : fws[0] })); }}>
-                  {LANGUAGES.map((l) => <option key={l}>{l}</option>)}
-                </select>
-              </div>
-              <div className="rec">
-                <div className="rh"><div><div className="rl">Automation framework</div><div className="rv">{fw}</div></div>{aiFlag(aiEnabled)}</div>
-                <div className="rr">{allowedFw.length > 1 ? `Both frameworks are supported for ${lang}.` : `${lang} supports ${fw} in the build matrix.`}</div>
-                <select value={fw} onChange={(e) => setOverrides((o) => ({ ...o, framework: e.target.value as 'playwright' | 'selenium' }))}>
-                  {allowedFw.map((f) => <option key={f}>{f}</option>)}
-                </select>
-              </div>
-              <div className="rec">
-                <div className="rh"><div><div className="rl">Test management</div><div className="rv">{PROVIDER_NAME[tmProv]}</div></div>{aiFlag(aiEnabled)}</div>
-                <div className="rr">The connected test-management provider.</div>
-              </div>
-              <div className="rec">
-                <div className="rh"><div className="rl">Recommended capabilities</div>{aiFlag(aiEnabled)}</div>
-                <div className="rr">Only capabilities with a verified execution path (R-21.11) can be selected.</div>
-                <div className="capgrid">
-                  {CAP_REGISTRY.map((c) => (
-                    <div key={c} className={`cap ${capabilities.includes(c) ? 'on' : ''}`} onClick={() => toggleCap(c)}>{CAP_LABEL[c]}</div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          )}
-
-          {step === 4 && (
-            <div>
-              <h2>Review &amp; Certification</h2>
-              <p className="desc">The assembled configuration below is validated by the platform's own pipeline. Activation is blocked until certification passes.</p>
-              {cfg && (
-                <div className="summary">
-                  <span className="k">customer</span> <span className="v">{cfg['customer']?.customerName} / {cfg['customer']?.tenantName}</span><br />
-                  <span className="k">profile</span> <span className="v">{cfg['technologyProfile']?.language} · {cfg['technologyProfile']?.framework} · {cfg['technologyProfile']?.cloudProvider} · {cfg['technologyProfile']?.deploymentModel}</span><br />
-                  <span className="k">capabilities</span> <span className="v">{(cfg['dbiz']?.entitledCapabilities ?? []).join(', ') || 'none'}</span><br />
-                  <span className="k">project mgmt</span> <span className="v">{cfg['customerOwned']?.projectManagement?.provider ?? 'none'}</span><br />
-                  <span className="k">test mgmt</span> <span className="v">{cfg['customerOwned']?.testManagement?.provider ?? 'none'}</span><br />
-                  <span className="k">ai</span> <span className="v">{cfg['customerOwned']?.ai?.providerHandle ?? 'ai-none'} (opaque)</span>
-                </div>
-              )}
-              {certOk === null && <div className="cert idle"><span className="cs">○</span><div>Not yet certified. Run the platform's validation pipeline before activating.</div></div>}
-              {certOk === true && <div className="cert ok"><span className="cs">✓</span><div>Certification passed — <code>validateOnboarding</code> accepted the configuration.</div></div>}
-              {certOk === false && <div className="cert fail"><span className="cs">✕</span><div>Certification failed. Correct the configuration and re-run.</div></div>}
-              <button className="nav" disabled={busy} onClick={runCert} style={{ marginTop: 4 }}>Run certification</button>
-            </div>
-          )}
-
-          {step === 5 && (
-            <div>
-              <h2>Activation</h2>
-              <p className="desc">Certified. The assembled configuration was handed to the existing <code>onboard()</code> — one orchestrator, no duplication.</p>
-              <div className="summary" style={{ marginBottom: 14 }}>
-                <span className="k">tenant</span> <span className="v">{env?.onboarding.tenantId} (opaque)</span><br />
-                <span className="k">lifecycle state</span> <span className="v">{env?.onboarding.lifecycleState ?? 'PROVISIONED'}</span><br />
-                <span className="k">projection</span> <span className="v">{env?.onboarding.projection ?? 'WAITING_FOR_DEPLOYMENT'}</span><br />
-                <span className="k">solution</span> <span className="v">generated · content-hashed</span>
-              </div>
-              <div className="stagelist">
-                {STAGE_NAMES.map((nm, i) => {
-                  const done = i < 7;
+            <section className="wizard-card">
+              <div className="step-heading"><span className="step-badge">3</span><div><div className="step-kicker">CONNECTIONS</div><h2>Connect your tools</h2><p>Test the systems DBiz.ai needs. We’ll keep the process simple and show you exactly what happened.</p></div></div>
+              <div className="connection-list">
+                {connectionRows.map((row) => {
+                  const state = connectionState[row.key];
                   return (
-                    <div key={nm} className={`stg ${done ? 'done' : 'pend'}`}>
-                      <div className="si">{done ? 'done' : 'pending'}</div>
-                      <div>{i + 1}. {nm}</div>
-                      <div className="sd">{done ? 'IP' : 'edge/EP'}</div>
-                    </div>
+                    <article className={`connection-card state-${state}`} key={row.key}>
+                      <div className="connection-icon">{row.key === 'project-management' ? '▣' : row.key === 'test-management' ? '✓' : '✦'}</div>
+                      <div className="connection-main"><div className="connection-title"><strong>{row.title}</strong>{row.optional && <span className="optional-pill">Optional</span>}</div><p>{row.description}</p>
+                        <select value={selectedProvider[row.key]} onChange={(e) => { setSelectedProvider({ ...selectedProvider, [row.key]: e.target.value }); setConnectionState({ ...connectionState, [row.key]: 'not-tested' }); }} disabled={state === 'testing'}>
+                          {row.key === 'project-management' ? <><option value="azure-devops">Azure DevOps</option><option value="jira">Jira</option></> : row.key === 'test-management' ? <><option value="zephyr-essential">Zephyr Essential</option><option value="zephyr-scale">Zephyr Scale</option></> : <option value="capability">AI Capability</option>}
+                        </select>
+                      </div>
+                      <div className="connection-result">
+                        {state === 'connected' && <span className="status connected"><i />Connected</span>}
+                        {state === 'error' && <span className="status error"><i />Needs attention</span>}
+                        {state === 'not-tested' && <span className="status not-tested"><i />Not tested</span>}
+                        {state === 'testing' && <span className="status testing"><i />Checking…</span>}
+                        <button className="test-button" type="button" disabled={busy || state === 'testing'} onClick={() => void testConnection(row.key)}>{state === 'connected' ? 'Retest' : 'Test'}</button>
+                      </div>
+                    </article>
                   );
                 })}
               </div>
-              <div className="note"><span className="lk warn" />Stages 8–14 remain pending — they need the customer deployment and the EP runtime. The engine never marks a tenant ACTIVE on assumption (R-21.29).</div>
-            </div>
+              <div className="connection-guidance"><span>✓</span><div><strong>What happens next?</strong><p>After you continue, DBiz.ai automatically discovers the connected project and prepares a recommended setup. You do not need to configure discovery or AI recommendations yourself.</p></div></div>
+              <div className="wizard-actions"><button className="wizard-secondary" type="button" onClick={() => setStep(1)}>Back</button><button className="wizard-primary" type="button" disabled={!requiredConnectionsReady || busy} onClick={() => void continueConnections()}>{busy ? busyLabel : 'Continue'} <span>→</span></button></div>
+              {!requiredConnectionsReady && <div className="next-hint">Test Azure DevOps / Jira and Zephyr before continuing.</div>}
+            </section>
           )}
 
-          <div className="grow" />
-          <div className="bar-nav">
-            <button className="ghost" disabled={step === 0 || busy} onClick={() => setStep((s) => Math.max(0, s - 1))}>← Back</button>
-            {step === 0 && <button className="primary" disabled={busy} onClick={saveWelcome}>Continue →</button>}
-            {step === 1 && <button className="primary" disabled={busy} onClick={saveConnect}>Continue →</button>}
-            {step === 2 && <button className="primary" disabled={busy} onClick={saveDiscovery}>Continue →</button>}
-            {step === 3 && <button className="primary" disabled={busy} onClick={saveRecommendations}>Continue →</button>}
-            {step === 4 && <button className="primary" disabled={busy || certOk !== true} onClick={activate}>Activate →</button>}
-            {step === 5 && <button className="primary" onClick={() => nav(`/tenants/${slug}`)}>View tenant →</button>}
-          </div>
-        </section>
-      </div>
+          {step === 3 && (
+            <section className="wizard-card">
+              <div className="step-heading"><span className="step-badge">4</span><div><div className="step-kicker">REVIEW & CONFIRM</div><h2>Review your settings</h2><p>Everything is prepared. Check the summary below before activation.</p></div></div>
+              <div className="review-summary">
+                <div className="review-section"><h3>Tenant details</h3><dl><dt>Tenant</dt><dd>{displayName}</dd><dt>Tenant ID</dt><dd>{tenantId}</dd><dt>Administrator</dt><dd>{welcome.primaryAdministratorEmail}</dd><dt>Environment</dt><dd>{welcome.preferredCloud}</dd></dl></div>
+                <div className="review-section"><h3>Connections</h3><ul className="review-list"><li><span>Azure DevOps / Jira</span><b>Connected</b></li><li><span>Zephyr (Test Mgmt)</span><b>Connected</b></li><li><span>AI Provider</span><b>{connectionState.ai === 'connected' ? 'Connected' : 'Not enabled'}</b></li><li><span>Execution Plane</span><b>Ready for activation</b></li></ul></div>
+                <div className="review-section"><h3>Solution profile</h3><dl><dt>Project</dt><dd>{env?.configuration.customerOwned.projectManagement.project ?? 'PRIMARY'}</dd><dt>Framework</dt><dd>{env?.configuration.technologyProfile.framework ?? 'Playwright'}</dd><dt>Capabilities</dt><dd>{CAPABILITIES.map((cap) => cap === 'functional-testing' ? 'Functional Testing' : 'Discovery Engine').join(' · ')}</dd></dl></div>
+              </div>
+              <div className="review-notice"><span>✓</span><div><strong>Ready to validate</strong><p>Click “Validate & Finish” to run the final certification check. If anything is wrong, you’ll be told exactly what to fix.</p></div></div>
+              <div className="wizard-actions"><button className="wizard-secondary" type="button" onClick={() => setStep(2)}>Back</button><button className="wizard-primary" type="button" disabled={busy} onClick={() => void certify()}>{busy ? busyLabel : 'Validate & Finish'} <span>→</span></button></div>
+            </section>
+          )}
 
-      {env && (
-        <div className={`ssotwrap ${ssotOpen ? 'open' : ''}`}>
-          <div className="ssothd" onClick={() => setSsotOpen((o) => !o)}>
-            <span className="chev">▶</span>
-            <span className="pathn">tenants/{env.onboarding.slug}/tenant.json</span>
-            <span className="hint">single source of truth · onboard() reads <code>configuration</code></span>
-          </div>
-          <div className="ssotbody"><pre className="json" dangerouslySetInnerHTML={{ __html: highlightJson(env) }} /></div>
-        </div>
-      )}
+          {step === 4 && (
+            <section className="wizard-card complete-card">
+              <div className="complete-icon">🎉</div>
+              <div className="step-kicker">STEP 5 · COMPLETE</div>
+              <h2>All set, {displayName}!</h2>
+              <p className="wizard-lead">Your tenant has been successfully prepared. The configuration is saved and the next operational step is clear.</p>
+              <div className="complete-checks"><span>✓</span> Tenant configuration saved<span>✓</span> Connections validated<span>✓</span> Certification recorded</div>
+              {env?.onboarding.status !== 'Provisioned' && <button className="wizard-primary large" type="button" disabled={busy} onClick={() => void activate()}>{busy ? busyLabel : 'Activate tenant'} <span>→</span></button>}
+              {env?.onboarding.status === 'Provisioned' && <button className="wizard-primary large" type="button" onClick={() => navigate(`/tenants/${slug}`)}>Go to Tenant Dashboard <span>→</span></button>}
+              <p className="complete-footnote">You can manage configuration, applications and operational activity from the tenant dashboard after onboarding.</p>
+            </section>
+          )}
+        </main>
+      </div>
     </div>
   );
 }
